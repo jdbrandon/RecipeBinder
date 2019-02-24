@@ -2,4 +2,8 @@
     <string name="app_name">Recipe Binder</string>
     <string name="action_settings">Settings</string>
     <string name="recipes">Recipes</string>
+    <string name="recipe_name">Recipe Name</string>
+    <string name="create">Create</string>
+    <string name="dialog_new_recipe_title">New Recipe</string>
+    <string name="toast_recipe_name">Please enter a recipe name</string>
 </resources>
