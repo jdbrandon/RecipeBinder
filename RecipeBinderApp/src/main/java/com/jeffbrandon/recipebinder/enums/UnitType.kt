@@ -1,4 +1,4 @@
-package com.jeffbrandon.recipebinder
+package com.jeffbrandon.recipebinder.enums
 
 enum class UnitType {
     GALLON,

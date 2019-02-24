@@ -1,4 +1,4 @@
-package com.jeffbrandon.recipebinder
+package com.jeffbrandon.recipebinder.data
 
 class Instruction(private val ingredients: List<Ingredient>, private val text: String) {
 

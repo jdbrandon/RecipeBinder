@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="padding_recipe_view">10dp</dimen>
+    <dimen name="info_text_size">12pt</dimen>
 </resources>

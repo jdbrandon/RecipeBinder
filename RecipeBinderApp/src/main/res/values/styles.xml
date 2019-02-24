@@ -17,4 +17,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
+    <style name="add_button" parent="AppTheme">
+        <item name="colorAccent">@color/add_button</item>
+    </style>
 </resources>

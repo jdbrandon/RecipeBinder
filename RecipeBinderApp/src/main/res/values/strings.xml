@@ -6,4 +6,8 @@
     <string name="create">Create</string>
     <string name="dialog_new_recipe_title">New Recipe</string>
     <string name="toast_recipe_name">Please enter a recipe name</string>
+    <string name="database_recipe_id">recipeId</string>
+    <string name="label_edit_activity">Recipe Editor</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="instructions">Instructions</string>
 </resources>

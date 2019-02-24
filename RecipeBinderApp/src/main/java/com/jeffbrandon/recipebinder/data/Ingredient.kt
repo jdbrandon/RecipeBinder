@@ -1,4 +1,6 @@
-package com.jeffbrandon.recipebinder
+package com.jeffbrandon.recipebinder.data
+
+import com.jeffbrandon.recipebinder.enums.UnitType
 
 data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
