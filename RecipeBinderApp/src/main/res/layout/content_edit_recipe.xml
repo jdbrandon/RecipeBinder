@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="5dp"
     android:layout_marginStart="@dimen/padding_recipe_view"
     android:layout_marginEnd="@dimen/padding_recipe_view"
     android:orientation="vertical"
@@ -21,6 +22,65 @@
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cook_type_chips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Instant Pot" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stove Top" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Oven" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sous Vide" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/tags_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleLine="false"
+        app:singleSelection="false">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fast" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Easy" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Healthy" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vegetarian" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vegan" />
+    </com.google.android.material.chip.ChipGroup>
 
     <TextView
         android:layout_width="wrap_content"

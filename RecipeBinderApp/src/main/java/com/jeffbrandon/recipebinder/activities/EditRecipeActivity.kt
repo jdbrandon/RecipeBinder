@@ -12,7 +12,7 @@ class EditRecipeActivity : RecipeAppActivity() {
         val action = intent?.action!!
 
         if(action == Intent.ACTION_EDIT)
-            setContentView(/*TODO*/0)
+            setContentView(R.layout.activity_edit_recipe)
         else
             setContentView(/*TODO*/0) //View action
 
