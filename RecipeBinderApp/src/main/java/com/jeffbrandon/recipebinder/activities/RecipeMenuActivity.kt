@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.get
+import androidx.core.view.size
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
 import kotlinx.android.synthetic.main.activity_recipe_menu.*
@@ -40,8 +41,10 @@ class RecipeMenuActivity : RecipeAppActivity() {
 
         setupNewRecipeButton()
         recipeListView.setOnItemClickListener { parent, view, pos, id ->
-            val item = recipeListView[pos] as AppCompatTextView
-            Timber.i("id: $id ${item.text} clicked.")
+            if(pos < recipeListView.size) {
+                val item = recipeListView[pos] as AppCompatTextView
+                Timber.i("id: $id ${item.text} clicked.")
+            } else Timber.d("$pos was out of bounds")
             //TODO Open recipe view activity
         }
         recipeListView.adapter = recipeMenuAdapter

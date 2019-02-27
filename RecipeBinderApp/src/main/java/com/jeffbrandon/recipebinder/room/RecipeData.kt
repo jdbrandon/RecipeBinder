@@ -12,5 +12,5 @@ data class RecipeData(
     var ingredientsJson: String,
     var instructionsJson: String
 ) {
-    constructor() : this(null, "", 0, "", "")
+    constructor() : this(null, "", 0, "[]", "[]")
 }
