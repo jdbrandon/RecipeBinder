@@ -16,7 +16,7 @@ interface RecipeDao {
     fun insertRecipes(recipes: List<RecipeData>): List<Long>
 
     @Query("SELECT * FROM RecipeData WHERE id = :id")
-    fun fetchRecipe(id: Int): RecipeData
+    fun fetchRecipe(id: Long): RecipeData
 
     @Query("SELECT name FROM RecipeData")
     fun fetchRecipeNames(): List<String>

@@ -2,7 +2,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="padding_recipe_view">10dp</dimen>
     <dimen name="info_text_size">12pt</dimen>
-    <dimen name="dialog_margin">16dp</dimen>
-    <dimen name="number_input_margin">20dp</dimen>
-    <dimen name="fraction_input_padding">35dp</dimen>
+    <dimen name="dialog_margin">4dp</dimen>
 </resources>

@@ -1,6 +1,7 @@
 package com.jeffbrandon.recipebinder.data
 
 import com.jeffbrandon.recipebinder.enums.UnitType
+import timber.log.Timber
 
 data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
@@ -171,5 +172,39 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.OUNCE -> amount * 0.035274f
             else -> throw IllegalArgumentException("Cannot convert gram to $type")
         }
+    }
+
+    fun amountString(): CharSequence {
+        val num = StringBuilder("%4.2f".format(amount))
+        val frac = num.substring(num.lastIndex - 2)
+        num.replace(num.length - 3, num.length, "")
+        when(frac) {
+            "00" -> num.apply {
+                removeSuffix(".00")
+            }
+            "25" -> num.apply {
+                removeSuffix(".25")
+                append(" 1/4")
+            }
+            "33" -> num.apply {
+                removeSuffix(".33")
+                append(" 1/3)")
+            }
+            "50" -> num.apply {
+                removeSuffix(".50")
+                append(" 1/2")
+            }
+            "66", "67" -> num.apply {
+                removeSuffix(".66")
+                removeSuffix(".67")
+                append(" 2/3")
+            }
+            "75" -> num.apply {
+                removeSuffix(".75")
+                append(" 3/4")
+            }
+            else -> Timber.d("unable to format $num")
+        }
+        return num.append(" $unit").toString()
     }
 }

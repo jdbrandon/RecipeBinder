@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp">
+    android:layout_marginTop="@dimen/dialog_margin"
+    android:layout_marginBottom="@dimen/dialog_margin"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/input_linear_layout"
@@ -14,214 +16,275 @@
         android:layout_marginEnd="@dimen/dialog_margin"
         android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/quantity_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2">
+        <RelativeLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:enabled="false"
-                android:hint="quantity" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/quantity_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:enabled="false"
+                    android:hint="@string/quantity" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/fraction_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="33dp"
+                android:layout_marginEnd="4dp"
+                android:layout_toStartOf="@id/units_text_view"
+                android:text="@string/_1_half"
+                tools:ignore="RelativeOverlap" />
+
+            <TextView
+                android:id="@+id/units_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="33dp"
+                android:layout_marginEnd="4dp"
+                android:text="@string/cup" />
+        </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/quantity_input"
-            android:layout_weight="8">
+            android:id="@+id/ingredient_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_ingredient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingredient" />
+                android:hint="@string/ingredient" />
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <GridLayout
-        android:id="@+id/number_grid_layout"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/input_linear_layout"
-        android:layout_marginStart="@dimen/number_input_margin"
-        android:layout_marginEnd="@dimen/number_input_margin"
-        android:columnCount="4"
-        android:orientation="horizontal"
-        android:rowCount="5">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginEnd="@dimen/dialog_margin">
 
-        <com.google.android.material.button.MaterialButton
+        <GridLayout
+            android:id="@+id/number_grid_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/one" />
+            android:columnCount="3"
+            android:orientation="horizontal"
+            android:rowCount="4">
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/one" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/two" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/three" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/four" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/five" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/six" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seven" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eight" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nine" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/symbol_dot" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_0" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_input_delete"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                app:icon="@drawable/ic_backspace_black_24dp"
+                app:iconGravity="textStart" />
+        </GridLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/two" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="4dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/three" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_input_quarter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1_quarter" />
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:insetLeft="4dp"
-            android:text="1/4" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_input_third"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1_third" />
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/four" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_input_half"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1_half" />
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/five" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_input_2_thirds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_2_thirds" />
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/six" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_input_3_quarter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_3_quarters" />
+        </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:insetLeft="4dp"
-            android:text="1/3" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/seven" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/eight" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/nine" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:insetLeft="4dp"
-            android:text="1/2" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="." />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0" />
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            app:icon="@drawable/ic_backspace_black_24dp"
-            app:iconGravity="textStart" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:insetLeft="4dp"
-            android:text="2/3" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="3"
-            android:insetLeft="4dp"
-            android:text="3/4" />
-    </GridLayout>
-
-    <com.google.android.material.chip.ChipGroup
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/number_grid_layout">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginEnd="@dimen/dialog_margin">
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="Cups" />
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/unit_chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ounces" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/cup_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/cup" />
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Table Spoons" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/ounce_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ounce" />
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TeaSpoons" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/tbsp_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/table_spoon" />
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pints" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/tsp_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tea_spoon" />
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quarts" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/pint_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pint" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/G"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gallons" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/quart_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quart" />
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Liters" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/gallon_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gallon" />
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ml" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/liter_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/liter" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/lbs"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pounds" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/milliliter_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/milliliter" />
 
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/lbs"
-            android:text="Grams" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/pound_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pound" />
 
-    </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/gram_chip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gram" />
 
-</RelativeLayout>
+        </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
+
+</LinearLayout>

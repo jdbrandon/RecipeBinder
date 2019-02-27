@@ -1,32 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="5dp"
     android:layout_marginStart="@dimen/padding_recipe_view"
+    android:layout_marginTop="5dp"
     android:layout_marginEnd="@dimen/padding_recipe_view"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_edit_recipe">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/recipe_name">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_new_recipe_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:hint="@string/recipe_name">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/recipe_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="minutes">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cook_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cook_type_chips"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
             android:layout_width="wrap_content"
@@ -82,7 +103,7 @@
             android:text="Vegan" />
     </com.google.android.material.chip.ChipGroup>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ingredients"
@@ -101,7 +122,7 @@
         android:theme="@style/add_button"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/instructions"
@@ -120,4 +141,4 @@
         android:theme="@style/add_button"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

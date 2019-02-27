@@ -26,10 +26,6 @@
             android:name=".activities.EditRecipeActivity"
             android:label="@string/label_edit_activity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-            </intent-filter>
         </activity>
     </application>
 
