@@ -17,7 +17,7 @@
         android:textSize="24sp" />
 
     <ListView
-        android:id="@+id/recipeListView"
+        android:id="@+id/recipe_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/main_title_text_view">

@@ -40,14 +40,15 @@ class RecipeMenuActivity : RecipeAppActivity() {
         setSupportActionBar(toolbar)
 
         setupNewRecipeButton()
-        recipeListView.setOnItemClickListener { parent, view, pos, id ->
-            if(pos < recipeListView.size) {
-                val item = recipeListView[pos] as AppCompatTextView
+        recipe_list_view.setOnItemClickListener { parent, view, pos, id ->
+            if(pos < recipe_list_view.size) {
+                val item = recipe_list_view[pos] as AppCompatTextView
                 Timber.i("id: $id ${item.text} clicked.")
+                //TODO Open recipe view activity instead of edit
+                navigateToEditRecipeActivity(id)
             } else Timber.d("$pos was out of bounds")
-            //TODO Open recipe view activity
         }
-        recipeListView.adapter = recipeMenuAdapter
+        recipe_list_view.adapter = recipeMenuAdapter
     }
 
     private fun setupNewRecipeButton() {
