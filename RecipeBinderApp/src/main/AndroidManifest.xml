@@ -25,7 +25,8 @@
         <activity
             android:name=".activities.EditRecipeActivity"
             android:label="@string/label_edit_activity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
         </activity>
     </application>
 

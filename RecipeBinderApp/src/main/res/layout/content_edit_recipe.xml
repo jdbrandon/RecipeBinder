@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/padding_recipe_view"
-    android:layout_marginTop="5dp"
+    android:layout_marginTop="4dp"
     android:layout_marginEnd="@dimen/padding_recipe_view"
+    android:layout_marginBottom="4dp"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_edit_recipe">
@@ -50,21 +51,29 @@
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_instant_pot"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Instant Pot" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_stove"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stove Top" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_oven"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Oven" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_sous_vide"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sous Vide" />
@@ -78,26 +87,36 @@
         app:singleSelection="false">
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_fast"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fast" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_easy"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Easy" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_healthy"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Healthy" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_vegetarian"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Vegetarian" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_vegan"
+            style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Vegan" />
@@ -112,14 +131,14 @@
     <ListView
         android:id="@+id/ingredients_list_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_ingredient_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:theme="@style/add_button"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -128,17 +147,49 @@
         android:text="@string/instructions"
         android:textSize="@dimen/info_text_size" />
 
-    <ListView
-        android:id="@+id/instructions_list_view"
+    <LinearLayout
+        android:id="@+id/instructions_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/instructions_list_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/instruction_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="250dp"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/instruction_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="instruction"
+                    android:inputType="textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_save_instruction"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                app:srcCompat="@drawable/ic_check_white_24dp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_instruction_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:theme="@style/add_button"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

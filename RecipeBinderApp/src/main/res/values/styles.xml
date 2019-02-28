@@ -1,12 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light" />
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -17,7 +12,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="Theme.MaterialComponents.NoActionBar" />
 
-    <style name="add_button" parent="AppTheme">
-        <item name="colorAccent">@color/add_button</item>
+    <style name="CheckableChip" parent="@style/Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
+        <item name="android:textColor">@color/text_color_chip_state_list</item>
     </style>
 </resources>

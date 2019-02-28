@@ -16,6 +16,7 @@
         android:text="@string/recipes"
         android:textSize="24sp" />
 
+    <!-- TODO: this list view should probably be a RecyclerView -->
     <ListView
         android:id="@+id/recipe_list_view"
         android:layout_width="match_parent"

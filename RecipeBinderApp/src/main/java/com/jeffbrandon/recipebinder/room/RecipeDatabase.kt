@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 @Database(entities = [RecipeData::class], version = 1)
+@TypeConverters(IngredientListConverter::class, InstructionConverter::class, RecipeTagConverter::class)
 abstract class RecipeDatabase : RoomDatabase() {
 
     abstract fun recipeDao(): RecipeDao
@@ -19,7 +21,7 @@ abstract class RecipeDatabase : RoomDatabase() {
                 INSTANCE = Room.databaseBuilder(
                     context.applicationContext,
                     RecipeDatabase::class.java,
-                    "recipes.db"
+                    "recipesBinderRecipes"
                 )
                     .build()
             }

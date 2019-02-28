@@ -19,4 +19,6 @@ abstract class AppendableAdapter<T>(private val context: Context, private val da
         notifyDataSetChanged()
         notifyDataSetInvalidated()
     }
+
+    fun getData(): List<T> = dataSource
 }

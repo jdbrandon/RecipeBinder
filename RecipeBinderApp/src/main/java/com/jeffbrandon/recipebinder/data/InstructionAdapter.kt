@@ -14,7 +14,7 @@ class InstructionAdapter(context: Context, private val instructions: MutableList
         val view = convertView ?: inflater.inflate(R.layout.instruction_list_item, parent, false)
         val textView = view.findViewById(R.id.instruction_text) as AppCompatTextView?
         instructions[position].let { instruction ->
-            textView?.apply { text = instruction.get() }
+            textView?.apply { text = instruction.text }
         }
         return view
     }

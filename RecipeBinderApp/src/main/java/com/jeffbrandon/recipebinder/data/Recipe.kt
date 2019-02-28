@@ -4,6 +4,7 @@ class Recipe(private val name: String) {
 
     private var ingredients: MutableList<Ingredient> = mutableListOf()
     private var instructions: MutableList<Instruction> = mutableListOf()
+    private var tags: MutableList<String> = mutableListOf()
     private var cookTime: Int? = null
 
     constructor(name: String, time: Int) : this(name) {
@@ -33,4 +34,7 @@ class Recipe(private val name: String) {
     fun setCookTime(time: Int) {
         cookTime = time
     }
+
+    fun getTags(): List<String> = tags
+    fun addTag(s: String) = tags.add(s)
 }

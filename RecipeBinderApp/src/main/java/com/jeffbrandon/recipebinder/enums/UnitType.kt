@@ -1,7 +1,5 @@
 package com.jeffbrandon.recipebinder.enums
 
-import java.lang.IllegalArgumentException
-
 enum class UnitType {
     GALLON,
     QUART,
@@ -13,9 +11,11 @@ enum class UnitType {
     POUND,
     LITER,
     MILLILITER,
-    GRAM;
+    GRAM,
+    NONE;
 
     override fun toString(): String {
+        if(this == NONE) return ""
         return this.name.toLowerCase().replace('_', ' ')
     }
 
@@ -33,7 +33,7 @@ enum class UnitType {
                 "l" -> LITER
                 "ml" -> MILLILITER
                 "g" -> GRAM
-                else -> throw IllegalArgumentException("Unexpected unit type string representation: $c")
+                else -> NONE
             }
         }
     }

@@ -45,7 +45,7 @@ class RecipeMenuActivity : RecipeAppActivity() {
                 val item = recipe_list_view[pos] as AppCompatTextView
                 Timber.i("id: $id ${item.text} clicked.")
                 //TODO Open recipe view activity instead of edit
-                navigateToEditRecipeActivity(id)
+                navigateToEditRecipeActivity(id + 1) //TODO: hackish need to fix
             } else Timber.d("$pos was out of bounds")
         }
         recipe_list_view.adapter = recipeMenuAdapter
@@ -93,7 +93,6 @@ class RecipeMenuActivity : RecipeAppActivity() {
     private fun navigateToEditRecipeActivity(id: Long) {
         val i = Intent(this, EditRecipeActivity::class.java)
         i.putExtra(getString(R.string.database_recipe_id), id)
-        i.putExtra(getString(R.string.activity_edit_recipe_intent_mode), getString(R.string.view_mode_edit))
         startActivity(i)
     }
 

@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#673AB7</color>
     <color name="colorAccent">#03A9F4</color>
     <color name="add_button">#44cc55</color>
+    <color name="checked_text">#dddddd</color>
+    <color name="checked_background">#2288dd</color>
+    <color name="unchecked_text">#151515</color>
+    <color name="unchecked_background">#dddddd</color>
 </resources>

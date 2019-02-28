@@ -6,20 +6,71 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.enums.UnitType
-import timber.log.Timber
-import java.lang.IllegalArgumentException
 
 class IngredientInputDialog(context: Context) : AlertDialog(context) {
+    private val view = View.inflate(context, R.layout.dialog_add_ingredient, null)
 
+    init {
+        setupAddIngredientViews(view)
+    }
+
+    private val dialog = Builder(context)
+        .setView(view)
+        .setPositiveButton(android.R.string.ok) { dialog, _ ->
+            dialog.cancel()
+            val amount = computeAmount(quantityInput.text.toString(), getSelectedFraction())
+            val type = getSelectedType()
+            val newIngredient = Ingredient(ingredientInput.text.toString(), amount, type)
+            ingredientAdapter.add(newIngredient)
+            clearValues()
+        }
+        .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+            dialog.cancel()
+            clearValues()
+        }.create()
+
+    private fun getSelectedType(): UnitType {
+        return when(unitsChipGroup.checkedChipId) {
+            R.id.gallon_chip -> UnitType.GALLON
+            R.id.quart_chip -> UnitType.QUART
+            R.id.pint_chip -> UnitType.PINT
+            R.id.cup_chip -> UnitType.CUP
+            R.id.ounce_chip -> UnitType.OUNCE
+            R.id.tbsp_chip -> UnitType.TABLE_SPOON
+            R.id.tsp_chip -> UnitType.TEA_SPOON
+            R.id.pound_chip -> UnitType.POUND
+            R.id.liter_chip -> UnitType.LITER
+            R.id.milliliter_chip -> UnitType.MILLILITER
+            R.id.gram_chip -> UnitType.GRAM
+            else -> UnitType.NONE
+        }
+    }
+
+    private fun getSelectedFraction(): Float {
+        return when(fracChipGroup.checkedChipId) {
+            R.id.chip_input_quarter -> 0.25f
+            R.id.chip_input_third -> 0.33f
+            R.id.chip_input_half -> 0.5f
+            R.id.chip_input_2_thirds -> 0.66f
+            R.id.chip_input_3_quarter -> 0.75f
+            else -> 0.0f
+        }
+    }
+
+    private lateinit var ingredientAdapter: IngredientAdapter
     private lateinit var quantityInput: TextInputEditText
     private lateinit var ingredientInput: TextInputEditText
     private lateinit var fractionTextView: TextView
     private lateinit var unitsTextView: TextView
+    private lateinit var unitsChipGroup: ChipGroup
+    private lateinit var fracChipGroup: ChipGroup
+    private lateinit var cupChip: Chip
     private val unitMap: HashMap<String, String> =
         hashMapOf(
             Pair(context.getString(R.string.cup), "c"),
@@ -50,12 +101,16 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
         else fractionTextView.text = ""
     }
 
-    private fun setupAddIngredientButtons(v: View) {
+    private fun setupAddIngredientViews(v: View) {
         quantityInput = v.findViewById(R.id.quantity_input)
         ingredientInput = v.findViewById(R.id.ingredient_input)
         fractionTextView = v.findViewById(R.id.fraction_text_view)
         fractionTextView.text = ""
         unitsTextView = v.findViewById(R.id.units_text_view)
+        cupChip = v.findViewById(R.id.cup_chip)
+        unitsChipGroup = v.findViewById(R.id.unit_chips)
+        fracChipGroup = v.findViewById(R.id.frac_chip_group)
+
         v.findViewById<MaterialButton>(R.id.button_input_0).setOnClickListener { keyListener(it as MaterialButton) }
         v.findViewById<MaterialButton>(R.id.button_input_1).setOnClickListener { keyListener(it as MaterialButton) }
         v.findViewById<MaterialButton>(R.id.button_input_2).setOnClickListener { keyListener(it as MaterialButton) }
@@ -96,37 +151,22 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
     }
 
     fun addIngredientListener(ingredientAdapter: IngredientAdapter) {
-        val view = View.inflate(context, R.layout.dialog_add_ingredient, null)
-        setupAddIngredientButtons(view)
-        Builder(context)
-            .setView(view)
-            .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                dialog.cancel()
-                //TODO: test this with fractional inputs
-                val amount = computeAmount(quantityInput.text.toString(), fractionTextView.text)
-                try {
-                    val type = UnitType.fromString(unitsTextView.text)
-                    val newIngredient = Ingredient(ingredientInput.text.toString(), amount, type)
-                    ingredientAdapter.add(newIngredient)
-                } catch(e: IllegalArgumentException) {
-                    Timber.e(e)
-                }
-            }
-            .setNegativeButton(android.R.string.cancel) { dialog, _ ->
-                dialog.cancel()
-            }
-            .show()
+        this.ingredientAdapter = ingredientAdapter
+        dialog.show()
     }
 
-    private fun computeAmount(whole: String, fraction: CharSequence?): Float {
-        val n = whole.toInt()
-        return n + when(fraction) {
-            "1/4" -> 0.25f
-            "1/3" -> 0.333f
-            "1/2" -> 0.5f
-            "2/3" -> 0.667f
-            "3/4" -> 0.75f
-            else -> 0.0f
-        }
+    private fun computeAmount(whole: String, fraction: Float): Float {
+        val n = if(whole.isEmpty()) 0 else whole.toInt()
+        return n + fraction
+    }
+
+    private fun clearValues() {
+        quantityInput.text!!.clear()
+        fractionTextView.text = ""
+        unitsTextView.text = ""
+        ingredientInput.text!!.clear()
+        ingredientInput.clearFocus()
+        unitsChipGroup.clearCheck()
+        fracChipGroup.clearCheck()
     }
 }

@@ -18,6 +18,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.LITER -> literTo(type)
             UnitType.MILLILITER -> milliLiterTo(type)
             UnitType.GRAM -> gramTo(type)
+            UnitType.NONE -> throw java.lang.IllegalArgumentException("Cannot convert to unit type $unit")
         }
     }
 
@@ -87,12 +88,12 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.QUART -> amount / 32
             UnitType.PINT, UnitType.POUND -> amount / 16
             UnitType.CUP -> amount / 8
-            UnitType.OUNCE -> amount
             UnitType.TABLE_SPOON -> amount * 2
             UnitType.TEA_SPOON -> amount * 6
             UnitType.LITER -> amount * 0.0295735f
             UnitType.MILLILITER -> amount * 29.5735f
             UnitType.GRAM -> amount * 28.3495f
+            else -> amount
         }
     }
 
@@ -176,34 +177,28 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
     fun amountString(): CharSequence {
         val num = StringBuilder("%4.2f".format(amount))
-        val frac = num.substring(num.lastIndex - 2)
+        val frac = num.substring(num.lastIndex - 1)
         num.replace(num.length - 3, num.length, "")
+        if(num.toString() == "0") num.clear()
         when(frac) {
-            "00" -> num.apply {
-                removeSuffix(".00")
+            "00" -> {
             }
             "25" -> num.apply {
-                removeSuffix(".25")
                 append(" 1/4")
             }
             "33" -> num.apply {
-                removeSuffix(".33")
                 append(" 1/3)")
             }
             "50" -> num.apply {
-                removeSuffix(".50")
                 append(" 1/2")
             }
             "66", "67" -> num.apply {
-                removeSuffix(".66")
-                removeSuffix(".67")
                 append(" 2/3")
             }
             "75" -> num.apply {
-                removeSuffix(".75")
                 append(" 3/4")
             }
-            else -> Timber.d("unable to format $num")
+            else -> Timber.d("unable to format $frac")
         }
         return num.append(" $unit").toString()
     }

@@ -39,7 +39,6 @@
                 android:layout_marginTop="33dp"
                 android:layout_marginEnd="4dp"
                 android:layout_toStartOf="@id/units_text_view"
-                android:text="@string/_1_half"
                 tools:ignore="RelativeOverlap" />
 
             <TextView
@@ -48,8 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="33dp"
-                android:layout_marginEnd="4dp"
-                android:text="@string/cup" />
+                android:layout_marginEnd="4dp" />
         </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -61,6 +59,7 @@
                 android:id="@+id/ingredient_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
                 android:hint="@string/ingredient" />
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -157,37 +156,44 @@
         </GridLayout>
 
         <com.google.android.material.chip.ChipGroup
+            android:id="@+id/frac_chip_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginStart="4dp">
+            android:layout_marginStart="4dp"
+            app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_quarter"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/_1_quarter" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_third"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/_1_third" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_half"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/_1_half" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_2_thirds"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/_2_thirds" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_3_quarter"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/_3_quarters" />
@@ -204,82 +210,82 @@
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/unit_chips"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/cup_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="@string/cup" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/ounce_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ounce" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/tbsp_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/table_spoon" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/tsp_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tea_spoon" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/pint_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pint" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/quart_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/quart" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/gallon_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gallon" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/liter_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/liter" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/milliliter_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/milliliter" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/pound_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pound" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/gram_chip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/CheckableChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gram" />

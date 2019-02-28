@@ -42,4 +42,7 @@
     <string name="activity_edit_recipe_intent_mode">viewAction</string>
     <string name="view_mode_edit">edit</string>
     <string name="view_mode_view">view</string>
+    <string name="colon">:</string>
+    <string name="cup_abbreviation">c</string>
+    <string name="new_ingredient">New Ingredient</string>
 </resources>
