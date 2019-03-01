@@ -156,7 +156,8 @@
         <ListView
             android:id="@+id/instructions_list_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:id="@+id/instruction_input_layout"
@@ -183,13 +184,13 @@
                 android:layout_marginStart="4dp"
                 app:srcCompat="@drawable/ic_check_white_24dp" />
         </LinearLayout>
-    </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_instruction_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_white_24dp" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_instruction_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_add_white_24dp" />
+    </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

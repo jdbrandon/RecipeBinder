@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.room.RecipeDao
 import com.jeffbrandon.recipebinder.room.RecipeDatabase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 
 abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
@@ -17,11 +21,13 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
 
-    protected val recipePersistantData by lazy { RecipeDatabase.getInstance(this).recipeDao() }
+    private lateinit var deferredDb: Deferred<RecipeDao>
+    protected val recipePersistantData by lazy { runBlocking { deferredDb.await() } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         job = SupervisorJob()
+        deferredDb = async(Dispatchers.IO) { RecipeDatabase.getInstance(this@RecipeAppActivity).recipeDao() }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -34,8 +40,8 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         job.cancel()
     }
 }

@@ -6,18 +6,17 @@ import android.widget.BaseAdapter
 
 abstract class AppendableAdapter<T>(private val context: Context, private val dataSource: MutableList<T>) :
     BaseAdapter() {
-    protected val inflater by lazy { context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater }
+    protected val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getItem(position: Int): T = dataSource[position]
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long = dataSource[position].hashCode().toLong()
 
     override fun getCount(): Int = dataSource.size
 
     fun add(element: T) {
         dataSource.add(element)
         notifyDataSetChanged()
-        notifyDataSetInvalidated()
     }
 
     fun getData(): List<T> = dataSource

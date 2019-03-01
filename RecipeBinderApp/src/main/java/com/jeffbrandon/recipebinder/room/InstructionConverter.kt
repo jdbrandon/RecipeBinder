@@ -2,10 +2,7 @@ package com.jeffbrandon.recipebinder.room
 
 import androidx.room.TypeConverter
 import com.jeffbrandon.recipebinder.data.Instruction
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.jeffbrandon.recipebinder.moshi.MoshiSingletons
 
 class InstructionConverter {
 
@@ -15,7 +12,7 @@ class InstructionConverter {
         fun toString(instructions: List<Instruction>): String {
             return when(instructions.size) {
                 0 -> ""
-                else -> getJsonAdapter().toJson(instructions)
+                else -> MoshiSingletons.instructionConverter.toJson(instructions)
             }
         }
 
@@ -24,17 +21,8 @@ class InstructionConverter {
         fun toListInstruction(json: String): List<Instruction> {
             json.run {
                 if(isEmpty()) return listOf()
-                return getJsonAdapter().fromJson(this)!!
+                return MoshiSingletons.instructionConverter.fromJson(this)!!
             }
-        }
-
-        @JvmStatic
-        private fun getJsonAdapter(): JsonAdapter<List<Instruction>> {
-            val moshi = Moshi.Builder()
-                .add(KotlinJsonAdapterFactory())
-                .build()
-            return moshi.adapter<List<Instruction>>(Types.newParameterizedType(List::class.java,
-                                                                               Instruction::class.java))
         }
     }
 }

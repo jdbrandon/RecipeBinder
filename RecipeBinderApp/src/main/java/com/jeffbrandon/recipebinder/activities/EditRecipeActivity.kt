@@ -12,8 +12,11 @@ import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.widgets.IngredientInputDialog
 import kotlinx.android.synthetic.main.activity_edit_recipe.*
 import kotlinx.android.synthetic.main.content_edit_recipe.*
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 class EditRecipeActivity : RecipeAppActivity() {
@@ -24,34 +27,36 @@ class EditRecipeActivity : RecipeAppActivity() {
 
     private var id: Long = BAD_ID
     private lateinit var currentRecipe: RecipeData
-    private lateinit var dialog: IngredientInputDialog
+    private lateinit var deferredDialog: Deferred<IngredientInputDialog>
+    private val dialog: IngredientInputDialog by lazy { runBlocking { deferredDialog.await() } }
 
     private lateinit var ingredientAdapter: IngredientAdapter
     private lateinit var instructionAdapter: InstructionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        deferredDialog = async { IngredientInputDialog(this@EditRecipeActivity) }
         intent?.apply {
             setContentView(R.layout.activity_edit_recipe)
 
-            id = extras!!.getLong(getString(R.string.database_recipe_id))
             launch(Dispatchers.IO) {
+                id = extras!!.getLong(getString(R.string.database_recipe_id))
                 currentRecipe = recipePersistantData.fetchRecipe(id)
                 setTags(currentRecipe.tags)
                 val ingredients = currentRecipe.ingredientsJson
                 val instructions = currentRecipe.instructionsJson
+                val cookTime = if(currentRecipe.cookTime == 0) ""
+                else currentRecipe.cookTime.toString()
                 launch(Dispatchers.Main) {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
                     recipe_name.setText(currentRecipe.name)
-                    cook_time.setText(if(currentRecipe.cookTime == 0) ""
-                                      else currentRecipe.cookTime.toString())
+                    cook_time.setText(cookTime)
                     ingredients_list_view.adapter = ingredientAdapter
                     instructions_list_view.adapter = instructionAdapter
                 }
             }
         }
-        dialog = IngredientInputDialog(this)
         setupButtonListeners()
     }
 
@@ -86,13 +91,13 @@ class EditRecipeActivity : RecipeAppActivity() {
         val tags = getTags()
         val ingredients = ingredientAdapter.getData()
         val instructions = instructionAdapter.getData()
-        val dbInput = RecipeData(id,
-                                 name,
-                                 time,
-                                 tags,
-                                 ingredients,
-                                 instructions)
         launch(Dispatchers.IO) {
+            val dbInput = RecipeData(id,
+                                     name,
+                                     time,
+                                     tags,
+                                     ingredients,
+                                     instructions)
             if(dbInput.id != BAD_ID) {
                 recipePersistantData.updateRecipe(dbInput)
             }
@@ -143,8 +148,6 @@ class EditRecipeActivity : RecipeAppActivity() {
             Timber.d("No ingredients")
             return IngredientAdapter(this, mutableListOf())
         }
-        for(ingredient in ingredients)
-            Timber.d(ingredient.name)
         return IngredientAdapter(this, ingredients.toMutableList())
     }
 
@@ -153,8 +156,6 @@ class EditRecipeActivity : RecipeAppActivity() {
             Timber.d("No instructions")
             return InstructionAdapter(this, mutableListOf())
         }
-        for(instruction in instructions)
-            Timber.d(instruction.text)
         return InstructionAdapter(this, instructions.toMutableList())
     }
 }

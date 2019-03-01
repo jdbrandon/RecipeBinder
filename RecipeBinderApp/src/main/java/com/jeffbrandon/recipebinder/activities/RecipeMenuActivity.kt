@@ -30,7 +30,7 @@ class RecipeMenuActivity : RecipeAppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        deferredMenuAdapter = async(Dispatchers.Default) {
+        deferredMenuAdapter = async(Dispatchers.IO) {
             ArrayAdapter(this@RecipeMenuActivity,
                          android.R.layout.simple_list_item_1,
                          recipePersistantData.fetchRecipeNames()
@@ -40,14 +40,20 @@ class RecipeMenuActivity : RecipeAppActivity() {
         setSupportActionBar(toolbar)
 
         setupNewRecipeButton()
-        recipe_list_view.setOnItemClickListener { parent, view, pos, id ->
+        recipe_list_view.setOnItemClickListener { _, _, pos, id ->
             if(pos < recipe_list_view.size) {
                 val item = recipe_list_view[pos] as AppCompatTextView
                 Timber.i("id: $id ${item.text} clicked.")
                 //TODO Open recipe view activity instead of edit
-                navigateToEditRecipeActivity(id + 1) //TODO: hackish need to fix
+                launch(Dispatchers.Default) {
+                    navigateToEditRecipeActivity(id + 1) //TODO: hackish need to fix
+                }
             } else Timber.d("$pos was out of bounds")
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         recipe_list_view.adapter = recipeMenuAdapter
     }
 
@@ -59,7 +65,7 @@ class RecipeMenuActivity : RecipeAppActivity() {
             AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_new_recipe_title)
                 .setView(newRecipeDialogContent)
-                .setPositiveButton(R.string.create) { dialog, which ->
+                .setPositiveButton(R.string.create) { dialog, _ ->
                     dialog.cancel()
                     val name = input!!.text.toString()
                     Timber.i("Creating a new recipe: $name")
@@ -72,17 +78,18 @@ class RecipeMenuActivity : RecipeAppActivity() {
                         ).show()
                     } else {
                         recipeMenuAdapter.add(name)
-                        recipeMenuAdapter.notifyDataSetChanged()
                         launch(Dispatchers.IO) {
                             //add basic recipe to db
                             val r = RecipeData()
                             r.name = name
                             r.id = recipePersistantData.insertRecipe(r)
-                            launch(Dispatchers.Main) { navigateToEditRecipeActivity(r.id!!) }
+                            launch(Dispatchers.Default) {
+                                navigateToEditRecipeActivity(r.id!!)
+                            }
                         }
                     }
                 }
-                .setNegativeButton(android.R.string.cancel) { dialog, which ->
+                .setNegativeButton(android.R.string.cancel) { dialog, _ ->
                     Timber.i("canceling recipe creation")
                     dialog.cancel()
                 }
