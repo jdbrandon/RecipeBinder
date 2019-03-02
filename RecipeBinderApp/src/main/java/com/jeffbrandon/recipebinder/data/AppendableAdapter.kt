@@ -19,5 +19,28 @@ abstract class AppendableAdapter<T>(private val context: Context, private val da
         notifyDataSetChanged()
     }
 
+    private fun add(i: Int, element: T) = dataSource.add(i, element)
+
+    private fun remove(i: Int): T = dataSource.removeAt(i)
+
     fun getData(): List<T> = dataSource
+
+    fun moveUp(position: Int) {
+        if(position == 0) return
+        val tmp = remove(position)
+        add(position - 1, tmp)
+        notifyDataSetChanged()
+    }
+
+    fun moveDown(position: Int) {
+        if(position == dataSource.lastIndex) return
+        val tmp = remove(position)
+        add(position + 1, tmp)
+        notifyDataSetChanged()
+    }
+
+    fun delete(position: Int) {
+        remove(position)
+        notifyDataSetChanged()
+    }
 }

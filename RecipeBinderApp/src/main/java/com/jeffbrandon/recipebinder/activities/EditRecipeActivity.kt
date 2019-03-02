@@ -1,12 +1,16 @@
 package com.jeffbrandon.recipebinder.activities
 
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.data.AppendableAdapter
 import com.jeffbrandon.recipebinder.data.Ingredient
-import com.jeffbrandon.recipebinder.data.IngredientAdapter
+import com.jeffbrandon.recipebinder.data.IngredientEditAdapter
 import com.jeffbrandon.recipebinder.data.Instruction
-import com.jeffbrandon.recipebinder.data.InstructionAdapter
+import com.jeffbrandon.recipebinder.data.InstructionEditAdapter
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.widgets.IngredientInputDialog
@@ -30,8 +34,8 @@ class EditRecipeActivity : RecipeAppActivity() {
     private lateinit var deferredDialog: Deferred<IngredientInputDialog>
     private val dialog: IngredientInputDialog by lazy { runBlocking { deferredDialog.await() } }
 
-    private lateinit var ingredientAdapter: IngredientAdapter
-    private lateinit var instructionAdapter: InstructionAdapter
+    private lateinit var ingredientEditAdapter: IngredientEditAdapter
+    private lateinit var instructionEditAdapter: InstructionEditAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +52,12 @@ class EditRecipeActivity : RecipeAppActivity() {
                 val cookTime = if(currentRecipe.cookTime == 0) ""
                 else currentRecipe.cookTime.toString()
                 launch(Dispatchers.Main) {
-                    ingredientAdapter = populateIngredients(ingredients)
-                    instructionAdapter = populateInstructions(instructions)
+                    ingredientEditAdapter = populateIngredients(ingredients)
+                    instructionEditAdapter = populateInstructions(instructions)
                     recipe_name.setText(currentRecipe.name)
                     cook_time.setText(cookTime)
-                    ingredients_list_view.adapter = ingredientAdapter
-                    instructions_list_view.adapter = instructionAdapter
+                    ingredients_list_view.adapter = ingredientEditAdapter
+                    instructions_list_view.adapter = instructionEditAdapter
                 }
             }
         }
@@ -61,14 +65,14 @@ class EditRecipeActivity : RecipeAppActivity() {
     }
 
     private fun setupButtonListeners() {
-        add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientAdapter) }
+        add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientEditAdapter) }
         add_instruction_button.setOnClickListener {
             instruction_input_layout.visibility = View.VISIBLE
             add_instruction_button.visibility = View.GONE
         }
         button_save_instruction.setOnClickListener {
             if(!instruction_input.text.isNullOrEmpty()) {
-                instructionAdapter.add(Instruction(instruction_input.text.toString()))
+                instructionEditAdapter.add(Instruction(instruction_input.text.toString()))
                 instruction_input.text!!.clear()
             }
             instruction_input_layout.visibility = View.GONE
@@ -77,6 +81,53 @@ class EditRecipeActivity : RecipeAppActivity() {
         button_save_recipe.setOnClickListener {
             saveRecipeState()
             //TODO: switch to view mode
+        }
+        registerForContextMenu(ingredients_list_view)
+        registerForContextMenu(instructions_list_view)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        menuInflater.inflate(R.menu.edit_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
+        return when(item.itemId) {
+            R.id.option_up -> {
+                moveItemUp(info)
+                true
+            }
+            R.id.option_down -> {
+                moveItemDown(info)
+                true
+            }
+            R.id.option_delete -> {
+                deleteItem(info)
+                true
+            }
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    private fun moveItemUp(menuInfo: AdapterView.AdapterContextMenuInfo) {
+        when(menuInfo.targetView.id) {
+            R.id.edit_ingredient_view -> ingredientEditAdapter.moveUp(menuInfo.position)
+            R.id.edit_instruction_view -> instructionEditAdapter.moveUp(menuInfo.position)
+        }
+    }
+
+    private fun moveItemDown(menuInfo: AdapterView.AdapterContextMenuInfo) {
+        when(menuInfo.targetView.id) {
+            R.id.edit_ingredient_view -> ingredientEditAdapter.moveDown(menuInfo.position)
+            R.id.edit_instruction_view -> instructionEditAdapter.moveDown(menuInfo.position)
+        }
+    }
+
+    private fun deleteItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
+        when(menuInfo.targetView.id) {
+            R.id.edit_ingredient_view -> ingredientEditAdapter.delete(menuInfo.position)
+            R.id.edit_instruction_view -> instructionEditAdapter.delete(menuInfo.position)
         }
     }
 
@@ -89,8 +140,8 @@ class EditRecipeActivity : RecipeAppActivity() {
         val name = recipe_name.text.toString()
         val time = cook_time.text.run { if(!isNullOrEmpty()) toString().toInt() else 0 }
         val tags = getTags()
-        val ingredients = ingredientAdapter.getData()
-        val instructions = instructionAdapter.getData()
+        val ingredients = ingredientEditAdapter.getData()
+        val instructions = instructionEditAdapter.getData()
         launch(Dispatchers.IO) {
             val dbInput = RecipeData(id,
                                      name,
@@ -143,19 +194,19 @@ class EditRecipeActivity : RecipeAppActivity() {
         }
     }
 
-    private fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter {
+    private fun populateIngredients(ingredients: List<Ingredient>?): IngredientEditAdapter {
         if(ingredients.isNullOrEmpty()) {
             Timber.d("No ingredients")
-            return IngredientAdapter(this, mutableListOf())
+            return IngredientEditAdapter(this, mutableListOf())
         }
-        return IngredientAdapter(this, ingredients.toMutableList())
+        return IngredientEditAdapter(this, ingredients.toMutableList())
     }
 
-    private fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter {
+    private fun populateInstructions(instructions: List<Instruction>?): InstructionEditAdapter {
         if(instructions.isNullOrEmpty()) {
             Timber.d("No instructions")
-            return InstructionAdapter(this, mutableListOf())
+            return InstructionEditAdapter(this, mutableListOf())
         }
-        return InstructionAdapter(this, instructions.toMutableList())
+        return InstructionEditAdapter(this, instructions.toMutableList())
     }
 }

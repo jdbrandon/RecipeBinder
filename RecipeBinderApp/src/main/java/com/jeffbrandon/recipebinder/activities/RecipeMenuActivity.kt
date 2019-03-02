@@ -58,7 +58,7 @@ class RecipeMenuActivity : RecipeAppActivity() {
     }
 
     private fun setupNewRecipeButton() {
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener { _ ->
             //Open a Dialog to create a recipe
             val newRecipeDialogContent = View.inflate(this, R.layout.dialog_create_recipe, null)
             val input = newRecipeDialogContent.findViewById<EditText>(R.id.input_new_recipe_name)
