@@ -68,9 +68,6 @@ class EditRecipeActivity : RecipeActivity() {
                     instructions_list_view.adapter = instructionAdapter
                     loading_panel.visibility = View.GONE
                     edit_activity_content.visibility = View.VISIBLE
-                    parent_layout.layoutParams =
-                        FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                                 FrameLayout.LayoutParams.WRAP_CONTENT)
                 }
             }
         }
