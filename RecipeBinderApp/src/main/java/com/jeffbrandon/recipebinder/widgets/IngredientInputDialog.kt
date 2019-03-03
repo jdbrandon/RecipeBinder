@@ -156,7 +156,7 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
     }
 
     private fun computeAmount(whole: String, fraction: Float): Float {
-        val n = if(whole.isEmpty()) 0 else whole.toInt()
+        val n = if(whole.isEmpty()) 0.0f else whole.toFloat()
         return n + fraction
     }
 

@@ -34,8 +34,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- TODO: add tag chips here -->
-
         <TextView
             android:id="@+id/cook_time_view"
             android:layout_width="wrap_content"
@@ -57,6 +55,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/tags_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recipe_name_view"
+            app:singleLine="true" />
+
         <TextView
             android:id="@+id/ingredients_section_title"
             android:layout_width="wrap_content"
@@ -64,7 +71,7 @@
             android:text="@string/ingredients"
             android:textSize="@dimen/info_text_size"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recipe_name_view" />
+            app:layout_constraintTop_toBottomOf="@id/tags_group" />
 
         <ListView
             android:id="@+id/ingredients_list_view"

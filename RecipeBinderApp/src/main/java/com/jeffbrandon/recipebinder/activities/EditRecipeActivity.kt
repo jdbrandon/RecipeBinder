@@ -1,11 +1,14 @@
 package com.jeffbrandon.recipebinder.activities
 
 import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.FrameLayout
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.IngredientAdapter
@@ -30,14 +33,18 @@ class EditRecipeActivity : RecipeActivity() {
 
     override lateinit var ingredientAdapter: IngredientAdapter
     override lateinit var instructionAdapter: InstructionAdapter
+    private var crossToCheckAnimation: AnimatedVectorDrawableCompat? = null
+    private var checkToCrossAnimation: AnimatedVectorDrawableCompat? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupButtonListeners()
+        crossToCheckAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.cross_to_check)
+        checkToCrossAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.check_to_cross)
     }
 
     override fun launchDeferredTasks() {
-        deferredDialog = async(Dispatchers.Default) { IngredientInputDialog(this@EditRecipeActivity) }
+        deferredDialog = async { IngredientInputDialog(this@EditRecipeActivity) }
     }
 
     override fun populateViews(intent: Intent?) {
@@ -47,7 +54,6 @@ class EditRecipeActivity : RecipeActivity() {
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.database_recipe_id))
                 currentRecipe = recipePersistantData.fetchRecipe(id)
-                setTagViews(currentRecipe.tags)
                 val ingredients = currentRecipe.ingredientsJson
                 val instructions = currentRecipe.instructionsJson
                 val cookTime = if(currentRecipe.cookTime == 0) ""
@@ -55,31 +61,46 @@ class EditRecipeActivity : RecipeActivity() {
                 launch(Dispatchers.Main) {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
+                    setTagViews(currentRecipe.tags)
                     recipe_name.setText(currentRecipe.name)
                     cook_time.setText(cookTime)
                     ingredients_list_view.adapter = ingredientAdapter
                     instructions_list_view.adapter = instructionAdapter
                     loading_panel.visibility = View.GONE
                     edit_activity_content.visibility = View.VISIBLE
+                    parent_layout.layoutParams =
+                        FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                                                 FrameLayout.LayoutParams.WRAP_CONTENT)
                 }
             }
         }
     }
 
+    private fun addInstructionClick() {
+        button_save_recipe.visibility = View.GONE
+        instruction_input_layout.visibility = View.VISIBLE
+        add_instruction_button.setImageDrawable(crossToCheckAnimation)
+        (add_instruction_button.drawable as Animatable).start()
+        add_instruction_button.setOnClickListener { saveInstructionClick() }
+    }
+
+    private fun saveInstructionClick() {
+        if(!instruction_input.text.isNullOrEmpty()) {
+            instructionAdapter.add(Instruction(instruction_input.text.toString()))
+            instruction_input.text!!.clear()
+        }
+        button_save_recipe.visibility = View.VISIBLE
+        instruction_input_layout.visibility = View.GONE
+        hideKeyboard()
+        add_instruction_button.setImageDrawable(checkToCrossAnimation)
+        (add_instruction_button.drawable as Animatable).start()
+        add_instruction_button.setOnClickListener { addInstructionClick() }
+        registerForContextMenu(instructions_list_view)
+    }
+
     private fun setupButtonListeners() {
         add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientAdapter) }
-        add_instruction_button.setOnClickListener {
-            instruction_input_layout.visibility = View.VISIBLE
-            add_instruction_button.visibility = View.GONE
-        }
-        button_save_instruction.setOnClickListener {
-            if(!instruction_input.text.isNullOrEmpty()) {
-                instructionAdapter.add(Instruction(instruction_input.text.toString()))
-                instruction_input.text!!.clear()
-            }
-            instruction_input_layout.visibility = View.GONE
-            add_instruction_button.visibility = View.VISIBLE
-        }
+        add_instruction_button.setOnClickListener { addInstructionClick() }
         button_save_recipe.setOnClickListener {
             saveRecipeState()
             navigateToViewRecipeActivity(id)

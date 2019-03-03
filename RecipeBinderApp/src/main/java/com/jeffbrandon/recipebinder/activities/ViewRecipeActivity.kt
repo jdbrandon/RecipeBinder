@@ -3,6 +3,8 @@ package com.jeffbrandon.recipebinder.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.AppendableAdapter
 import com.jeffbrandon.recipebinder.data.Ingredient
@@ -41,9 +43,9 @@ class ViewRecipeActivity : RecipeActivity() {
                 launch(Dispatchers.Main) {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
+                    setTagViews(currentRecipe.tags)
                     recipe_name_view.text = currentRecipe.name
                     cook_time_view.text = cookTime
-                    setTagViews(currentRecipe.tags)
                     ingredients_list_view.adapter = ingredientAdapter
                     instructions_list_view.adapter = instructionAdapter
                     loading_panel.visibility = View.GONE
@@ -54,6 +56,15 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     override fun setTagViews(tags: List<RecipeTag>) {
+        val chipGroup = tags_group
+        for(tag in tags) {
+            val tagChip = Chip(this).apply {
+                text = tag.toString()
+                layoutParams =
+                    ChipGroup.LayoutParams(ChipGroup.LayoutParams.WRAP_CONTENT, ChipGroup.LayoutParams.WRAP_CONTENT)
+            }
+            chipGroup.addView(tagChip)
+        }
     }
 
     override fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter {

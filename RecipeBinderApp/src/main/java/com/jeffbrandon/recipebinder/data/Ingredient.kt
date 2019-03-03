@@ -187,7 +187,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
                 append(" 1/4")
             }
             "33" -> num.apply {
-                append(" 1/3)")
+                append(" 1/3")
             }
             "50" -> num.apply {
                 append(" 1/2")
