@@ -1,9 +1,9 @@
 package com.jeffbrandon.recipebinder.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
@@ -30,6 +30,7 @@ class RecipeMenuActivity : RecipeAppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         deferredMenuAdapter = async(Dispatchers.IO) {
             ArrayAdapter(this@RecipeMenuActivity,
                          android.R.layout.simple_list_item_1,
@@ -44,9 +45,8 @@ class RecipeMenuActivity : RecipeAppActivity() {
             if(pos < recipe_list_view.size) {
                 val item = recipe_list_view[pos] as AppCompatTextView
                 Timber.i("id: $id ${item.text} clicked.")
-                //TODO Open recipe view activity instead of edit
                 launch(Dispatchers.Default) {
-                    navigateToEditRecipeActivity(id + 1) //TODO: hackish need to fix
+                    navigateToViewRecipeActivity(id + 1) //TODO: hackish need to fix
                 }
             } else Timber.d("$pos was out of bounds")
         }
@@ -95,12 +95,6 @@ class RecipeMenuActivity : RecipeAppActivity() {
                 }
                 .show()
         }
-    }
-
-    private fun navigateToEditRecipeActivity(id: Long) {
-        val i = Intent(this, EditRecipeActivity::class.java)
-        i.putExtra(getString(R.string.database_recipe_id), id)
-        startActivity(i)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

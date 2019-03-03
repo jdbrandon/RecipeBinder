@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
 
-abstract class AppendableAdapter<T>(private val context: Context, private val dataSource: MutableList<T>) :
+abstract class AppendableAdapter<T>(private val context: Context, protected val dataSource: MutableList<T>) :
     BaseAdapter() {
     protected val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 

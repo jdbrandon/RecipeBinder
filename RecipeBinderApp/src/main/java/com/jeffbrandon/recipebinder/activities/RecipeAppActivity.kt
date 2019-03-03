@@ -1,7 +1,11 @@
 package com.jeffbrandon.recipebinder.activities
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeDao
@@ -43,5 +47,25 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
     override fun onDestroy() {
         super.onDestroy()
         job.cancel()
+    }
+
+    protected fun navigateToEditRecipeActivity(id: Long) {
+        val i = Intent(this, EditRecipeActivity::class.java)
+        i.putExtra(getString(R.string.database_recipe_id), id)
+        startActivity(i)
+    }
+
+    protected fun navigateToViewRecipeActivity(id: Long) {
+        val i = Intent(this, ViewRecipeActivity::class.java)
+        i.putExtra(getString(R.string.database_recipe_id), id)
+        startActivity(i)
+    }
+
+    protected fun hideKeyboard() {
+        val view = findViewById<View>(android.R.id.content)
+        if(view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }

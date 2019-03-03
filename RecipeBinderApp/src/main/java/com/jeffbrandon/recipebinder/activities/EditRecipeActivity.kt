@@ -1,16 +1,19 @@
 package com.jeffbrandon.recipebinder.activities
 
+import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.FrameLayout
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.jeffbrandon.recipebinder.R
-import com.jeffbrandon.recipebinder.data.AppendableAdapter
 import com.jeffbrandon.recipebinder.data.Ingredient
-import com.jeffbrandon.recipebinder.data.IngredientEditAdapter
+import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.data.Instruction
-import com.jeffbrandon.recipebinder.data.InstructionEditAdapter
+import com.jeffbrandon.recipebinder.data.InstructionAdapter
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.widgets.IngredientInputDialog
@@ -23,64 +26,80 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
-class EditRecipeActivity : RecipeAppActivity() {
+class EditRecipeActivity : RecipeActivity() {
 
-    companion object {
-        private const val BAD_ID: Long = -1
-    }
-
-    private var id: Long = BAD_ID
-    private lateinit var currentRecipe: RecipeData
     private lateinit var deferredDialog: Deferred<IngredientInputDialog>
     private val dialog: IngredientInputDialog by lazy { runBlocking { deferredDialog.await() } }
 
-    private lateinit var ingredientEditAdapter: IngredientEditAdapter
-    private lateinit var instructionEditAdapter: InstructionEditAdapter
+    override lateinit var ingredientAdapter: IngredientAdapter
+    override lateinit var instructionAdapter: InstructionAdapter
+    private var crossToCheckAnimation: AnimatedVectorDrawableCompat? = null
+    private var checkToCrossAnimation: AnimatedVectorDrawableCompat? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupButtonListeners()
+        crossToCheckAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.cross_to_check)
+        checkToCrossAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.check_to_cross)
+    }
+
+    override fun launchDeferredTasks() {
         deferredDialog = async { IngredientInputDialog(this@EditRecipeActivity) }
+    }
+
+    override fun populateViews(intent: Intent?) {
         intent?.apply {
             setContentView(R.layout.activity_edit_recipe)
 
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.database_recipe_id))
                 currentRecipe = recipePersistantData.fetchRecipe(id)
-                setTags(currentRecipe.tags)
                 val ingredients = currentRecipe.ingredientsJson
                 val instructions = currentRecipe.instructionsJson
                 val cookTime = if(currentRecipe.cookTime == 0) ""
                 else currentRecipe.cookTime.toString()
                 launch(Dispatchers.Main) {
-                    ingredientEditAdapter = populateIngredients(ingredients)
-                    instructionEditAdapter = populateInstructions(instructions)
+                    ingredientAdapter = populateIngredients(ingredients)
+                    instructionAdapter = populateInstructions(instructions)
+                    setTagViews(currentRecipe.tags)
                     recipe_name.setText(currentRecipe.name)
                     cook_time.setText(cookTime)
-                    ingredients_list_view.adapter = ingredientEditAdapter
-                    instructions_list_view.adapter = instructionEditAdapter
+                    ingredients_list_view.adapter = ingredientAdapter
+                    instructions_list_view.adapter = instructionAdapter
+                    loading_panel.visibility = View.GONE
+                    edit_activity_content.visibility = View.VISIBLE
                 }
             }
         }
-        setupButtonListeners()
+    }
+
+    private fun addInstructionClick() {
+        button_save_recipe.visibility = View.GONE
+        instruction_input_layout.visibility = View.VISIBLE
+        add_instruction_button.setImageDrawable(crossToCheckAnimation)
+        (add_instruction_button.drawable as Animatable).start()
+        add_instruction_button.setOnClickListener { saveInstructionClick() }
+    }
+
+    private fun saveInstructionClick() {
+        if(!instruction_input.text.isNullOrEmpty()) {
+            instructionAdapter.add(Instruction(instruction_input.text.toString()))
+            instruction_input.text!!.clear()
+        }
+        button_save_recipe.visibility = View.VISIBLE
+        instruction_input_layout.visibility = View.GONE
+        hideKeyboard()
+        add_instruction_button.setImageDrawable(checkToCrossAnimation)
+        (add_instruction_button.drawable as Animatable).start()
+        add_instruction_button.setOnClickListener { addInstructionClick() }
     }
 
     private fun setupButtonListeners() {
-        add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientEditAdapter) }
-        add_instruction_button.setOnClickListener {
-            instruction_input_layout.visibility = View.VISIBLE
-            add_instruction_button.visibility = View.GONE
-        }
-        button_save_instruction.setOnClickListener {
-            if(!instruction_input.text.isNullOrEmpty()) {
-                instructionEditAdapter.add(Instruction(instruction_input.text.toString()))
-                instruction_input.text!!.clear()
-            }
-            instruction_input_layout.visibility = View.GONE
-            add_instruction_button.visibility = View.VISIBLE
-        }
+        add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientAdapter) }
+        add_instruction_button.setOnClickListener { addInstructionClick() }
         button_save_recipe.setOnClickListener {
             saveRecipeState()
-            //TODO: switch to view mode
+            navigateToViewRecipeActivity(id)
         }
         registerForContextMenu(ingredients_list_view)
         registerForContextMenu(instructions_list_view)
@@ -112,22 +131,22 @@ class EditRecipeActivity : RecipeAppActivity() {
 
     private fun moveItemUp(menuInfo: AdapterView.AdapterContextMenuInfo) {
         when(menuInfo.targetView.id) {
-            R.id.edit_ingredient_view -> ingredientEditAdapter.moveUp(menuInfo.position)
-            R.id.edit_instruction_view -> instructionEditAdapter.moveUp(menuInfo.position)
+            R.id.ingredient_view -> ingredientAdapter.moveUp(menuInfo.position)
+            R.id.instruction_view -> instructionAdapter.moveUp(menuInfo.position)
         }
     }
 
     private fun moveItemDown(menuInfo: AdapterView.AdapterContextMenuInfo) {
         when(menuInfo.targetView.id) {
-            R.id.edit_ingredient_view -> ingredientEditAdapter.moveDown(menuInfo.position)
-            R.id.edit_instruction_view -> instructionEditAdapter.moveDown(menuInfo.position)
+            R.id.ingredient_view -> ingredientAdapter.moveDown(menuInfo.position)
+            R.id.instruction_view -> instructionAdapter.moveDown(menuInfo.position)
         }
     }
 
     private fun deleteItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
         when(menuInfo.targetView.id) {
-            R.id.edit_ingredient_view -> ingredientEditAdapter.delete(menuInfo.position)
-            R.id.edit_instruction_view -> instructionEditAdapter.delete(menuInfo.position)
+            R.id.ingredient_view -> ingredientAdapter.delete(menuInfo.position)
+            R.id.instruction_view -> instructionAdapter.delete(menuInfo.position)
         }
     }
 
@@ -140,8 +159,8 @@ class EditRecipeActivity : RecipeAppActivity() {
         val name = recipe_name.text.toString()
         val time = cook_time.text.run { if(!isNullOrEmpty()) toString().toInt() else 0 }
         val tags = getTags()
-        val ingredients = ingredientEditAdapter.getData()
-        val instructions = instructionEditAdapter.getData()
+        val ingredients = ingredientAdapter.getData()
+        val instructions = instructionAdapter.getData()
         launch(Dispatchers.IO) {
             val dbInput = RecipeData(id,
                                      name,
@@ -149,7 +168,7 @@ class EditRecipeActivity : RecipeAppActivity() {
                                      tags,
                                      ingredients,
                                      instructions)
-            if(dbInput.id != BAD_ID) {
+            if(dbInput.id != RecipeActivity.BAD_ID) {
                 recipePersistantData.updateRecipe(dbInput)
             }
         }
@@ -178,7 +197,7 @@ class EditRecipeActivity : RecipeAppActivity() {
         return res
     }
 
-    private fun setTags(tags: List<RecipeTag>) {
+    override fun setTagViews(tags: List<RecipeTag>) {
         for(tag in tags) {
             when(tag) {
                 RecipeTag.INSTANT_POT -> chip_instant_pot.isChecked = true
@@ -194,19 +213,21 @@ class EditRecipeActivity : RecipeAppActivity() {
         }
     }
 
-    private fun populateIngredients(ingredients: List<Ingredient>?): IngredientEditAdapter {
+    override fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter {
+        //TODO: specify view for editing
         if(ingredients.isNullOrEmpty()) {
             Timber.d("No ingredients")
-            return IngredientEditAdapter(this, mutableListOf())
+            return IngredientAdapter(this, mutableListOf())
         }
-        return IngredientEditAdapter(this, ingredients.toMutableList())
+        return IngredientAdapter(this, ingredients.toMutableList())
     }
 
-    private fun populateInstructions(instructions: List<Instruction>?): InstructionEditAdapter {
+    override fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter {
+        //TODO: specify view for editing
         if(instructions.isNullOrEmpty()) {
             Timber.d("No instructions")
-            return InstructionEditAdapter(this, mutableListOf())
+            return InstructionAdapter(this, mutableListOf())
         }
-        return InstructionEditAdapter(this, instructions.toMutableList())
+        return InstructionAdapter(this, instructions.toMutableList())
     }
 }

@@ -48,4 +48,6 @@
     <string name="delete">Delete</string>
     <string name="move_down">Move Down</string>
     <string name="move_up">Move Up</string>
+    <string name="min">min</string>
+    <string name="instruction">instruction</string>
 </resources>
