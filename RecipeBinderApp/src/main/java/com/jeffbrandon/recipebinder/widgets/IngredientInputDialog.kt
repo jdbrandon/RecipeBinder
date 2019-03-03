@@ -10,7 +10,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
-import com.jeffbrandon.recipebinder.data.IngredientEditAdapter
+import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.enums.UnitType
 
 class IngredientInputDialog(context: Context) : AlertDialog(context) {
@@ -27,7 +27,7 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
             val amount = computeAmount(quantityInput.text.toString(), getSelectedFraction())
             val type = getSelectedType()
             val newIngredient = Ingredient(ingredientInput.text.toString(), amount, type)
-            ingredientEditAdapter.add(newIngredient)
+            ingredientAdapter.add(newIngredient)
             clearValues()
         }
         .setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -63,7 +63,7 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
         }
     }
 
-    private lateinit var ingredientEditAdapter: IngredientEditAdapter
+    private lateinit var ingredientAdapter: IngredientAdapter
     private lateinit var quantityInput: TextInputEditText
     private lateinit var ingredientInput: TextInputEditText
     private lateinit var fractionTextView: TextView
@@ -150,8 +150,8 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
         v.findViewById<Chip>(R.id.gram_chip).setOnClickListener { unitListener(it as Chip) }
     }
 
-    fun addIngredientListener(ingredientEditAdapter: IngredientEditAdapter) {
-        this.ingredientEditAdapter = ingredientEditAdapter
+    fun addIngredientListener(ingredientAdapter: IngredientAdapter) {
+        this.ingredientAdapter = ingredientAdapter
         dialog.show()
     }
 

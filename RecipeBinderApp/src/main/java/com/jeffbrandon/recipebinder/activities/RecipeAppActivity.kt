@@ -1,5 +1,6 @@
 package com.jeffbrandon.recipebinder.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -43,5 +44,17 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
     override fun onDestroy() {
         super.onDestroy()
         job.cancel()
+    }
+
+    protected fun navigateToEditRecipeActivity(id: Long) {
+        val i = Intent(this, EditRecipeActivity::class.java)
+        i.putExtra(getString(R.string.database_recipe_id), id)
+        startActivity(i)
+    }
+
+    protected fun navigateToViewRecipeActivity(id: Long) {
+        val i = Intent(this, ViewRecipeActivity::class.java)
+        i.putExtra(getString(R.string.database_recipe_id), id)
+        startActivity(i)
     }
 }
