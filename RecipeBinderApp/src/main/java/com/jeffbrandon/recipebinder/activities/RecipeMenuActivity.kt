@@ -45,7 +45,6 @@ class RecipeMenuActivity : RecipeAppActivity() {
             if(pos < recipe_list_view.size) {
                 val item = recipe_list_view[pos] as AppCompatTextView
                 Timber.i("id: $id ${item.text} clicked.")
-                //TODO Open recipe view activity instead of edit
                 launch(Dispatchers.Default) {
                     navigateToViewRecipeActivity(id + 1) //TODO: hackish need to fix
                 }

@@ -19,12 +19,12 @@ class RecipeTagConverter {
         @TypeConverter
         @JvmStatic
         fun toListRecipeTag(tags: Int): MutableList<RecipeTag> {
-            val res = mutableSetOf<RecipeTag>()
+            val res = mutableListOf<RecipeTag>()
             for(i in 0..RecipeTag.values().size) {
                 if((1 shl i) and tags != 0)
                     res.add(RecipeTag.values()[i])
             }
-            return res.toMutableList()
+            return res
         }
     }
 }

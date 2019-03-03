@@ -92,7 +92,6 @@ class EditRecipeActivity : RecipeActivity() {
         add_instruction_button.setImageDrawable(checkToCrossAnimation)
         (add_instruction_button.drawable as Animatable).start()
         add_instruction_button.setOnClickListener { addInstructionClick() }
-        registerForContextMenu(instructions_list_view)
     }
 
     private fun setupButtonListeners() {
@@ -215,6 +214,7 @@ class EditRecipeActivity : RecipeActivity() {
     }
 
     override fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter {
+        //TODO: specify view for editing
         if(ingredients.isNullOrEmpty()) {
             Timber.d("No ingredients")
             return IngredientAdapter(this, mutableListOf())
@@ -223,6 +223,7 @@ class EditRecipeActivity : RecipeActivity() {
     }
 
     override fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter {
+        //TODO: specify view for editing
         if(instructions.isNullOrEmpty()) {
             Timber.d("No instructions")
             return InstructionAdapter(this, mutableListOf())
