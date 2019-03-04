@@ -1,10 +1,9 @@
 package com.jeffbrandon.recipebinder.activities
 
 import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.view.View
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.AppendableAdapter
 import com.jeffbrandon.recipebinder.data.Ingredient
@@ -26,6 +25,7 @@ class ViewRecipeActivity : RecipeActivity() {
             launch(Dispatchers.Default) {
                 navigateToEditRecipeActivity(id)
             }
+            (edit_recipe_button.drawable as Animatable).start()
         }
     }
 
@@ -58,11 +58,8 @@ class ViewRecipeActivity : RecipeActivity() {
     override fun setTagViews(tags: List<RecipeTag>) {
         val chipGroup = tags_group
         for(tag in tags) {
-            val tagChip = Chip(this).apply {
-                text = tag.toString()
-                layoutParams =
-                    ChipGroup.LayoutParams(ChipGroup.LayoutParams.WRAP_CONTENT, ChipGroup.LayoutParams.WRAP_CONTENT)
-            }
+            val tagChip = tag.toChipView(this)
+            tagChip.isCheckable = false
             chipGroup.addView(tagChip)
         }
     }

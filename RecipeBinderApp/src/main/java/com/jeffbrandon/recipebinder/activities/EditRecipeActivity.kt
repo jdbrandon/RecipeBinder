@@ -214,7 +214,6 @@ class EditRecipeActivity : RecipeActivity() {
     }
 
     override fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter {
-        //TODO: specify view for editing
         if(ingredients.isNullOrEmpty()) {
             Timber.d("No ingredients")
             return IngredientAdapter(this, mutableListOf())
@@ -223,11 +222,10 @@ class EditRecipeActivity : RecipeActivity() {
     }
 
     override fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter {
-        //TODO: specify view for editing
         if(instructions.isNullOrEmpty()) {
             Timber.d("No instructions")
-            return InstructionAdapter(this, mutableListOf())
+            return InstructionAdapter(this, mutableListOf(), R.layout.instruction_edit_item)
         }
-        return InstructionAdapter(this, instructions.toMutableList())
+        return InstructionAdapter(this, instructions.toMutableList(), R.layout.instruction_edit_item)
     }
 }

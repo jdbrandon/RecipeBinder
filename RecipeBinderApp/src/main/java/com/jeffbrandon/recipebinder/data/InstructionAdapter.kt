@@ -3,7 +3,7 @@ package com.jeffbrandon.recipebinder.data
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
+import android.widget.TextView
 import com.jeffbrandon.recipebinder.R
 
 class InstructionAdapter(context: Context,
@@ -14,7 +14,7 @@ class InstructionAdapter(context: Context,
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(layout, parent, false)
         view.id = R.id.instruction_view
-        val textView = view.findViewById(R.id.instruction_text) as AppCompatTextView?
+        val textView = view.findViewById<TextView>(R.id.instruction_text)
         dataSource[position].let { instruction ->
             textView?.apply { text = instruction.text }
         }

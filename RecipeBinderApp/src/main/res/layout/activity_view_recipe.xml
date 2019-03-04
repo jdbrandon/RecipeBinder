@@ -29,8 +29,8 @@
             android:id="@+id/recipe_name_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RecipeName"
             android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,7 +39,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="30"
             android:textSize="@dimen/info_text_size"
             app:layout_constraintEnd_toStartOf="@id/min_view"
             app:layout_constraintTop_toTopOf="parent" />
@@ -73,13 +72,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tags_group" />
 
-        <ListView
-            android:id="@+id/ingredients_list_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/ingredients_list_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintHeight_max="130dp"
+            app:layout_constraintHeight_min="100dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
-            app:layout_constraintWidth_percent="90" />
+            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title">
+
+            <ListView
+                android:id="@+id/ingredients_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/instructions_section_view"
@@ -88,15 +95,23 @@
             android:text="@string/instructions"
             android:textSize="@dimen/info_text_size"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view" />
+            app:layout_constraintTop_toBottomOf="@id/ingredients_list_layout" />
 
-        <ListView
-            android:id="@+id/instructions_list_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/instructions_list_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintHeight_max="250dp"
+            app:layout_constraintHeight_min="100dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instructions_section_view"
-            app:layout_constraintWidth_percent="90" />
+            app:layout_constraintTop_toBottomOf="@id/instructions_section_view">
+
+            <ListView
+                android:id="@+id/instructions_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_recipe_button"
@@ -105,6 +120,6 @@
             android:layout_margin="@dimen/fab_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_mode_edit_white_24dp" />
+            app:srcCompat="@drawable/edit_blast_off" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

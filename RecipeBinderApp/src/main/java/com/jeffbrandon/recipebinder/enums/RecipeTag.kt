@@ -1,5 +1,9 @@
 package com.jeffbrandon.recipebinder.enums
 
+import android.content.Context
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+
 enum class RecipeTag {
     INSTANT_POT,
     STOVE,
@@ -22,6 +26,14 @@ enum class RecipeTag {
             HEALTHY -> "Healthy"
             VEGETARIAN -> "Vegetarian"
             VEGAN -> "Vegan"
+        }
+    }
+
+    fun toChipView(context: Context): Chip {
+        return Chip(context).apply {
+            text = this@RecipeTag.toString()
+            layoutParams =
+                ChipGroup.LayoutParams(ChipGroup.LayoutParams.WRAP_CONTENT, ChipGroup.LayoutParams.WRAP_CONTENT)
         }
     }
 }

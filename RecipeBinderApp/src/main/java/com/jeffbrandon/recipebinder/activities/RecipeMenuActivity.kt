@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.view.WindowManager
-import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.get
 import androidx.core.view.size
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.data.RecipeAdapter
 import com.jeffbrandon.recipebinder.room.RecipeData
 import kotlinx.android.synthetic.main.activity_recipe_menu.*
 import kotlinx.android.synthetic.main.content_recipe_menu.*
@@ -24,29 +24,29 @@ import timber.log.Timber
 
 class RecipeMenuActivity : RecipeAppActivity() {
 
-    private lateinit var deferredMenuAdapter: Deferred<ArrayAdapter<String>>
+    private lateinit var deferredMenuAdapter: Deferred<RecipeAdapter>
 
-    private val recipeMenuAdapter: ArrayAdapter<String> by lazy { runBlocking { deferredMenuAdapter.await() } }
+    private val recipeMenuAdapter: RecipeAdapter by lazy { runBlocking { deferredMenuAdapter.await() } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         deferredMenuAdapter = async(Dispatchers.IO) {
-            ArrayAdapter(this@RecipeMenuActivity,
-                         android.R.layout.simple_list_item_1,
-                         recipePersistantData.fetchRecipeNames()
+            RecipeAdapter(this@RecipeMenuActivity,
+                          recipePersistantData.fetchAllRecipes().toMutableList()
             )
         }
         setContentView(R.layout.activity_recipe_menu)
         setSupportActionBar(toolbar)
-
         setupNewRecipeButton()
         recipe_list_view.setOnItemClickListener { _, _, pos, id ->
             if(pos < recipe_list_view.size) {
-                val item = recipe_list_view[pos] as AppCompatTextView
-                Timber.i("id: $id ${item.text} clicked.")
+                val item = recipe_list_view[pos]
+                val recipeId = item.findViewById<TextView>(R.id.id_view)
+                val name = item.findViewById<TextView>(R.id.recipe_name)
+                Timber.i("id: $id. dbID: ${recipeId.text}, ${name.text} clicked.")
                 launch(Dispatchers.Default) {
-                    navigateToViewRecipeActivity(id + 1) //TODO: hackish need to fix
+                    navigateToViewRecipeActivity(recipeId.text.toString().toLong())
                 }
             } else Timber.d("$pos was out of bounds")
         }
@@ -58,7 +58,7 @@ class RecipeMenuActivity : RecipeAppActivity() {
     }
 
     private fun setupNewRecipeButton() {
-        fab.setOnClickListener { _ ->
+        fab.setOnClickListener {
             //Open a Dialog to create a recipe
             val newRecipeDialogContent = View.inflate(this, R.layout.dialog_create_recipe, null)
             val input = newRecipeDialogContent.findViewById<EditText>(R.id.input_new_recipe_name)
@@ -77,7 +77,6 @@ class RecipeMenuActivity : RecipeAppActivity() {
                             R.string.toast_recipe_name, Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        recipeMenuAdapter.add(name)
                         launch(Dispatchers.IO) {
                             //add basic recipe to db
                             val r = RecipeData()
