@@ -1,7 +1,6 @@
 package com.jeffbrandon.recipebinder.data
 
 import android.content.Context
-import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -16,15 +15,17 @@ class RecipeAdapter(context: Context, recipeList: MutableList<RecipeData>) :
         val idView = view.findViewById<TextView>(R.id.id_view)
         val nameView = view.findViewById<TextView>(R.id.recipe_name)
         val tagsGroup = view.findViewById<ChipGroup>(R.id.tags_group)
+        val cookTimeView = view.findViewById<TextView>(R.id.cook_time)
         dataSource[position].run {
             idView.text = id.toString()
             nameView.text = name
-            nameView.setTextSize(TypedValue.COMPLEX_UNIT_PT, 11.0f)
-            for(tag in tags) {
-                val chip = tag.toChipView(context)
-                chip.isCheckable = false
-                tagsGroup.addView(chip)
-            }
+            cookTimeView.text = if(cookTime == 0) "" else context.getString(R.string.cook_time_format).format(cookTime)
+            if(tagsGroup.childCount == 0)
+                for(tag in tags) {
+                    val chip = tag.toChipView(context)
+                    chip.isCheckable = false
+                    tagsGroup.addView(chip)
+                }
         }
         return view
     }

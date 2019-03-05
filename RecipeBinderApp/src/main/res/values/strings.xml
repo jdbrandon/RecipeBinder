@@ -30,11 +30,11 @@
     <string name="table_spoon">Table Spoon</string>
     <string name="ounce">Ounce</string>
     <string name="cup">Cup</string>
-    <string name="_3_quarters"><![CDATA[&#190;]]></string>
+    <string name="_3_quarters">3/4</string>
     <string name="_2_thirds">2/3</string>
-    <string name="_1_half"><![CDATA[&#189;]]></string>
-    <string name="_1_third"><![CDATA[&#8531;]]></string>
-    <string name="_1_quarter"><![CDATA[&#188;]]></string>
+    <string name="_1_half">1/2</string>
+    <string name="_1_third">1/3</string>
+    <string name="_1_quarter">1/4</string>
     <string name="_0">0</string>
     <string name="symbol_dot">.</string>
     <string name="ingredient">Ingredient</string>
@@ -49,4 +49,5 @@
     <string name="move_up">Move Up</string>
     <string name="min">min</string>
     <string name="instruction">instruction</string>
+    <string name="cook_time_format">%d min</string>
 </resources>

@@ -2,8 +2,10 @@ package com.jeffbrandon.recipebinder.activities
 
 import android.content.Intent
 import android.graphics.drawable.Animatable
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.AppendableAdapter
 import com.jeffbrandon.recipebinder.data.Ingredient
@@ -18,15 +20,24 @@ import kotlinx.coroutines.launch
 class ViewRecipeActivity : RecipeActivity() {
     override lateinit var ingredientAdapter: AppendableAdapter<Ingredient>
     override lateinit var instructionAdapter: AppendableAdapter<Instruction>
+    private var editButtonAnimatedVector: AnimatedVectorDrawableCompat? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         edit_recipe_button.setOnClickListener {
             launch(Dispatchers.Default) {
-                navigateToEditRecipeActivity(id)
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    navigateToEditRecipeActivity(id, recipe_name_view, getString(R.string.name_transition))
+                } else navigateToEditRecipeActivity(id)
             }
             (edit_recipe_button.drawable as Animatable).start()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        editButtonAnimatedVector = AnimatedVectorDrawableCompat.create(this, R.drawable.edit_blast_off)
+        edit_recipe_button.setImageDrawable(editButtonAnimatedVector)
     }
 
     override fun populateViews(intent: Intent?) {
@@ -38,8 +49,7 @@ class ViewRecipeActivity : RecipeActivity() {
                 val ingredients = currentRecipe.ingredientsJson
                 val instructions = currentRecipe.instructionsJson
                 val cookTime = if(currentRecipe.cookTime == 0) ""
-                else currentRecipe.cookTime.toString()
-                if(cookTime.isEmpty()) min_view.visibility = View.GONE
+                else getString(R.string.cook_time_format).format(currentRecipe.cookTime)
                 launch(Dispatchers.Main) {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)

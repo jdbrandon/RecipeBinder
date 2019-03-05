@@ -1,11 +1,13 @@
 package com.jeffbrandon.recipebinder.activities
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeDao
@@ -16,12 +18,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 
 abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
 
-    protected lateinit var job: Job
+    private lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
 
@@ -49,16 +52,44 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
         job.cancel()
     }
 
+    @RequiresApi(21)
+    private fun navigateTo(i: Intent, sharedElement: View? = null, sharedName: String? = null) {
+        launch(Dispatchers.Main) {
+            startActivity(i,
+                          ActivityOptions.makeSceneTransitionAnimation(this@RecipeAppActivity,
+                                                                       sharedElement,
+                                                                       sharedName).toBundle())
+        }
+    }
+
     protected fun navigateToEditRecipeActivity(id: Long) {
-        val i = Intent(this, EditRecipeActivity::class.java)
-        i.putExtra(getString(R.string.database_recipe_id), id)
-        startActivity(i)
+        startActivity(getEditActivityIntent(id))
+    }
+
+    @RequiresApi(21)
+    protected fun navigateToEditRecipeActivity(id: Long, sharedElement: View, sharedName: String) {
+        navigateTo(getEditActivityIntent(id), sharedElement, sharedName)
     }
 
     protected fun navigateToViewRecipeActivity(id: Long) {
-        val i = Intent(this, ViewRecipeActivity::class.java)
-        i.putExtra(getString(R.string.database_recipe_id), id)
-        startActivity(i)
+        startActivity(getViewActivityIntent(id))
+    }
+
+    @RequiresApi(21)
+    protected fun navigateToViewRecipeActivity(id: Long, sharedElement: View, sharedName: String) {
+        navigateTo(getViewActivityIntent(id), sharedElement, sharedName)
+    }
+
+    private fun getEditActivityIntent(id: Long): Intent {
+        return Intent(this, EditRecipeActivity::class.java).apply {
+            putExtra(getString(R.string.database_recipe_id), id)
+        }
+    }
+
+    private fun getViewActivityIntent(id: Long): Intent {
+        return Intent(this, ViewRecipeActivity::class.java).apply {
+            putExtra(getString(R.string.database_recipe_id), id)
+        }
     }
 
     protected fun hideKeyboard() {

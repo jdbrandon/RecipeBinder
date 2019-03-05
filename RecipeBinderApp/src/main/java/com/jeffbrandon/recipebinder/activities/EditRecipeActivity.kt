@@ -2,12 +2,12 @@ package com.jeffbrandon.recipebinder.activities
 
 import android.content.Intent
 import android.graphics.drawable.Animatable
+import android.os.Build
 import android.os.Bundle
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.FrameLayout
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
@@ -99,7 +99,9 @@ class EditRecipeActivity : RecipeActivity() {
         add_instruction_button.setOnClickListener { addInstructionClick() }
         button_save_recipe.setOnClickListener {
             saveRecipeState()
-            navigateToViewRecipeActivity(id)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                finishAfterTransition()
+            else finish()
         }
         registerForContextMenu(ingredients_list_view)
         registerForContextMenu(instructions_list_view)
