@@ -5,6 +5,8 @@ import android.graphics.drawable.Animatable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.AppendableAdapter
@@ -28,7 +30,23 @@ class ViewRecipeActivity : RecipeActivity() {
         edit_recipe_button.setOnClickListener {
             launch(Dispatchers.Default) {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    navigateToEditRecipeActivity(id, toolbar, getString(R.string.name_transition))
+                    val namePair = Pair(recipe_name_view as View, getString(R.string.name_transition))
+                    val timePair = Pair(cook_time_view as View, getString(R.string.time_transition))
+                    val tagsPair = Pair(tags_group as View, getString(R.string.tags_transition))
+                    val ingredientsPair =
+                        Pair(ingredients_list_layout as View, getString(R.string.ingredient_layout_transition))
+                    val instructionsPair =
+                        Pair(instructions_list_layout as View, getString(R.string.instruction_layout_transition))
+                    val intent = getEditActivityIntent(id)
+                    launch(Dispatchers.Main) {
+                        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this@ViewRecipeActivity,
+                                                                                         namePair,
+                                                                                         timePair,
+                                                                                         tagsPair,
+                                                                                         ingredientsPair,
+                                                                                         instructionsPair)
+                        startActivity(intent, options.toBundle())
+                    }
                 } else navigateToEditRecipeActivity(id)
             }
             (edit_recipe_button.drawable as Animatable).start()
@@ -54,7 +72,7 @@ class ViewRecipeActivity : RecipeActivity() {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
                     setTagViews(currentRecipe.tags)
-                    toolbar.title = currentRecipe.name
+                    recipe_name_view.text = currentRecipe.name
                     cook_time_view.text = cookTime
                     ingredients_list_view.adapter = ingredientAdapter
                     instructions_list_view.adapter = instructionAdapter
@@ -66,7 +84,7 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     override fun setTagViews(tags: List<RecipeTag>) {
-        val chipGroup = tags_group
+        val chipGroup = tags_group.apply { removeAllViews() }
         for(tag in tags) {
             val tagChip = tag.toChipView(this)
             tagChip.isCheckable = false

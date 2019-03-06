@@ -62,7 +62,6 @@ class EditRecipeActivity : RecipeActivity() {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
                     setTagViews(currentRecipe.tags)
-                    toolbar.title = currentRecipe.name
                     recipe_name.setText(currentRecipe.name)
                     cook_time.setText(cookTime)
                     ingredients_list_view.adapter = ingredientAdapter
@@ -227,8 +226,8 @@ class EditRecipeActivity : RecipeActivity() {
     override fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter {
         if(instructions.isNullOrEmpty()) {
             Timber.d("No instructions")
-            return InstructionAdapter(this, mutableListOf(), R.layout.instruction_edit_item)
+            return InstructionAdapter(this, mutableListOf())
         }
-        return InstructionAdapter(this, instructions.toMutableList(), R.layout.instruction_edit_item)
+        return InstructionAdapter(this, instructions.toMutableList())
     }
 }

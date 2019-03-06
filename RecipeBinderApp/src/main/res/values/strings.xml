@@ -60,4 +60,8 @@
     <string name="healthy">Healthy</string>
     <string name="vegetarian">Vegetarian</string>
     <string name="vegan">Vegan</string>
+    <string name="time_transition">timeTransitionId</string>
+    <string name="tags_transition">tagsTransitionId</string>
+    <string name="ingredient_layout_transition">ingredientLayoutTransitionId</string>
+    <string name="instruction_layout_transition">instructionLayoutTransitionId</string>
 </resources>

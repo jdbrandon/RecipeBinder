@@ -1,9 +1,11 @@
 package com.jeffbrandon.recipebinder.data
 
+import androidx.core.app.ActivityOptionsCompat
 import android.content.Context
 import android.os.Build
 import android.view.View
 import android.widget.TextView
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.ChipGroup
 import com.jeffbrandon.recipebinder.R
@@ -23,10 +25,14 @@ class RecipeViewHolder(context: Context, view: View, activity: RecipeAppActivity
             val recipeId = view.findViewById<TextView>(R.id.id_view)
             Timber.i("id: $recipeId. dbID: ${recipeId.text}, ${nameView.text} clicked.")
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                nameView.transitionName = context.getString(R.string.name_transition)
-                activity.navigateToViewRecipeActivity(recipeId.text.toString().toLong(),
-                                                      nameView,
-                                                      context.getString(R.string.name_transition))
+                //Setup transition to view activity
+                val namePair = Pair(nameView as View, context.getString(R.string.name_transition))
+                val timePair = Pair(timeView as View, context.getString(R.string.time_transition))
+                val tagsPair = Pair(tagsGroup as View, context.getString(R.string.tags_transition))
+                val intent = activity.getViewActivityIntent(recipeId.text.toString().toLong())
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                                                                                 namePair, timePair, tagsPair)
+                activity.startActivity(intent, options.toBundle())
             } else
                 activity.navigateToViewRecipeActivity(recipeId.text.toString().toLong())
 
