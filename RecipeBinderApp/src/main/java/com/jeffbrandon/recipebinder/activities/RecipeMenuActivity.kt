@@ -39,9 +39,9 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        recipeLiveData = recipePersistentData.fetchAllRecipes()
-        recipeLiveData.observe(this, this)
         deferredMenuAdapter = async(Dispatchers.IO) {
+            recipeLiveData = recipePersistentData.fetchAllRecipes()
+            launch(Dispatchers.Main) { recipeLiveData.observe(this@RecipeMenuActivity, this@RecipeMenuActivity) }
             RecipeAdapter(this@RecipeMenuActivity,
                           recipeLiveData.value?.toMutableList() ?: mutableListOf()
             )
