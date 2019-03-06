@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants">
 
     <TextView
@@ -17,7 +17,8 @@
         android:id="@+id/recipe_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="11pt"
+        android:textSize="@dimen/recipe_menu_item_text_size"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,17 +26,26 @@
         android:id="@+id/cook_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textSize="11pt"
-        app:layout_constraintStart_toEndOf="@id/recipe_name"
+        android:layout_marginEnd="8dp"
+        android:textSize="@dimen/recipe_menu_item_text_size"
+        app:layout_constraintEnd_toStartOf="@id/minutes_view"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/minutes_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:contentDescription="@string/minutes"
+        app:layout_constraintBottom_toBottomOf="@id/cook_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_hourglass_empty_black_24dp" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/tags_group"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/recipe_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

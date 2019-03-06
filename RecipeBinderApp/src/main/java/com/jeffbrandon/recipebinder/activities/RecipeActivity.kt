@@ -27,6 +27,10 @@ abstract class RecipeActivity : RecipeAppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         launchDeferredTasks()
+    }
+
+    override fun onResume() {
+        super.onResume()
         populateViews(intent)
     }
 

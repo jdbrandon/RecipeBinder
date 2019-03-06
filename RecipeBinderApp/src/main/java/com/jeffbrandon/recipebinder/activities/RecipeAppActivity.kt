@@ -29,7 +29,7 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
         get() = job + Dispatchers.Main
 
     private lateinit var deferredDb: Deferred<RecipeDao>
-    protected val recipePersistantData by lazy { runBlocking { deferredDb.await() } }
+    protected val recipePersistentData by lazy { runBlocking { deferredDb.await() } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,21 +62,21 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    protected fun navigateToEditRecipeActivity(id: Long) {
+    fun navigateToEditRecipeActivity(id: Long) {
         startActivity(getEditActivityIntent(id))
     }
 
     @RequiresApi(21)
-    protected fun navigateToEditRecipeActivity(id: Long, sharedElement: View, sharedName: String) {
+    fun navigateToEditRecipeActivity(id: Long, sharedElement: View, sharedName: String) {
         navigateTo(getEditActivityIntent(id), sharedElement, sharedName)
     }
 
-    protected fun navigateToViewRecipeActivity(id: Long) {
+    fun navigateToViewRecipeActivity(id: Long) {
         startActivity(getViewActivityIntent(id))
     }
 
     @RequiresApi(21)
-    protected fun navigateToViewRecipeActivity(id: Long, sharedElement: View, sharedName: String) {
+    fun navigateToViewRecipeActivity(id: Long, sharedElement: View, sharedName: String) {
         navigateTo(getViewActivityIntent(id), sharedElement, sharedName)
     }
 

@@ -38,6 +38,7 @@ class EditRecipeActivity : RecipeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_edit_recipe)
         setupButtonListeners()
         crossToCheckAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.cross_to_check)
         checkToCrossAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.check_to_cross)
@@ -49,11 +50,10 @@ class EditRecipeActivity : RecipeActivity() {
 
     override fun populateViews(intent: Intent?) {
         intent?.apply {
-            setContentView(R.layout.activity_edit_recipe)
 
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.database_recipe_id))
-                currentRecipe = recipePersistantData.fetchRecipe(id)
+                currentRecipe = recipePersistentData.fetchRecipe(id)
                 val ingredients = currentRecipe.ingredientsJson
                 val instructions = currentRecipe.instructionsJson
                 val cookTime = if(currentRecipe.cookTime == 0) ""
@@ -62,6 +62,7 @@ class EditRecipeActivity : RecipeActivity() {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
                     setTagViews(currentRecipe.tags)
+                    toolbar.title = currentRecipe.name
                     recipe_name.setText(currentRecipe.name)
                     cook_time.setText(cookTime)
                     ingredients_list_view.adapter = ingredientAdapter
@@ -152,8 +153,8 @@ class EditRecipeActivity : RecipeActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         saveRecipeState()
     }
 
@@ -171,7 +172,7 @@ class EditRecipeActivity : RecipeActivity() {
                                      ingredients,
                                      instructions)
             if(dbInput.id != RecipeActivity.BAD_ID) {
-                recipePersistantData.updateRecipe(dbInput)
+                recipePersistentData.updateRecipe(dbInput)
             }
         }
     }

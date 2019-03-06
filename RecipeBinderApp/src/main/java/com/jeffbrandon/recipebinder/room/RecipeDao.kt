@@ -1,5 +1,6 @@
 package com.jeffbrandon.recipebinder.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -19,7 +20,7 @@ interface RecipeDao {
     fun fetchRecipe(id: Long): RecipeData
 
     @Query("SELECT * FROM RecipeData")
-    fun fetchAllRecipes(): List<RecipeData>
+    fun fetchAllRecipes(): LiveData<List<RecipeData>>
 
     @Update
     fun updateRecipe(recipe: RecipeData)

@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="minutes">
+            android:hint="@string/minutes">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cook_time"
@@ -63,28 +63,28 @@
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Instant Pot" />
+            android:text="@string/instant_pot" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_stove"
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Stove Top" />
+            android:text="@string/stove_top" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_oven"
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Oven" />
+            android:text="@string/oven" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_sous_vide"
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sous Vide" />
+            android:text="@string/sous_vide" />
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.chip.ChipGroup
@@ -101,35 +101,35 @@
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fast" />
+            android:text="@string/fast" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_easy"
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Easy" />
+            android:text="@string/easy" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_healthy"
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Healthy" />
+            android:text="@string/healthy" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_vegetarian"
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vegetarian" />
+            android:text="@string/vegetarian" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_vegan"
             style="@style/CheckableChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vegan" />
+            android:text="@string/vegan" />
     </com.google.android.material.chip.ChipGroup>
 
     <androidx.appcompat.widget.AppCompatTextView

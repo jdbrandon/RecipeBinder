@@ -50,4 +50,14 @@
     <string name="min">min</string>
     <string name="instruction">instruction</string>
     <string name="cook_time_format">%d min</string>
+    <string name="minutes">minutes</string>
+    <string name="instant_pot">Instant Pot</string>
+    <string name="stove_top">Stove Top</string>
+    <string name="oven">Oven</string>
+    <string name="sous_vide">Sous Vide</string>
+    <string name="fast">Fast</string>
+    <string name="easy">Easy</string>
+    <string name="healthy">Healthy</string>
+    <string name="vegetarian">Vegetarian</string>
+    <string name="vegan">Vegan</string>
 </resources>

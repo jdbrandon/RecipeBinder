@@ -24,10 +24,11 @@ class ViewRecipeActivity : RecipeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_view_recipe)
         edit_recipe_button.setOnClickListener {
             launch(Dispatchers.Default) {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    navigateToEditRecipeActivity(id, recipe_name_view, getString(R.string.name_transition))
+                    navigateToEditRecipeActivity(id, toolbar, getString(R.string.name_transition))
                 } else navigateToEditRecipeActivity(id)
             }
             (edit_recipe_button.drawable as Animatable).start()
@@ -42,10 +43,9 @@ class ViewRecipeActivity : RecipeActivity() {
 
     override fun populateViews(intent: Intent?) {
         intent?.apply {
-            setContentView(R.layout.activity_view_recipe)
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.database_recipe_id))
-                currentRecipe = recipePersistantData.fetchRecipe(id)
+                currentRecipe = recipePersistentData.fetchRecipe(id)
                 val ingredients = currentRecipe.ingredientsJson
                 val instructions = currentRecipe.instructionsJson
                 val cookTime = if(currentRecipe.cookTime == 0) ""
@@ -54,7 +54,7 @@ class ViewRecipeActivity : RecipeActivity() {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
                     setTagViews(currentRecipe.tags)
-                    recipe_name_view.text = currentRecipe.name
+                    toolbar.title = currentRecipe.name
                     cook_time_view.text = cookTime
                     ingredients_list_view.adapter = ingredientAdapter
                     instructions_list_view.adapter = instructionAdapter
