@@ -20,6 +20,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
+        android:id="@+id/recipe_name_view_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -38,18 +39,131 @@
             android:textSize="@dimen/info_text_size" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/recipe_name_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:hint="@string/recipe_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/recipe_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/minutes">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cook_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cook_type_chips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipe_name_edit_layout"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_instant_pot"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/instant_pot" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_stove"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stove_top" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_oven"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/oven" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_sous_vide"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sous_vide" />
+    </com.google.android.material.chip.ChipGroup>
+
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/tags_group"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
-        app:singleLine="true" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cook_type_chips"
+        app:singleLine="false"
+        app:singleSelection="false">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_fast"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fast" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_easy"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/easy" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_healthy"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/healthy" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_vegetarian"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vegetarian" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_vegan"
+            style="@style/CheckableChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vegan" />
+    </com.google.android.material.chip.ChipGroup>
 
     <RelativeLayout
         android:id="@+id/loading_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -62,7 +176,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/ingredients_section_title"
@@ -86,8 +200,19 @@
             <ListView
                 android:id="@+id/ingredients_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:clickable="false" />
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_ingredient_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
+            app:srcCompat="@drawable/ic_add_white_24dp" />
 
         <TextView
             android:id="@+id/instructions_section_view"
@@ -97,6 +222,22 @@
             android:textSize="@dimen/info_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_list_layout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/instruction_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instructions_section_view">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/instruction_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/instruction"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/instructions_list_layout"
@@ -111,16 +252,27 @@
             <ListView
                 android:id="@+id/instructions_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:clickable="false" />
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/edit_recipe_button"
+            android:id="@+id/add_instruction_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instructions_section_view"
+            app:srcCompat="@drawable/cross_to_check" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/edit_blast_off" />
+            app:srcCompat="@drawable/edit_to_save" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

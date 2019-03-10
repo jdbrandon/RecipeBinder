@@ -50,17 +50,14 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
     }
 
     fun navigateToEditRecipeActivity(id: Long) {
-        startActivity(getEditActivityIntent(id))
+        startActivity(getViewActivityIntent(id).apply {
+            putExtra(getString(R.string.view_mode_extra),
+                     ViewRecipeActivity.EDIT)
+        })
     }
 
     fun navigateToViewRecipeActivity(id: Long) {
         startActivity(getViewActivityIntent(id))
-    }
-
-    protected fun getEditActivityIntent(id: Long): Intent {
-        return Intent(this, EditRecipeActivity::class.java).apply {
-            putExtra(getString(R.string.database_recipe_id), id)
-        }
     }
 
     fun getViewActivityIntent(id: Long): Intent {
