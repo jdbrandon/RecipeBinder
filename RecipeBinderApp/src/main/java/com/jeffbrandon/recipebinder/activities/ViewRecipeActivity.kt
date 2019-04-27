@@ -146,10 +146,7 @@ class ViewRecipeActivity : RecipeActivity() {
                 recipe_name_edit_layout.visibility = View.VISIBLE
                 add_ingredient_button.visibility = View.VISIBLE
                 add_instruction_button.visibility = View.VISIBLE
-                (cook_type_chips.children + tags_group.children).forEach {
-                    it.visibility = View.VISIBLE
-                    (it as Chip).isCheckable = true
-                }
+                setTagViews(currentRecipe.tags)
             }
         }
     }
@@ -212,8 +209,9 @@ class ViewRecipeActivity : RecipeActivity() {
                                      tags,
                                      ingredients,
                                      instructions)
-            if(dbInput.id != RecipeActivity.BAD_ID) {
+            if(dbInput.id != BAD_ID) {
                 recipePersistentData.updateRecipe(dbInput)
+                currentRecipe = dbInput
             } else Timber.w("Tried to update recipe with uninitialized id")
             launch(Dispatchers.Main) {
                 recipe_name_view.text = name
@@ -251,8 +249,9 @@ class ViewRecipeActivity : RecipeActivity() {
         (cook_type_chips.children + tags_group.children).forEach {
             (it as Chip).apply {
                 val checked = getTagForChip(it) in tags
-                isCheckable = editing
-                isChecked = checked
+                isChecked = checked // Required for data
+                isSelected = checked // Required for visual confirmation
+                isClickable = editing
                 visibility = if(checked || editing) View.VISIBLE else View.GONE
             }
         }

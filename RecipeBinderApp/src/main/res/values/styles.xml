@@ -30,6 +30,9 @@
     <style name="CheckableChip" parent="@style/Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
         <item name="android:textColor">@color/text_color_chip_state_list</item>
+        <item name="chipStrokeColor">@color/text_color_chip_state_list</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
-
 </resources>

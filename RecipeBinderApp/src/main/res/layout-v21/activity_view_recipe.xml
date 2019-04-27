@@ -43,9 +43,9 @@
             android:id="@+id/recipe_name_view_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@id/recipe_name_edit_layout"
-            app:layout_constraintTop_toTopOf="@id/recipe_name_edit_layout"
-            android:orientation="horizontal">
+            app:layout_constraintTop_toTopOf="@id/recipe_name_edit_layout">
 
             <TextView
                 android:id="@+id/recipe_name_view"
@@ -114,30 +114,26 @@
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_instant_pot"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/instant_pot" />
+                android:text="@string/instant_pot"
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_stove"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stove_top" />
+                android:text="@string/stove_top"
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_oven"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/oven" />
+                android:text="@string/oven"
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_sous_vide"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sous_vide" />
+                android:text="@string/sous_vide"
+                android:visibility="gone" />
         </com.google.android.material.chip.ChipGroup>
 
         <com.google.android.material.chip.ChipGroup
@@ -152,37 +148,32 @@
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_fast"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fast" />
+                android:text="@string/fast"
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_easy"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/easy" />
+                android:text="@string/easy"
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_healthy"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/healthy" />
+                android:text="@string/healthy"
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_vegetarian"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/vegetarian" />
+                android:text="@string/vegetarian"
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_vegan"
                 style="@style/CheckableChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/vegan" />
+                android:text="@string/vegan"
+                android:visibility="gone" />
         </com.google.android.material.chip.ChipGroup>
 
         <TextView

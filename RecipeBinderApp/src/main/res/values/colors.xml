@@ -7,8 +7,8 @@
     <color name="colorSecondary">#00b0ff</color>
     <color name="colorSecondaryVariant">#69e2ff</color>
     <color name="colorOnSecondary">#eceff1</color>
-    <color name="checked_text">#000000</color>
-    <color name="checked_background">#69e2ff</color>
-    <color name="unchecked_text">#000000</color>
+    <color name="checked_text">#ececec</color>
+    <color name="checked_background">#8c8c8c</color>
+    <color name="unchecked_text">#101010</color>
     <color name="unchecked_background">#ffffff</color>
 </resources>
