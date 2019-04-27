@@ -86,27 +86,23 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_instant_pot"
-            style="@style/CheckableChip"
-            android:text="@string/instant_pot"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/instant_pot" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_stove"
-            style="@style/CheckableChip"
-            android:text="@string/stove_top"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/stove_top" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_oven"
-            style="@style/CheckableChip"
-            android:text="@string/oven"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/oven" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_sous_vide"
-            style="@style/CheckableChip"
-            android:text="@string/sous_vide"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/sous_vide" />
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.chip.ChipGroup
@@ -120,33 +116,28 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_fast"
-            style="@style/CheckableChip"
-            android:text="@string/fast"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/fast" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_easy"
-            style="@style/CheckableChip"
-            android:text="@string/easy"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/easy" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_healthy"
-            style="@style/CheckableChip"
-            android:text="@string/healthy"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/healthy" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_vegetarian"
-            style="@style/CheckableChip"
-            android:text="@string/vegetarian"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/vegetarian" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_vegan"
-            style="@style/CheckableChip"
-            android:text="@string/vegan"
-            android:visibility="gone" />
+            style="@style/RecipeCheckableChip"
+            android:text="@string/vegan" />
     </com.google.android.material.chip.ChipGroup>
 
     <RelativeLayout

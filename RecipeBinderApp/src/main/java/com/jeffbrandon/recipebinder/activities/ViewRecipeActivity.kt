@@ -99,8 +99,8 @@ class ViewRecipeActivity : RecipeActivity() {
         add_instruction_button.setOnClickListener { addInstructionClick() }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         if(mode == EDIT)
             saveRecipeState()
     }
@@ -250,7 +250,6 @@ class ViewRecipeActivity : RecipeActivity() {
             (it as Chip).apply {
                 val checked = getTagForChip(it) in tags
                 isChecked = checked // Required for data
-                isSelected = checked // Required for visual confirmation
                 isClickable = editing
                 visibility = if(checked || editing) View.VISIBLE else View.GONE
             }
