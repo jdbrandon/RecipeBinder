@@ -24,17 +24,17 @@ class RecipeViewHolder(context: Context, view: View, activity: RecipeAppActivity
             val nameView = view.findViewById<TextView>(R.id.recipe_name)
             val recipeId = view.findViewById<TextView>(R.id.id_view)
             Timber.i("id: $recipeId. dbID: ${recipeId.text}, ${nameView.text} clicked.")
+            val intent = activity.getViewActivityIntent(recipeId.text.toString().toLong())
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //Setup transition to view activity
                 val namePair = Pair(nameView as View, context.getString(R.string.name_transition))
                 val timePair = Pair(timeView as View, context.getString(R.string.time_transition))
                 val tagsPair = Pair(tagsGroup as View, context.getString(R.string.tags_transition))
-                val intent = activity.getViewActivityIntent(recipeId.text.toString().toLong())
                 val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
                                                                                  namePair, timePair, tagsPair)
                 activity.startActivity(intent, options.toBundle())
             } else
-                activity.navigateToViewRecipeActivity(recipeId.text.toString().toLong())
+                activity.startActivity(intent)
 
         }
     }

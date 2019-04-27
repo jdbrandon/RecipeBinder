@@ -121,6 +121,6 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
     }
 
     override fun onChanged(data: List<RecipeData>) {
-        recipeMenuAdapter.updateDataSource(data)
+        recipeMenuAdapter.setDataSource(data)
     }
 }

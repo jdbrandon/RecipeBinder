@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.activities.RecipeAppActivity
 import com.jeffbrandon.recipebinder.room.RecipeData
+import timber.log.Timber
 
 class RecipeAdapter(private val activity: RecipeAppActivity, private var recipeList: MutableList<RecipeData>) :
     RecyclerView.Adapter<RecipeViewHolder>() {
@@ -32,14 +33,23 @@ class RecipeAdapter(private val activity: RecipeAppActivity, private var recipeL
         }
     }
 
-    fun getRecipe(i: Int) = recipeList[i]
+    fun getRecipe(i: Int): RecipeData {
+        if(i in 0 until recipeList.size)
+            return recipeList[i]
+        Timber.w("Attempted to get recipe $i: out of bounds")
+        return RecipeData(-1, "Unknown", 0, mutableListOf(), listOf(), listOf())
+    }
     fun deleteRecipe(i: Int): RecipeData {
-        val recipe = recipeList.removeAt(i)
-        notifyDataSetChanged()
-        return recipe
+        if(i in 0 until recipeList.size) {
+            val recipe = recipeList.removeAt(i)
+            notifyDataSetChanged()
+            return recipe
+        }
+        Timber.w("Attempted to delete recipe $i: out of bounds")
+        return RecipeData(-1, "Unknown", 0, mutableListOf(), listOf(), listOf())
     }
 
-    fun updateDataSource(t: List<RecipeData>) {
+    fun setDataSource(t: List<RecipeData>) {
         recipeList = t.toMutableList()
         notifyDataSetChanged()
     }

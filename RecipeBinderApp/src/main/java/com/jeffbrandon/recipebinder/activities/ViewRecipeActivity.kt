@@ -23,6 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import timber.log.Timber
+import java.lang.IllegalArgumentException
 
 class ViewRecipeActivity : RecipeActivity() {
     private var mode: Int = VIEW
@@ -212,7 +214,7 @@ class ViewRecipeActivity : RecipeActivity() {
                                      instructions)
             if(dbInput.id != RecipeActivity.BAD_ID) {
                 recipePersistentData.updateRecipe(dbInput)
-            }
+            } else Timber.w("Tried to update recipe with uninitialized id")
             launch(Dispatchers.Main) {
                 recipe_name_view.text = name
                 cook_time_view.text = if(time == 0) "" else time.toString()
@@ -248,30 +250,26 @@ class ViewRecipeActivity : RecipeActivity() {
         val editing = mode == EDIT
         (cook_type_chips.children + tags_group.children).forEach {
             (it as Chip).apply {
+                val checked = getTagForChip(it) in tags
                 isCheckable = editing
-                visibility = if(editing) View.VISIBLE else View.GONE
-            }
-        }
-
-        for(tag in tags) {
-            getChipForTag(tag).apply {
-                visibility = View.VISIBLE
-                isChecked = true
+                isChecked = checked
+                visibility = if(checked || editing) View.VISIBLE else View.GONE
             }
         }
     }
 
-    private fun getChipForTag(tag: RecipeTag): Chip {
-        return when(tag) {
-            RecipeTag.INSTANT_POT -> chip_instant_pot
-            RecipeTag.STOVE -> chip_stove
-            RecipeTag.OVEN -> chip_oven
-            RecipeTag.SOUS_VIDE -> chip_sous_vide
-            RecipeTag.FAST -> chip_fast
-            RecipeTag.EASY -> chip_easy
-            RecipeTag.HEALTHY -> chip_healthy
-            RecipeTag.VEGETARIAN -> chip_vegetarian
-            RecipeTag.VEGAN -> chip_vegan
+    private fun getTagForChip(chip: Chip): RecipeTag {
+        return when(chip.id) {
+            chip_instant_pot.id -> RecipeTag.INSTANT_POT
+            chip_stove.id -> RecipeTag.STOVE
+            chip_oven.id -> RecipeTag.OVEN
+            chip_sous_vide.id -> RecipeTag.SOUS_VIDE
+            chip_fast.id -> RecipeTag.FAST
+            chip_easy.id -> RecipeTag.EASY
+            chip_healthy.id -> RecipeTag.HEALTHY
+            chip_vegetarian.id -> RecipeTag.VEGETARIAN
+            chip_vegan.id -> RecipeTag.VEGAN
+            else -> throw IllegalArgumentException("Unknown chip argument")
         }
     }
 
