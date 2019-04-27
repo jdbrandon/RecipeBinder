@@ -8,16 +8,19 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
+        stage('Checkout'){
+            checkout scm
+        }
         stage('Compile') {
             steps {
                 // Compile the app and its dependencies
-                sh './gradlew.bat compileDebugSources compileReleaseSources'
+                bat './gradlew.bat compileDebugSources compileReleaseSources'
             }
         }
         stage('Unit test') {
             steps {
                 // Compile and run the unit tests for the app and its dependencies
-                sh './gradlew.bat testDebugUnitTest testReleaseUnitTest'
+                bat './gradlew.bat testDebugUnitTest testReleaseUnitTest'
 
                 // Analyse the test results and update the build result as appropriate
                 junit '**/TEST-*.xml'
@@ -26,7 +29,7 @@ pipeline {
         stage('Build APK') {
             steps {
                 // Finish building and packaging the APK
-                sh './gradlew.bat assemble'
+                bat './gradlew.bat assemble'
 
                 // Archive the APKs so that they can be downloaded from Jenkins
                 archiveArtifacts '**/*.apk'
@@ -35,7 +38,7 @@ pipeline {
         stage('Static analysis') {
             steps {
                 // Run Lint and analyse the results
-                sh './gradlew.bat lintDebug lintRelease'
+                bat './gradlew.bat lintDebug lintRelease'
                 androidLint pattern: '**/lint-results-*.xml'
             }
         }
