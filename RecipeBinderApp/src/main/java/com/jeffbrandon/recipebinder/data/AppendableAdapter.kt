@@ -4,15 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
 
-abstract class AppendableAdapter<T>(private val context: Context, protected val dataSource: MutableList<T>) :
+abstract class AppendableAdapter<T>(protected val context: Context, protected val dataSource: MutableList<T>) :
     BaseAdapter() {
     protected val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getItem(position: Int): T = dataSource[position]
-
     override fun getItemId(position: Int): Long = dataSource[position].hashCode().toLong()
-
     override fun getCount(): Int = dataSource.size
+    override fun areAllItemsEnabled(): Boolean = true
+    override fun isEnabled(position: Int): Boolean = true
 
     fun add(element: T) {
         dataSource.add(element)

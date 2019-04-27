@@ -7,7 +7,6 @@
     <string name="dialog_new_recipe_title">New Recipe</string>
     <string name="toast_recipe_name">Please enter a recipe name</string>
     <string name="database_recipe_id">recipeId</string>
-    <string name="label_edit_activity">Recipe Editor</string>
     <string name="ingredients">Ingredients</string>
     <string name="instructions">Instructions</string>
     <string name="three">3</string>
@@ -39,15 +38,22 @@
     <string name="symbol_dot">.</string>
     <string name="ingredient">Ingredient</string>
     <string name="quantity">quantity</string>
-    <string name="activity_edit_recipe_intent_mode">viewAction</string>
-    <string name="view_mode_edit">edit</string>
-    <string name="view_mode_view">view</string>
     <string name="colon">:</string>
-    <string name="cup_abbreviation">c</string>
-    <string name="new_ingredient">New Ingredient</string>
     <string name="delete">Delete</string>
     <string name="move_down">Move Down</string>
     <string name="move_up">Move Up</string>
-    <string name="min">min</string>
     <string name="instruction">instruction</string>
+    <string name="minutes">minutes</string>
+    <string name="instant_pot">Instant Pot</string>
+    <string name="stove_top">Stove Top</string>
+    <string name="oven">Oven</string>
+    <string name="sous_vide">Sous Vide</string>
+    <string name="fast">Fast</string>
+    <string name="easy">Easy</string>
+    <string name="healthy">Healthy</string>
+    <string name="vegetarian">Vegetarian</string>
+    <string name="vegan">Vegan</string>
+    <string name="time_transition">timeTransitionId</string>
+    <string name="tags_transition">tagsTransitionId</string>
+    <string name="view_mode_extra">viewMode</string>
 </resources>

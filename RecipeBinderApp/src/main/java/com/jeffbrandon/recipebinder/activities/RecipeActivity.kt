@@ -27,6 +27,10 @@ abstract class RecipeActivity : RecipeAppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         launchDeferredTasks()
+    }
+
+    override fun onResume() {
+        super.onResume()
         populateViews(intent)
     }
 
@@ -36,8 +40,18 @@ abstract class RecipeActivity : RecipeAppActivity() {
         }
     }
 
+    protected fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter {
+        if(ingredients.isNullOrEmpty())
+            return IngredientAdapter(this, mutableListOf())
+        return IngredientAdapter(this, ingredients.toMutableList())
+    }
+
+    protected fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter {
+        if(instructions.isNullOrEmpty())
+            return InstructionAdapter(this, mutableListOf())
+        return InstructionAdapter(this, instructions.toMutableList())
+    }
+
     abstract fun populateViews(intent: Intent?)
     abstract fun setTagViews(tags: List<RecipeTag>)
-    abstract fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter
-    abstract fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter
 }

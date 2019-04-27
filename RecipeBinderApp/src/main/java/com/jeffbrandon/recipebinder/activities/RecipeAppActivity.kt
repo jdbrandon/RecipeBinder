@@ -21,12 +21,12 @@ import kotlin.coroutines.CoroutineContext
 
 abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
 
-    protected lateinit var job: Job
+    private lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
 
     private lateinit var deferredDb: Deferred<RecipeDao>
-    protected val recipePersistantData by lazy { runBlocking { deferredDb.await() } }
+    protected val recipePersistentData by lazy { runBlocking { deferredDb.await() } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +49,21 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
         job.cancel()
     }
 
-    protected fun navigateToEditRecipeActivity(id: Long) {
-        val i = Intent(this, EditRecipeActivity::class.java)
-        i.putExtra(getString(R.string.database_recipe_id), id)
-        startActivity(i)
+    fun navigateToEditRecipeActivity(id: Long) {
+        startActivity(getViewActivityIntent(id).apply {
+            putExtra(getString(R.string.view_mode_extra),
+                     ViewRecipeActivity.EDIT)
+        })
     }
 
-    protected fun navigateToViewRecipeActivity(id: Long) {
-        val i = Intent(this, ViewRecipeActivity::class.java)
-        i.putExtra(getString(R.string.database_recipe_id), id)
-        startActivity(i)
+    fun navigateToViewRecipeActivity(id: Long) {
+        startActivity(getViewActivityIntent(id))
+    }
+
+    fun getViewActivityIntent(id: Long): Intent {
+        return Intent(this, ViewRecipeActivity::class.java).apply {
+            putExtra(getString(R.string.database_recipe_id), id)
+        }
     }
 
     protected fun hideKeyboard() {

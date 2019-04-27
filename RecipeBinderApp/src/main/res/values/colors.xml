@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#673AB7</color>
-    <color name="colorAccent">#03A9F4</color>
-    <color name="add_button">#44cc55</color>
-    <color name="checked_text">#dddddd</color>
-    <color name="checked_background">#2288dd</color>
-    <color name="unchecked_text">#151515</color>
-    <color name="unchecked_background">#dddddd</color>
+    <color name="colorPrimary">#388e3c</color>
+    <color name="colorPrimaryVariant">#6abf69</color>
+    <color name="colorPrimaryDark">#00600f</color>
+    <color name="colorOnPrimary">#000000</color>
+    <color name="colorSecondary">#00b0ff</color>
+    <color name="colorSecondaryVariant">#69e2ff</color>
+    <color name="colorOnSecondary">#eceff1</color>
+    <color name="checked_text">#ececec</color>
+    <color name="checked_background">#8c8c8c</color>
+    <color name="unchecked_text">#101010</color>
+    <color name="unchecked_background">#ffffff</color>
 </resources>
