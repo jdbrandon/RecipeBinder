@@ -24,7 +24,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-import java.lang.IllegalArgumentException
 
 class ViewRecipeActivity : RecipeActivity() {
     private var mode: Int = VIEW
@@ -197,12 +196,12 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun saveRecipeState() {
-        val name = recipe_name.text.toString()
-        val time = cook_time.text.run { if(!isNullOrEmpty()) toString().toInt() else 0 }
-        val tags = buildTagsList()
-        val ingredients = ingredientAdapter.getData()
-        val instructions = instructionAdapter.getData()
         launch(Dispatchers.IO) {
+            val name = recipe_name.text.toString()
+            val time = cook_time.text.run { if(!isNullOrEmpty()) toString().toInt() else 0 }
+            val tags = buildTagsList()
+            val ingredients = ingredientAdapter.getData()
+            val instructions = instructionAdapter.getData()
             val dbInput = RecipeData(id,
                                      name,
                                      time,
