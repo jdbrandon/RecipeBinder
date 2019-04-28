@@ -13,11 +13,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Prepare'){
-            steps {
-                bat 'gradlew.bat init'
-            }
-        }
         stage('Compile') {
             steps {
                 // Compile the app and its dependencies
