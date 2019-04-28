@@ -16,13 +16,15 @@ pipeline {
         stage('Compile') {
             steps {
                 // Compile the app and its dependencies
-                bat 'gradlew.bat -P"org.gradle.jvmargs"=-Xmx3g compileDebugSources compileReleaseSources --stacktrace --debug'
+                bat 'gradlew.bat compileDebugSources --stacktrace'
+                bat 'gradlew.bat compileReleaseSources --stacktrace'
             }
         }
         stage('Unit test') {
             steps {
                 // Compile and run the unit tests for the app and its dependencies
-                bat 'gradlew.bat testDebugUnitTest testReleaseUnitTest'
+                bat 'gradlew.bat testDebugUnitTest'
+                bat 'gradlew.bat testReleaseUnitTest'
 
                 // Analyse the test results and update the build result as appropriate
                 junit '**/TEST-*.xml'
@@ -40,7 +42,8 @@ pipeline {
         stage('Static analysis') {
             steps {
                 // Run Lint and analyse the results
-                bat 'gradlew.bat lintDebug lintRelease'
+                bat 'gradlew.bat lintDebug'
+                bat 'gradlew.bat lintRelease'
                 androidLint pattern: '**/lint-results-*.xml'
             }
         }
