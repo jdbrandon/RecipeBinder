@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Prepare'){
             steps {
-                bat '/gradlew.bat init'
+                bat './gradlew.bat init'
             }
         }
         stage('Compile') {
