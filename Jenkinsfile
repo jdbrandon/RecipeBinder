@@ -16,7 +16,7 @@ pipeline {
         stage('Compile') {
             steps {
                 // Compile the app and its dependencies
-                bat 'gradlew.bat compileDebugSources compileReleaseSources'
+                bat 'gradlew.bat -Porg.gradle.jvmargs=-Xmx3g compileDebugSources compileReleaseSources'
             }
         }
         stage('Unit test') {
