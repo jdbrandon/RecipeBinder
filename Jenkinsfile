@@ -13,11 +13,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Accept Licenses') {
-            steps {
-                sh 'yes | $SDK_MANAGER --licenses'
-            }
-        }
         stage('Compile') {
             steps {
                 // Compile the app and its dependencies
@@ -27,6 +22,9 @@ pipeline {
         }
         stage('Unit test') {
             steps {
+                // Clear old reports
+                sh 'rm -rf ./RecipeBinderApp/build/test-results/*'
+                sh 'rm -rf ./RecipeBinderApp/build/reports/*'
                 // Compile and run the unit tests for the app and its dependencies
                 sh './gradlew testDebugUnitTest'
                 sh './gradlew testReleaseUnitTest'
