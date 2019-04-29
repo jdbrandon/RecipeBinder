@@ -16,15 +16,15 @@ pipeline {
         stage('Compile') {
             steps {
                 // Compile the app and its dependencies
-                bat 'gradlew.bat compileDebugSources'
-                bat 'gradlew.bat compileReleaseSources'
+                sh './gradlew compileDebugSources'
+                sh './gradlew compileReleaseSources'
             }
         }
         stage('Unit test') {
             steps {
                 // Compile and run the unit tests for the app and its dependencies
-                bat 'gradlew.bat testDebugUnitTest'
-                bat 'gradlew.bat testReleaseUnitTest'
+                sh './gradlew testDebugUnitTest'
+                sh './gradlew testReleaseUnitTest'
 
                 // Analyse the test results and update the build result as appropriate
                 junit '**/TEST-*.xml'
@@ -33,7 +33,7 @@ pipeline {
         stage('Build APK') {
             steps {
                 // Finish building and packaging the APK
-                bat 'gradlew.bat assemble'
+                sh './gradlew assemble'
 
                 // Archive the APKs so that they can be downloaded from Jenkins
                 archiveArtifacts '**/*.apk'
@@ -42,8 +42,8 @@ pipeline {
         stage('Static analysis') {
             steps {
                 // Run Lint and analyse the results
-                bat 'gradlew.bat lintDebug'
-                bat 'gradlew.bat lintRelease'
+                sh './gradlew lintDebug'
+                sh './gradlew lintRelease'
                 androidLint pattern: '**/lint-results-*.xml'
             }
         }
