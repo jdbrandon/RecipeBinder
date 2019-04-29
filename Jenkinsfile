@@ -13,6 +13,11 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Accept Licenses') {
+            steps {
+                sh 'yes | $SDK_MANAGER --licenses'
+            }
+        }
         stage('Compile') {
             steps {
                 // Compile the app and its dependencies
