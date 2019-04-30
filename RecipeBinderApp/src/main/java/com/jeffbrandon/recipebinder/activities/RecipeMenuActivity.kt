@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
 import com.jeffbrandon.recipebinder.room.RecipeData
-import kotlinx.android.synthetic.main.activity_recipe_menu.*
 import kotlinx.android.synthetic.main.content_recipe_menu.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +46,6 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
             )
         }
         setContentView(R.layout.activity_recipe_menu)
-        setSupportActionBar(toolbar)
         setupNewRecipeButton()
         viewManager = LinearLayoutManager(this)
         recyclerView = recipe_recycler_view.apply {
@@ -59,7 +57,7 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
     }
 
     private fun setupNewRecipeButton() {
-        fab.setOnClickListener {
+        add_recipe_button.setOnClickListener {
             //Open a Dialog to create a recipe
             val newRecipeDialogContent = View.inflate(this, R.layout.dialog_create_recipe, null)
             val input = newRecipeDialogContent.findViewById<EditText>(R.id.input_new_recipe_name)

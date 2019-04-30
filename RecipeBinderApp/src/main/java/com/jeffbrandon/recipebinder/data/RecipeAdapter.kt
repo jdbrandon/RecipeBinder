@@ -24,12 +24,6 @@ class RecipeAdapter(private val activity: RecipeAppActivity, private var recipeL
         holder.apply {
             getId().text = recipe.id.toString()
             getName().text = recipe.name
-            getCookTime().text = if(recipe.cookTime == 0) "" else recipe.cookTime.toString()
-            getTags().removeAllViews()
-            for(tag in recipe.tags) {
-                val chip = tag.toChipView(activity)
-                getTags().addView(chip)
-            }
         }
     }
 
