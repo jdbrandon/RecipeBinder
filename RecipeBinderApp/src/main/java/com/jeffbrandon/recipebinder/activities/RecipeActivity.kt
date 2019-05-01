@@ -19,6 +19,10 @@ abstract class RecipeActivity : RecipeAppActivity() {
     }
 
     protected var id: Long = BAD_ID
+
+    /**
+     * The current [RecipeData]
+     */
     protected lateinit var currentRecipe: RecipeData
 
     abstract val ingredientAdapter: AppendableAdapter<Ingredient>
@@ -52,6 +56,8 @@ abstract class RecipeActivity : RecipeAppActivity() {
         return InstructionAdapter(this, instructions.toMutableList())
     }
 
+    /**
+     * Called in [onResume], populates views with fresh data
+     */
     abstract fun populateViews(intent: Intent?)
-    abstract fun setTagViews(tags: List<RecipeTag>)
 }

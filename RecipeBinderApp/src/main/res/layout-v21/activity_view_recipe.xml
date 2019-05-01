@@ -5,19 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_marginStart="@dimen/view_recipe_title_margin_start"
+        android:layout_marginTop="@dimen/min_margin"
+        android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
+        android:layout_marginBottom="@dimen/min_margin"
+        android:text="@string/recipe_details"
+        android:textSize="@dimen/title_text_size"
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:id="@+id/loading_panel"
@@ -36,7 +33,6 @@
         android:id="@+id/view_activity_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
         android:visibility="visible">
 
         <LinearLayout
@@ -51,16 +47,21 @@
                 android:id="@+id/recipe_name_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/info_text_size"
+                android:layout_marginStart="@dimen/view_recipe_title_margin_start"
+                android:layout_marginEnd="@dimen/min_margin"
+                android:layout_weight="4"
+                android:textSize="@dimen/item_text_size"
+                android:textStyle="bold"
                 android:transitionName="@string/name_transition" />
 
             <TextView
                 android:id="@+id/cook_time_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:textSize="@dimen/info_text_size"
-                android:transitionName="@string/time_transition" />
+                android:layout_marginStart="@dimen/min_margin"
+                android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
+                android:layout_weight="1"
+                android:textSize="@dimen/item_text_size" />
         </LinearLayout>
 
         <LinearLayout
@@ -73,10 +74,15 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_recipe_title_margin_start"
+                android:layout_marginEnd="@dimen/min_margin"
                 android:layout_weight="4"
-                android:hint="@string/recipe_name">
+                android:hint="@string/recipe_name"
+                app:boxCornerRadiusBottomEnd="4dp"
+                app:boxCornerRadiusTopEnd="4dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/recipe_name"
@@ -87,17 +93,21 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/min_margin"
+                android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
                 android:layout_weight="1"
-                android:hint="@string/minutes">
+                android:hint="@string/minutes"
+                app:boxCornerRadiusBottomStart="4dp"
+                app:boxCornerRadiusTopStart="4dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/cook_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:transitionName="@string/time_transition" />
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -106,7 +116,6 @@
             android:id="@+id/cook_type_chips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:transitionName="@string/tags_transition"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recipe_name_edit_layout"
             app:singleSelection="true">
@@ -131,7 +140,7 @@
                 style="@style/RecipeCheckableChip"
                 android:text="@string/sous_vide" />
         </com.google.android.material.chip.ChipGroup>
-
+        <!-- TODO add dish type chips -->
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/tags_group"
             android:layout_width="match_parent"
@@ -171,8 +180,11 @@
             android:id="@+id/ingredients_section_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/view_recipe_title_margin_start"
+            android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
             android:text="@string/ingredients"
-            android:textSize="@dimen/info_text_size"
+            android:textSize="@dimen/item_text_size"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tags_group" />
 
@@ -180,8 +192,10 @@
             android:id="@+id/ingredients_list_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/view_recipe_content_margin_start"
+            android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
             android:orientation="vertical"
-            app:layout_constraintHeight_max="130dp"
+            app:layout_constraintHeight_max="200dp"
             app:layout_constraintHeight_min="100dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_section_title">
@@ -197,7 +211,7 @@
             android:id="@+id/add_ingredient_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_margin="@dimen/min_margin"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
@@ -207,15 +221,21 @@
             android:id="@+id/instructions_section_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/view_recipe_title_margin_start"
+            android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
             android:text="@string/instructions"
-            android:textSize="@dimen/info_text_size"
+            android:textSize="@dimen/item_text_size"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_list_layout" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/instruction_input_layout"
+            style="@style/TextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/view_recipe_content_margin_start"
+            android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructions_section_view">
@@ -232,11 +252,13 @@
             android:id="@+id/instructions_list_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/view_recipe_content_margin_start"
+            android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
             android:orientation="vertical"
-            app:layout_constraintHeight_max="250dp"
+            app:layout_constraintHeight_max="300dp"
             app:layout_constraintHeight_min="100dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instructions_section_view">
+            app:layout_constraintTop_toBottomOf="@id/instruction_input_layout">
 
             <ListView
                 android:id="@+id/instructions_list_view"
@@ -249,7 +271,7 @@
             android:id="@+id/add_instruction_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_margin="@dimen/min_margin"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructions_section_view"

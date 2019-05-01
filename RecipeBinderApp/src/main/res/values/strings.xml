@@ -53,9 +53,9 @@
     <string name="healthy">Healthy</string>
     <string name="vegetarian">Vegetarian</string>
     <string name="vegan">Vegan</string>
-    <string name="time_transition">timeTransitionId</string>
-    <string name="tags_transition">tagsTransitionId</string>
     <string name="view_mode_extra">viewMode</string>
     <string name="recipe_filter">Recipe filter</string>
     <string name="add_recipe">Add Recipe</string>
+    <string name="recipe_details">Recipe Details</string>
+    <string name="recipe_editor">Recipe Editor</string>
 </resources>

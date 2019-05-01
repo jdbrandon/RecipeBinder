@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import androidx.core.view.children
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.chip.Chip
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.data.Instruction
@@ -33,36 +34,29 @@ class ViewRecipeActivity : RecipeActivity() {
     override lateinit var instructionAdapter: InstructionAdapter
     private var crossToCheckAnimation: AnimatedVectorDrawableCompat? = null
     private var checkToCrossAnimation: AnimatedVectorDrawableCompat? = null
-    private val editButtonAnimatedVector: AnimatedVectorDrawableCompat?
-        get() = AnimatedVectorDrawableCompat.create(this, R.drawable.edit_to_save)
+    private val editButtonAnimatedVector: AnimatedVectorDrawableCompat? =
+        AnimatedVectorDrawableCompat.create(this, R.drawable.edit_to_save)
     private val saveButtonAnimatedVector: AnimatedVectorDrawableCompat? by lazy {
         AnimatedVectorDrawableCompat.create(this,
                                             R.drawable.save_to_edit)
     }
 
-    private fun editActionListener() {
-        mode = EDIT
-        showCorrectViews()
-        action_button.setImageDrawable(editButtonAnimatedVector)
-        (action_button.drawable as Animatable).start()
-        action_button.setOnClickListener { saveActionListener() }
-    }
-
-    private fun saveActionListener() {
-        mode = VIEW
-        showCorrectViews()
-        saveRecipeState()
-        action_button.setImageDrawable(saveButtonAnimatedVector)
-        (action_button.drawable as Animatable).start()
-        action_button.setOnClickListener { editActionListener() }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_recipe)
+        setMode(intent, savedInstanceState)
         setupButtonListeners()
         crossToCheckAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.cross_to_check)
         checkToCrossAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.check_to_cross)
+    }
+
+    private fun setMode(intent: Intent?, savedInstanceState: Bundle?) {
+        intent?.run {
+            mode = getIntExtra(getString(R.string.view_mode_extra), mode)
+        }
+        savedInstanceState?.run {
+            mode = getInt(getString(R.string.view_mode_extra), mode)
+        }
     }
 
     override fun launchDeferredTasks() {
@@ -72,7 +66,10 @@ class ViewRecipeActivity : RecipeActivity() {
     private fun setupButtonListeners() {
         add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientAdapter) }
         add_instruction_button.setOnClickListener { addInstructionClick() }
-        action_button.setOnClickListener { editActionListener() }
+        when(mode) {
+            VIEW -> action_button.setOnClickListener { editActionListener() }
+            EDIT -> action_button.setAnimationCallback(saveButtonAnimatedVector) { saveActionListener() }
+        }
         registerForContextMenu(ingredients_list_view)
         registerForContextMenu(instructions_list_view)
     }
@@ -80,9 +77,20 @@ class ViewRecipeActivity : RecipeActivity() {
     private fun addInstructionClick() {
         action_button.visibility = View.GONE
         instruction_input_layout.visibility = View.VISIBLE
-        add_instruction_button.setImageDrawable(crossToCheckAnimation)
-        (add_instruction_button.drawable as Animatable).start()
-        add_instruction_button.setOnClickListener { saveInstructionClick() }
+        add_instruction_button.setAnimationCallback(crossToCheckAnimation!!) { saveInstructionClick() }
+    }
+
+    private fun editActionListener() {
+        mode = EDIT
+        showCorrectViews()
+        action_button.setAnimationCallback(editButtonAnimatedVector) { saveActionListener() }
+    }
+
+    private fun saveActionListener() {
+        mode = VIEW
+        showCorrectViews()
+        saveRecipeState()
+        action_button.setAnimationCallback(saveButtonAnimatedVector) { editActionListener() }
     }
 
     private fun saveInstructionClick() {
@@ -93,19 +101,34 @@ class ViewRecipeActivity : RecipeActivity() {
         action_button.visibility = View.VISIBLE
         instruction_input_layout.visibility = View.GONE
         hideKeyboard()
-        add_instruction_button.setImageDrawable(checkToCrossAnimation)
-        (add_instruction_button.drawable as Animatable).start()
-        add_instruction_button.setOnClickListener { addInstructionClick() }
+        add_instruction_button.setAnimationCallback(checkToCrossAnimation) { addInstructionClick() }
+    }
+
+    private fun FloatingActionButton.setAnimationCallback(animatedDrawable: AnimatedVectorDrawableCompat?,
+                                                          callback: () -> Unit) {
+        setImageDrawable(animatedDrawable)
+        (drawable as Animatable).start()
+        setOnClickListener { callback() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(getString(R.string.view_mode_extra), mode)
         super.onSaveInstanceState(outState)
         if(mode == EDIT)
             saveRecipeState()
     }
 
+    /**
+     * Called from [onResume]
+     */
     override fun populateViews(intent: Intent?) {
-        intent?.apply {
+        if(intent == null) {
+            Timber.w("No recipe ID passed through intent: not sure how to populate views")
+            Timber.i("exiting")
+            finish()
+            return // Ensures kotlin knows intent is not null
+        }
+        intent.run {
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.database_recipe_id))
                 mode = extras!!.getInt(getString(R.string.view_mode_extra), VIEW)
@@ -228,6 +251,7 @@ class ViewRecipeActivity : RecipeActivity() {
             R.id.chip_sous_vide -> mutableListOf(RecipeTag.SOUS_VIDE)
             else -> mutableListOf()
         }
+        //TODO entree side dessert soup etc. tags
         res.apply {
             if(chip_fast.isChecked)
                 add(RecipeTag.FAST)
@@ -243,8 +267,9 @@ class ViewRecipeActivity : RecipeActivity() {
         return res
     }
 
-    override fun setTagViews(tags: List<RecipeTag>) {
+    private fun setTagViews(tags: List<RecipeTag>) {
         val editing = mode == EDIT
+        //TODO add dish type tags
         (cook_type_chips.children + tags_group.children).forEach {
             (it as Chip).apply {
                 val checked = getTagForChip(it) in tags
@@ -266,6 +291,7 @@ class ViewRecipeActivity : RecipeActivity() {
             chip_healthy.id -> RecipeTag.HEALTHY
             chip_vegetarian.id -> RecipeTag.VEGETARIAN
             chip_vegan.id -> RecipeTag.VEGAN
+            //TODO add dish type tags
             else -> throw IllegalArgumentException("Unknown chip argument")
         }
     }

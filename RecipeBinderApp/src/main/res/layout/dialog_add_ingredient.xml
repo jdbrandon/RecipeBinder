@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/dialog_margin"
-    android:layout_marginBottom="@dimen/dialog_margin"
+    android:layout_marginTop="@dimen/min_margin"
+    android:layout_marginBottom="@dimen/min_margin"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/input_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginEnd="@dimen/dialog_margin"
+        android:layout_marginStart="@dimen/min_margin"
+        android:layout_marginEnd="@dimen/min_margin"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -68,8 +68,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginEnd="@dimen/dialog_margin">
+        android:layout_marginStart="@dimen/min_margin"
+        android:layout_marginEnd="@dimen/min_margin">
 
         <GridLayout
             android:id="@+id/number_grid_layout"
@@ -194,8 +194,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginEnd="@dimen/dialog_margin">
+        android:layout_marginStart="@dimen/min_margin"
+        android:layout_marginEnd="@dimen/min_margin">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/unit_chips"
