@@ -7,6 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextInputStyle"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="20dp"
         android:hint="@string/recipe_name">
 
         <com.google.android.material.textfield.TextInputEditText
