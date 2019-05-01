@@ -35,11 +35,11 @@ class ViewRecipeActivity : RecipeActivity() {
     override lateinit var instructionAdapter: InstructionAdapter
     private var crossToCheckAnimation: AnimatedVectorDrawableCompat? = null
     private var checkToCrossAnimation: AnimatedVectorDrawableCompat? = null
-    private val editButtonAnimatedVector: AnimatedVectorDrawableCompat? =
+    private val editButtonAnimatedVector: AnimatedVectorDrawableCompat? by lazy {
         AnimatedVectorDrawableCompat.create(this, R.drawable.edit_to_save)
+    }
     private val saveButtonAnimatedVector: AnimatedVectorDrawableCompat? by lazy {
-        AnimatedVectorDrawableCompat.create(this,
-                                            R.drawable.save_to_edit)
+        AnimatedVectorDrawableCompat.create(this, R.drawable.save_to_edit)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
