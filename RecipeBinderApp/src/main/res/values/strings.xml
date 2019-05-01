@@ -58,4 +58,5 @@
     <string name="add_recipe">Add Recipe</string>
     <string name="recipe_details">Recipe Details</string>
     <string name="recipe_editor">Recipe Editor</string>
+    <string name="toast_save">Recipe data saved</string>
 </resources>

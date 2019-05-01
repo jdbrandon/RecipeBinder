@@ -7,6 +7,7 @@ import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.core.view.children
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.chip.Chip
@@ -90,6 +91,7 @@ class ViewRecipeActivity : RecipeActivity() {
         mode = VIEW
         showCorrectViews()
         saveRecipeState()
+        Toast.makeText(this, getString(R.string.toast_save), Toast.LENGTH_SHORT).show()
         action_button.setAnimationCallback(saveButtonAnimatedVector) { editActionListener() }
     }
 
