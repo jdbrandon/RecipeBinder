@@ -160,12 +160,14 @@ class ViewRecipeActivity : RecipeActivity() {
     private fun showCorrectViews() {
         when(mode) {
             VIEW -> {
+                title_text_view.text = getString(R.string.recipe_details)
                 recipe_name_view_layout.visibility = View.VISIBLE
                 recipe_name_edit_layout.visibility = View.INVISIBLE
                 add_ingredient_button.visibility = View.GONE
                 add_instruction_button.visibility = View.GONE
             }
             EDIT -> {
+                title_text_view.text = getString(R.string.recipe_editor)
                 recipe_name_view_layout.visibility = View.GONE
                 recipe_name_edit_layout.visibility = View.VISIBLE
                 add_ingredient_button.visibility = View.VISIBLE
