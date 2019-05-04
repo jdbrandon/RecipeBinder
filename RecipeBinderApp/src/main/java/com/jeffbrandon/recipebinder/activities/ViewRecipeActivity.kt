@@ -69,7 +69,7 @@ class ViewRecipeActivity : RecipeActivity() {
         add_instruction_button.setOnClickListener { addInstructionClick() }
         when(mode) {
             VIEW -> action_button.setOnClickListener { editActionListener() }
-            EDIT -> action_button.setAnimationCallback(saveButtonAnimatedVector) { saveActionListener() }
+            EDIT -> action_button.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
         }
         registerForContextMenu(ingredients_list_view)
         registerForContextMenu(instructions_list_view)
@@ -78,13 +78,13 @@ class ViewRecipeActivity : RecipeActivity() {
     private fun addInstructionClick() {
         action_button.visibility = View.GONE
         instruction_input_layout.visibility = View.VISIBLE
-        add_instruction_button.setAnimationCallback(crossToCheckAnimation!!) { saveInstructionClick() }
+        add_instruction_button.animateWithCallback(crossToCheckAnimation!!) { saveInstructionClick() }
     }
 
     private fun editActionListener() {
         mode = EDIT
         showCorrectViews()
-        action_button.setAnimationCallback(editButtonAnimatedVector) { saveActionListener() }
+        action_button.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
     }
 
     private fun saveActionListener() {
@@ -92,7 +92,7 @@ class ViewRecipeActivity : RecipeActivity() {
         showCorrectViews()
         saveRecipeState()
         Toast.makeText(this, getString(R.string.toast_save), Toast.LENGTH_SHORT).show()
-        action_button.setAnimationCallback(saveButtonAnimatedVector) { editActionListener() }
+        action_button.animateWithCallback(saveButtonAnimatedVector) { editActionListener() }
     }
 
     private fun saveInstructionClick() {
@@ -103,11 +103,11 @@ class ViewRecipeActivity : RecipeActivity() {
         action_button.visibility = View.VISIBLE
         instruction_input_layout.visibility = View.GONE
         hideKeyboard()
-        add_instruction_button.setAnimationCallback(checkToCrossAnimation) { addInstructionClick() }
+        add_instruction_button.animateWithCallback(checkToCrossAnimation) { addInstructionClick() }
     }
 
-    private fun FloatingActionButton.setAnimationCallback(animatedDrawable: AnimatedVectorDrawableCompat?,
-                                                          callback: () -> Unit) {
+    private fun FloatingActionButton.animateWithCallback(animatedDrawable: AnimatedVectorDrawableCompat?,
+                                                         callback: () -> Unit) {
         setImageDrawable(animatedDrawable)
         (drawable as Animatable).start()
         setOnClickListener { callback() }

@@ -73,28 +73,28 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
     private lateinit var cupChip: Chip
     private val unitMap: HashMap<String, String> =
         hashMapOf(
-            Pair(context.getString(R.string.cup), "c"),
-            Pair(context.getString(R.string.ounce), "oz"),
-            Pair(context.getString(R.string.table_spoon), "Tbsp"),
-            Pair(context.getString(R.string.tea_spoon), "tsp"),
-            Pair(context.getString(R.string.pint), "pt"),
-            Pair(context.getString(R.string.quart), "qt"),
-            Pair(context.getString(R.string.gallon), "gal"),
-            Pair(context.getString(R.string.liter), "l"),
-            Pair(context.getString(R.string.milliliter), "ml"),
-            Pair(context.getString(R.string.pound), "lb"),
-            Pair(context.getString(R.string.gram), "g")
+            Pair(context.getString(R.string.cup), context.getString(R.string.cup_shorthand)),
+            Pair(context.getString(R.string.ounce), context.getString(R.string.ounce_shorthand)),
+            Pair(context.getString(R.string.table_spoon), context.getString(R.string.tablespoon_shorthand)),
+            Pair(context.getString(R.string.tea_spoon), context.getString(R.string.teaspoon_shorthand)),
+            Pair(context.getString(R.string.pint), context.getString(R.string.pint_shorthand)),
+            Pair(context.getString(R.string.quart), context.getString(R.string.quart_shorthand)),
+            Pair(context.getString(R.string.gallon), context.getString(R.string.gallon_shorthand)),
+            Pair(context.getString(R.string.liter), context.getString(R.string.liter_shorthand)),
+            Pair(context.getString(R.string.milliliter), context.getString(R.string.mililiter_shorthand)),
+            Pair(context.getString(R.string.pound), context.getString(R.string.pound_shorthand)),
+            Pair(context.getString(R.string.gram), context.getString(R.string.gram_shorthand))
         )
 
-    private fun keyListener(v: MaterialButton) {
+    private fun numberKeyListener(v: MaterialButton) {
         quantityInput.text!!.append(v.text)
     }
 
-    private fun unitListener(v: Chip) {
+    private fun unitChipListener(v: Chip) {
         unitsTextView.text = unitMap[v.text]
     }
 
-    private fun fractionListener(v: Chip) {
+    private fun fractionChipListener(v: Chip) {
         val newText = v.text
         if(fractionTextView.text != newText)
             fractionTextView.text = newText
@@ -111,43 +111,54 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
         unitsChipGroup = v.findViewById(R.id.unit_chips)
         fracChipGroup = v.findViewById(R.id.frac_chip_group)
 
-        v.findViewById<MaterialButton>(R.id.button_input_0).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_1).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_2).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_3).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_4).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_5).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_6).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_7).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_8).setOnClickListener { keyListener(it as MaterialButton) }
-        v.findViewById<MaterialButton>(R.id.button_input_9).setOnClickListener { keyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_0)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_1)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_2)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_3)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_4)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_5)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_6)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_7)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_8)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
+        v.findViewById<MaterialButton>(R.id.button_input_9)
+            .setOnClickListener { numberKeyListener(it as MaterialButton) }
         v.findViewById<MaterialButton>(R.id.button_input_dot).setOnClickListener {
             if(quantityInput.text!!.contains('.'))
                 return@setOnClickListener
-            keyListener(it as MaterialButton)
+            numberKeyListener(it as MaterialButton)
         }
         v.findViewById<MaterialButton>(R.id.button_input_delete).setOnClickListener {
             quantityInput.text!!.apply {
-                if(length > 0) delete(lastIndex - 1, lastIndex)
+                if(length > 1) delete(lastIndex - 1, lastIndex)
+                else clear()
             }
         }
-        v.findViewById<Chip>(R.id.chip_input_quarter).setOnClickListener { fractionListener(it as Chip) }
-        v.findViewById<Chip>(R.id.chip_input_third).setOnClickListener { fractionListener(it as Chip) }
-        v.findViewById<Chip>(R.id.chip_input_half).setOnClickListener { fractionListener(it as Chip) }
-        v.findViewById<Chip>(R.id.chip_input_2_thirds).setOnClickListener { fractionListener(it as Chip) }
-        v.findViewById<Chip>(R.id.chip_input_3_quarter).setOnClickListener { fractionListener(it as Chip) }
+        v.findViewById<Chip>(R.id.chip_input_quarter).setOnClickListener { fractionChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.chip_input_third).setOnClickListener { fractionChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.chip_input_half).setOnClickListener { fractionChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.chip_input_2_thirds).setOnClickListener { fractionChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.chip_input_3_quarter).setOnClickListener { fractionChipListener(it as Chip) }
 
-        v.findViewById<Chip>(R.id.cup_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.ounce_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.tbsp_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.tsp_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.pint_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.quart_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.gallon_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.liter_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.milliliter_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.pound_chip).setOnClickListener { unitListener(it as Chip) }
-        v.findViewById<Chip>(R.id.gram_chip).setOnClickListener { unitListener(it as Chip) }
+        v.findViewById<Chip>(R.id.cup_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.ounce_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.tbsp_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.tsp_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.pint_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.quart_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.gallon_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.liter_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.milliliter_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.pound_chip).setOnClickListener { unitChipListener(it as Chip) }
+        v.findViewById<Chip>(R.id.gram_chip).setOnClickListener { unitChipListener(it as Chip) }
     }
 
     fun addIngredientListener(ingredientAdapter: IngredientAdapter) {

@@ -10,5 +10,5 @@
     <color name="checked_text">@color/colorSecondary</color>
     <color name="checked_background">@color/colorOnSecondary</color>
     <color name="unchecked_text">@color/colorOnPrimary</color>
-    <color name="unchecked_background">@color/colorPrimaryVariant</color>
+    <color name="unchecked_background">@color/colorSecondary</color>
 </resources>

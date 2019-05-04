@@ -59,4 +59,15 @@
     <string name="recipe_details">Recipe Details</string>
     <string name="recipe_editor">Recipe Editor</string>
     <string name="toast_save">Recipe data saved</string>
+    <string name="cup_shorthand">c</string>
+    <string name="ounce_shorthand">oz</string>
+    <string name="tablespoon_shorthand">Tbsp</string>
+    <string name="teaspoon_shorthand">tsp</string>
+    <string name="pint_shorthand">pt</string>
+    <string name="quart_shorthand">qt</string>
+    <string name="gallon_shorthand">gal</string>
+    <string name="liter_shorthand">l</string>
+    <string name="mililiter_shorthand">ml</string>
+    <string name="pound_shorthand">lb</string>
+    <string name="gram_shorthand">g</string>
 </resources>

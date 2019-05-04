@@ -21,8 +21,12 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/min_margin"
+                app:boxCornerRadiusBottomEnd="@dimen/square_corner"
+                app:boxCornerRadiusTopEnd="@dimen/square_corner">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/quantity_input"
@@ -52,15 +56,19 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ingredient_layout"
+            style="@style/TextInputStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/min_margin"
+            app:boxCornerRadiusBottomStart="@dimen/square_corner"
+            app:boxCornerRadiusTopStart="@dimen/square_corner">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ingredient_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences"
-                android:hint="@string/ingredient" />
+                android:hint="@string/ingredient"
+                android:inputType="textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
