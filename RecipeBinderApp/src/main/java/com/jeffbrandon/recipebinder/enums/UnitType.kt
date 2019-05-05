@@ -15,26 +15,19 @@ enum class UnitType {
     NONE;
 
     override fun toString(): String {
-        if(this == NONE) return ""
-        return this.name.toLowerCase().replace('_', ' ')
-    }
-
-    companion object {
-        fun fromString(c: CharSequence): UnitType {
-            return when(c) {
-                "gal" -> GALLON
-                "qt" -> QUART
-                "p" -> PINT
-                "c" -> CUP
-                "oz" -> OUNCE
-                "Tbsp" -> TABLE_SPOON
-                "tsp" -> TEA_SPOON
-                "lb" -> POUND
-                "l" -> LITER
-                "ml" -> MILLILITER
-                "g" -> GRAM
-                else -> NONE
-            }
+        return when(this) {
+            GALLON -> "gal"
+            QUART -> "qt"
+            PINT -> "pt"
+            CUP -> "c"
+            OUNCE -> "oz"
+            TABLE_SPOON -> "tbp"
+            TEA_SPOON -> "tsp"
+            POUND -> "lb"
+            LITER -> "l"
+            MILLILITER -> "ml"
+            GRAM -> "g"
+            NONE -> ""
         }
     }
 }

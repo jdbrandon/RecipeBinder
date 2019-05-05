@@ -67,10 +67,10 @@ class ViewRecipeActivity : RecipeActivity() {
     private fun setupButtonListeners() {
         add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientAdapter) }
         add_instruction_button.setOnClickListener { addInstructionClick() }
-        when(mode) {
-            VIEW -> action_button.setOnClickListener { editActionListener() }
-            EDIT -> action_button.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
-        }
+        if(mode.isEditing())
+            action_button.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
+        else action_button.setOnClickListener { editActionListener() }
+
         registerForContextMenu(ingredients_list_view)
         registerForContextMenu(instructions_list_view)
     }
@@ -82,7 +82,7 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun editActionListener() {
-        mode = EDIT
+        mode = EDIT_TAGS
         showCorrectViews()
         action_button.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
     }
@@ -116,7 +116,7 @@ class ViewRecipeActivity : RecipeActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(getString(R.string.view_mode_extra), mode)
         super.onSaveInstanceState(outState)
-        if(mode == EDIT)
+        if(mode.isEditing())
             saveRecipeState()
     }
 
@@ -158,23 +158,54 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun showCorrectViews() {
+        setCommonViewVisibility(mode.isEditing())
         when(mode) {
             VIEW -> {
-                title_text_view.text = getString(R.string.recipe_details)
-                recipe_name_view_layout.visibility = View.VISIBLE
-                recipe_name_edit_layout.visibility = View.INVISIBLE
+                setTagsVisibility(View.VISIBLE)
+                ingredients_list_view.visibility = View.VISIBLE
+                instructions_list_view.visibility = View.VISIBLE
                 add_ingredient_button.visibility = View.GONE
                 add_instruction_button.visibility = View.GONE
             }
-            EDIT -> {
-                title_text_view.text = getString(R.string.recipe_editor)
-                recipe_name_view_layout.visibility = View.GONE
-                recipe_name_edit_layout.visibility = View.VISIBLE
-                add_ingredient_button.visibility = View.VISIBLE
-                add_instruction_button.visibility = View.VISIBLE
+            EDIT_TAGS -> {
                 setTagViews(currentRecipe.tags)
+                setTagsVisibility(View.VISIBLE)
+                setIngredientsVisibility(View.GONE)
+                setInstructionsVisibility(View.GONE)
+            }
+            EDIT_INGREDIENTS -> {
+                setTagsVisibility(View.GONE)
+                setIngredientsVisibility(View.VISIBLE)
+                setInstructionsVisibility(View.GONE)
+            }
+            EDIT_INSTRUCTIONS -> {
+                setTagsVisibility(View.GONE)
+                setIngredientsVisibility(View.GONE)
+                setInstructionsVisibility(View.VISIBLE)
             }
         }
+    }
+
+    private fun setTagsVisibility(visible: Int) {
+        cook_type_chips.visibility = visible
+        //dish_type_chips.visibility = visible
+        tags_group.visibility = visible
+    }
+
+    private fun setIngredientsVisibility(visible: Int) {
+        ingredients_list_view.visibility = visible
+        add_ingredient_button.visibility = visible
+    }
+
+    private fun setInstructionsVisibility(visible: Int) {
+        instructions_list_view.visibility = visible
+        add_instruction_button.visibility = visible
+    }
+
+    private fun setCommonViewVisibility(editing: Boolean) {
+        title_text_view.text = if(editing) getString(R.string.recipe_editor) else getString(R.string.recipe_details)
+        recipe_name_view_layout.visibility = if(editing) View.GONE else View.VISIBLE
+        recipe_name_edit_layout.visibility = if(editing) View.VISIBLE else View.GONE
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -272,7 +303,7 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun setTagViews(tags: List<RecipeTag>) {
-        val editing = mode == EDIT
+        val editing = mode == EDIT_TAGS
         //TODO add dish type tags
         (cook_type_chips.children + tags_group.children).forEach {
             (it as Chip).apply {
@@ -300,8 +331,37 @@ class ViewRecipeActivity : RecipeActivity() {
         }
     }
 
+    fun tagsClick(v: View) {
+        switchMode(EDIT_TAGS)
+    }
+
+    fun ingredientsClick(v: View) {
+        switchMode(EDIT_INGREDIENTS)
+    }
+
+    fun instructionsClick(v: View) {
+        switchMode(EDIT_INSTRUCTIONS)
+    }
+
+    private fun switchMode(newMode: Int) {
+        if(mode.isEditing() && mode != newMode) {
+            mode = newMode
+            showCorrectViews()
+        }
+    }
+
     companion object {
         const val VIEW: Int = 0
-        const val EDIT: Int = 1
+        const val EDIT_TAGS: Int = 1
+        const val EDIT_INGREDIENTS: Int = 2
+        const val EDIT_INSTRUCTIONS: Int = 3
+        private fun Int.isEditing(): Boolean {
+            return when(this) {
+                EDIT_TAGS,
+                EDIT_INGREDIENTS,
+                EDIT_INSTRUCTIONS -> true
+                else -> false
+            }
+        }
     }
 }

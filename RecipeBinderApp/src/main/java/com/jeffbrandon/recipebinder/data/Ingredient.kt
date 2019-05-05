@@ -200,6 +200,6 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             }
             else -> Timber.d("unable to format $frac")
         }
-        return num.append(" $unit").toString()
+        return num.append(" $unit\t").toString()
     }
 }

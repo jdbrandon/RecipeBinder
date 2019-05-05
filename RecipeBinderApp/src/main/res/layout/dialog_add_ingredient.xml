@@ -40,9 +40,10 @@
                 android:id="@+id/fraction_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="33dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="4dp"
                 android:layout_toStartOf="@id/units_text_view"
+                android:textSize="7pt"
                 tools:ignore="RelativeOverlap" />
 
             <TextView
@@ -50,8 +51,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="33dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="7pt" />
         </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout
