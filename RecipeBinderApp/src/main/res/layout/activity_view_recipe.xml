@@ -203,24 +203,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tags_group" />
 
-        <LinearLayout
-            android:id="@+id/ingredients_list_layout"
+        <ListView
+            android:id="@+id/ingredients_list_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/view_recipe_content_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
-            android:orientation="vertical"
-            app:layout_constraintHeight_max="200dp"
-            app:layout_constraintHeight_min="100dp"
+            android:clickable="false"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title">
-
-            <ListView
-                android:id="@+id/ingredients_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="false" />
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
+            app:layout_constraintVertical_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_ingredient_button"
@@ -242,7 +234,7 @@
             android:textSize="@dimen/item_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_list_layout" />
+            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/instruction_input_layout"
@@ -263,24 +255,16 @@
                 android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:id="@+id/instructions_list_layout"
+        <ListView
+            android:id="@+id/instructions_list_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/view_recipe_content_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
-            android:orientation="vertical"
-            app:layout_constraintHeight_max="300dp"
-            app:layout_constraintHeight_min="100dp"
+            android:clickable="false"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instruction_input_layout">
-
-            <ListView
-                android:id="@+id/instructions_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="false" />
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/instruction_input_layout"
+            app:layout_constraintVertical_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_instruction_button"
@@ -288,8 +272,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/min_margin"
             android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/action_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructions_section_view"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/cross_to_check" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
