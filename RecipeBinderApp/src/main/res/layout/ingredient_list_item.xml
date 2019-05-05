@@ -12,8 +12,8 @@
         android:textSize="@dimen/ingredient_list_text_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_max="80dp"
-        app:layout_constraintWidth_min="40dp" />
+        app:layout_constraintWidth_max="130dp"
+        app:layout_constraintWidth_min="80dp" />
 
     <TextView
         android:id="@+id/colon_view"

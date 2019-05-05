@@ -70,4 +70,5 @@
     <string name="mililiter_shorthand">ml</string>
     <string name="pound_shorthand">lb</string>
     <string name="gram_shorthand">g</string>
+    <string name="tags">Tags</string>
 </resources>
