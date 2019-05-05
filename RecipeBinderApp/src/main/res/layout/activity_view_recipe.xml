@@ -34,6 +34,7 @@
         android:id="@+id/view_activity_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         android:visibility="visible">
 
         <LinearLayout
@@ -117,12 +118,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_recipe_title_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
+            android:onClick="tagsClick"
             android:text="@string/tags"
             android:textSize="@dimen/item_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recipe_name_edit_layout" />
-
+        <!-- Tags Views -->
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/cook_type_chips"
             android:layout_width="match_parent"
@@ -190,19 +192,21 @@
                 style="@style/RecipeCheckableChip"
                 android:text="@string/vegan" />
         </com.google.android.material.chip.ChipGroup>
-
+        <!-- End Tags Views -->
         <TextView
             android:id="@+id/ingredients_section_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_recipe_title_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
+            android:onClick="ingredientsClick"
             android:text="@string/ingredients"
             android:textSize="@dimen/item_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tags_group" />
 
+        <!-- Ingredient Views -->
         <ListView
             android:id="@+id/ingredients_list_view"
             android:layout_width="match_parent"
@@ -210,9 +214,10 @@
             android:layout_marginStart="@dimen/view_recipe_content_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
             android:clickable="false"
+            app:layout_constraintHeight_max="300dp"
+            app:layout_constraintHeight_min="100dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
-            app:layout_constraintVertical_weight="1" />
+            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_ingredient_button"
@@ -224,18 +229,21 @@
             app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
             app:srcCompat="@drawable/ic_add_white_24dp" />
 
+        <!-- End Ingredient Views -->
         <TextView
             android:id="@+id/instructions_section_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_recipe_title_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
+            android:onClick="instructionsClick"
             android:text="@string/instructions"
             android:textSize="@dimen/item_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_list_view" />
 
+        <!-- Instruction Views -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/instruction_input_layout"
             style="@style/TextInputStyle"
@@ -262,9 +270,10 @@
             android:layout_marginStart="@dimen/view_recipe_content_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
             android:clickable="false"
+            app:layout_constraintHeight_max="300dp"
+            app:layout_constraintHeight_min="100dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instruction_input_layout"
-            app:layout_constraintVertical_weight="1" />
+            app:layout_constraintTop_toBottomOf="@id/instruction_input_layout" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_instruction_button"
@@ -278,6 +287,7 @@
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/cross_to_check" />
 
+        <!-- End Instruction Views -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_button"
             android:layout_width="wrap_content"
