@@ -1,6 +1,7 @@
 package com.jeffbrandon.recipebinder.widgets
 
 import android.content.Context
+import android.nfc.FormatException
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -12,22 +13,28 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.enums.UnitType
+import timber.log.Timber
 
-class IngredientInputDialog(context: Context) : AlertDialog(context) {
+class IngredientInputDialog(context: Context) {
+    private var id: Int = -1
     private val view = View.inflate(context, R.layout.dialog_add_ingredient, null)
+    private var action = Mode.ADD
 
     init {
         setupAddIngredientViews(view)
     }
 
-    private val dialog = Builder(context)
+    private val dialog = AlertDialog.Builder(context)
         .setView(view)
         .setPositiveButton(android.R.string.ok) { dialog, _ ->
             dialog.cancel()
             val amount = computeAmount(quantityInput.text.toString(), getSelectedFraction())
             val type = getSelectedType()
             val newIngredient = Ingredient(ingredientInput.text.toString(), amount, type)
-            ingredientAdapter.add(newIngredient)
+            when(action) {
+                Mode.ADD -> ingredientAdapter.add(newIngredient)
+                Mode.UPDATE -> ingredientAdapter.update(id, newIngredient)
+            }
             clearValues()
         }
         .setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -53,7 +60,7 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
     }
 
     private fun getSelectedFraction(): Float {
-        return when(fracChipGroup.checkedChipId) {
+        return when(fractionChipGroup.checkedChipId) {
             R.id.chip_input_quarter -> 0.25f
             R.id.chip_input_third -> 0.33f
             R.id.chip_input_half -> 0.5f
@@ -69,8 +76,7 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
     private lateinit var fractionTextView: TextView
     private lateinit var unitsTextView: TextView
     private lateinit var unitsChipGroup: ChipGroup
-    private lateinit var fracChipGroup: ChipGroup
-    private lateinit var cupChip: Chip
+    private lateinit var fractionChipGroup: ChipGroup
     private val unitMap: HashMap<String, String> =
         hashMapOf(
             Pair(context.getString(R.string.cup), context.getString(R.string.cup_shorthand)),
@@ -91,25 +97,26 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
     }
 
     private fun unitChipListener(v: Chip) {
-        unitsTextView.text = unitMap[v.text]
+        unitsTextView.text =
+            if(unitsTextView.text != unitMap[v.text])
+                unitMap[v.text]
+            else ""
     }
 
     private fun fractionChipListener(v: Chip) {
-        val newText = v.text
-        if(fractionTextView.text != newText)
-            fractionTextView.text = newText
-        else fractionTextView.text = ""
+        fractionTextView.text =
+            if(fractionTextView.text != v.text)
+                v.text
+            else ""
     }
 
     private fun setupAddIngredientViews(v: View) {
         quantityInput = v.findViewById(R.id.quantity_input)
         ingredientInput = v.findViewById(R.id.ingredient_input)
         fractionTextView = v.findViewById(R.id.fraction_text_view)
-        fractionTextView.text = ""
         unitsTextView = v.findViewById(R.id.units_text_view)
-        cupChip = v.findViewById(R.id.cup_chip)
         unitsChipGroup = v.findViewById(R.id.unit_chips)
-        fracChipGroup = v.findViewById(R.id.frac_chip_group)
+        fractionChipGroup = v.findViewById(R.id.frac_chip_group)
 
         v.findViewById<MaterialButton>(R.id.button_input_0)
             .setOnClickListener { numberKeyListener(it as MaterialButton) }
@@ -138,8 +145,7 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
         }
         v.findViewById<MaterialButton>(R.id.button_input_delete).setOnClickListener {
             quantityInput.text!!.apply {
-                if(length > 1) delete(lastIndex - 1, lastIndex)
-                else clear()
+                if(length > 0) delete(lastIndex, length)
             }
         }
         v.findViewById<Chip>(R.id.chip_input_quarter).setOnClickListener { fractionChipListener(it as Chip) }
@@ -163,7 +169,69 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
 
     fun addIngredientListener(ingredientAdapter: IngredientAdapter) {
         this.ingredientAdapter = ingredientAdapter
+        action = Mode.ADD
         dialog.show()
+    }
+
+    fun updateIngredientListener(ingredientAdapter: IngredientAdapter, pos: Int) {
+        this.ingredientAdapter = ingredientAdapter
+        action = Mode.UPDATE
+        populateViews(ingredientAdapter.getItem(pos))
+        id = pos
+        dialog.show()
+    }
+
+    private fun populateViews(ingredient: Ingredient) {
+        val amountInfo = ingredient.amountString().split(" ")
+        when(amountInfo.size) {
+            1 -> quantityInput.setText(amountInfo[0])
+            2 -> {
+                quantityInput.setText(amountInfo[0])
+                //check to see if it's a float or not
+                if(amountInfo[1].toFloatOrNull() != null) setFraction(amountInfo[1])
+                else setUnit(amountInfo[1])
+            }
+            3 -> {
+                quantityInput.setText(amountInfo[0])
+                setFraction(amountInfo[1])
+                setUnit(amountInfo[2])
+            }
+            else -> {
+                Timber.w("Failing to parse amount string!")
+                throw FormatException("Unexpected amount string format ${ingredient.amountString()}")
+            }
+        }
+        ingredientInput.setText(ingredient.name)
+    }
+
+    private fun setUnit(s: String) {
+        unitsTextView.text = s
+        when(UnitType.fromString(s)) {
+            UnitType.GALLON -> unitsChipGroup.findViewById<Chip>(R.id.gallon_chip)?.isChecked = true
+            UnitType.QUART -> unitsChipGroup.findViewById<Chip>(R.id.quart_chip)?.isChecked = true
+            UnitType.PINT -> unitsChipGroup.findViewById<Chip>(R.id.pint_chip)?.isChecked = true
+            UnitType.CUP -> unitsChipGroup.findViewById<Chip>(R.id.cup_chip)?.isChecked = true
+            UnitType.OUNCE -> unitsChipGroup.findViewById<Chip>(R.id.ounce_chip)?.isChecked = true
+            UnitType.TABLE_SPOON -> unitsChipGroup.findViewById<Chip>(R.id.tbsp_chip)?.isChecked = true
+            UnitType.TEA_SPOON -> unitsChipGroup.findViewById<Chip>(R.id.tsp_chip)?.isChecked = true
+            UnitType.POUND -> unitsChipGroup.findViewById<Chip>(R.id.pound_chip)?.isChecked = true
+            UnitType.LITER -> unitsChipGroup.findViewById<Chip>(R.id.liter_chip)?.isChecked = true
+            UnitType.MILLILITER -> unitsChipGroup.findViewById<Chip>(R.id.milliliter_chip)?.isChecked = true
+            UnitType.GRAM -> unitsChipGroup.findViewById<Chip>(R.id.gram_chip)?.isChecked = true
+            UnitType.NONE -> {
+            }
+        }
+    }
+
+    private fun setFraction(s: String) {
+        fractionTextView.text = s
+        when(s) {
+            "1/4" -> fractionChipGroup.findViewById<Chip>(R.id.chip_input_quarter)?.isChecked = true
+            "1/3" -> fractionChipGroup.findViewById<Chip>(R.id.chip_input_third)?.isChecked = true
+            "1/2" -> fractionChipGroup.findViewById<Chip>(R.id.chip_input_half)?.isChecked = true
+            "2/3" -> fractionChipGroup.findViewById<Chip>(R.id.chip_input_2_thirds)?.isChecked = true
+            "3/4" -> fractionChipGroup.findViewById<Chip>(R.id.chip_input_3_quarter)?.isChecked = true
+        }
     }
 
     private fun computeAmount(whole: String, fraction: Float): Float {
@@ -178,6 +246,13 @@ class IngredientInputDialog(context: Context) : AlertDialog(context) {
         ingredientInput.text!!.clear()
         ingredientInput.clearFocus()
         unitsChipGroup.clearCheck()
-        fracChipGroup.clearCheck()
+        fractionChipGroup.clearCheck()
+    }
+
+    companion object {
+        private enum class Mode {
+            ADD,
+            UPDATE
+        }
     }
 }

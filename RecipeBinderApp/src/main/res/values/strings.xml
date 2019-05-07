@@ -71,4 +71,10 @@
     <string name="pound_shorthand">lb</string>
     <string name="gram_shorthand">g</string>
     <string name="tags">Tags</string>
+    <string name="entree">Entree</string>
+    <string name="side">Side</string>
+    <string name="soup">Soup</string>
+    <string name="dessert">Dessert</string>
+    <string name="update_instruction">Update instruction</string>
+    <string name="update">Update</string>
 </resources>

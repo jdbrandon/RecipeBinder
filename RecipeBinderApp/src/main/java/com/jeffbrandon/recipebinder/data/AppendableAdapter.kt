@@ -3,6 +3,7 @@ package com.jeffbrandon.recipebinder.data
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
+import timber.log.Timber
 
 abstract class AppendableAdapter<T>(protected val context: Context, protected val dataSource: MutableList<T>) :
     BaseAdapter() {
@@ -37,6 +38,13 @@ abstract class AppendableAdapter<T>(protected val context: Context, protected va
         val tmp = remove(position)
         add(position + 1, tmp)
         notifyDataSetChanged()
+    }
+
+    fun update(position: Int, item: T) {
+        if(position > 0 && position < dataSource.size) {
+            dataSource[position] = item
+            notifyDataSetChanged()
+        } else Timber.w("Tried to update outside bounds of data source")
     }
 
     fun delete(position: Int) {

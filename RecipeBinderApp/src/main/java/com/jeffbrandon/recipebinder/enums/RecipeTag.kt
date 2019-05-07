@@ -13,7 +13,11 @@ enum class RecipeTag {
     EASY,
     HEALTHY,
     VEGETARIAN,
-    VEGAN;
+    VEGAN,
+    ENTREE,
+    SIDE,
+    DESSERT,
+    SOUP;
 
     override fun toString(): String {
         return when(this) {
@@ -26,6 +30,10 @@ enum class RecipeTag {
             HEALTHY -> "Healthy"
             VEGETARIAN -> "Vegetarian"
             VEGAN -> "Vegan"
+            ENTREE -> "Entree"
+            SIDE -> "Side"
+            DESSERT -> "Dessert"
+            SOUP -> "Soup"
         }
     }
 
@@ -34,6 +42,7 @@ enum class RecipeTag {
             text = this@RecipeTag.toString()
             layoutParams =
                 ChipGroup.LayoutParams(ChipGroup.LayoutParams.WRAP_CONTENT, ChipGroup.LayoutParams.WRAP_CONTENT)
+            isChecked = true
         }
     }
 }

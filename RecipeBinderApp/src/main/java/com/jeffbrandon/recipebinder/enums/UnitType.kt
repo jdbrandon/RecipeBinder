@@ -30,4 +30,23 @@ enum class UnitType {
             NONE -> ""
         }
     }
+
+    companion object {
+        fun fromString(s: String): UnitType {
+            return when(s) {
+                "gal" -> GALLON
+                "qt" -> QUART
+                "pt" -> PINT
+                "c" -> CUP
+                "oz" -> OUNCE
+                "tbp" -> TABLE_SPOON
+                "tsp" -> TEA_SPOON
+                "lb" -> POUND
+                "l" -> LITER
+                "ml" -> MILLILITER
+                "g" -> GRAM
+                else -> NONE
+            }
+        }
+    }
 }

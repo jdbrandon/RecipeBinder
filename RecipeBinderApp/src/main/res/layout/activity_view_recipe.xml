@@ -79,7 +79,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/view_recipe_title_margin_start"
-                android:layout_marginEnd="@dimen/min_margin"
                 android:layout_weight="4"
                 android:hint="@string/recipe_name"
                 app:boxCornerRadiusBottomEnd="@dimen/square_corner"
@@ -96,7 +95,6 @@
                 style="@style/TextInputStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/min_margin"
                 android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
                 android:layout_weight="1"
                 android:hint="@string/minutes"
@@ -125,73 +123,123 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recipe_name_edit_layout" />
         <!-- Tags Views -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cook_type_chips"
+        <LinearLayout
+            android:id="@+id/tags_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_recipe_content_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tags_section_title"
-            app:singleSelection="true">
+            app:layout_constraintTop_toBottomOf="@id/tags_section_title">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_instant_pot"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/instant_pot" />
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_stove"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/stove_top" />
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tags_view_chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    app:singleSelection="false" />
+            </HorizontalScrollView>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_oven"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/oven" />
+            <LinearLayout
+                android:id="@+id/tags_edit_chip_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_sous_vide"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/sous_vide" />
-        </com.google.android.material.chip.ChipGroup>
-        <!-- TODO add dish type chips -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/tags_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_recipe_content_margin_start"
-            android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cook_type_chips"
-            app:singleLine="false"
-            app:singleSelection="false">
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cook_type_chips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_fast"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/fast" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_instant_pot"
+                        style="@style/CheckableChip"
+                        android:text="@string/instant_pot" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_easy"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/easy" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_stove"
+                        style="@style/CheckableChip"
+                        android:text="@string/stove_top" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_healthy"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/healthy" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_oven"
+                        style="@style/CheckableChip"
+                        android:text="@string/oven" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_vegetarian"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/vegetarian" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_sous_vide"
+                        style="@style/CheckableChip"
+                        android:text="@string/sous_vide" />
+                </com.google.android.material.chip.ChipGroup>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_vegan"
-                style="@style/RecipeCheckableChip"
-                android:text="@string/vegan" />
-        </com.google.android.material.chip.ChipGroup>
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/dish_type_chips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_entree"
+                        style="@style/CheckableChip"
+                        android:text="@string/entree" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_side"
+                        style="@style/CheckableChip"
+                        android:text="@string/side" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_soup"
+                        style="@style/CheckableChip"
+                        android:text="@string/soup" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_dessert"
+                        style="@style/CheckableChip"
+                        android:text="@string/dessert" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tags_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleLine="false"
+                    app:singleSelection="false">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_fast"
+                        style="@style/CheckableChip"
+                        android:text="@string/fast" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_easy"
+                        style="@style/CheckableChip"
+                        android:text="@string/easy" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_healthy"
+                        style="@style/CheckableChip"
+                        android:text="@string/healthy" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_vegetarian"
+                        style="@style/CheckableChip"
+                        android:text="@string/vegetarian" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_vegan"
+                        style="@style/CheckableChip"
+                        android:text="@string/vegan" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+        </LinearLayout>
         <!-- End Tags Views -->
         <TextView
             android:id="@+id/ingredients_section_title"
@@ -204,18 +252,12 @@
             android:textSize="@dimen/item_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tags_group" />
+            app:layout_constraintTop_toBottomOf="@id/tags_layout" />
 
         <!-- Ingredient Views -->
         <ListView
             android:id="@+id/ingredients_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/view_recipe_content_margin_start"
-            android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
-            android:clickable="false"
-            app:layout_constraintHeight_max="300dp"
-            app:layout_constraintHeight_min="100dp"
+            style="@style/SmallConstrainedListView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_section_title" />
 
@@ -251,6 +293,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_recipe_content_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
+            android:hint="@string/instruction"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructions_section_view">
@@ -259,19 +302,12 @@
                 android:id="@+id/instruction_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/instruction"
                 android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ListView
             android:id="@+id/instructions_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/view_recipe_content_margin_start"
-            android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
-            android:clickable="false"
-            app:layout_constraintHeight_max="300dp"
-            app:layout_constraintHeight_min="100dp"
+            style="@style/SmallConstrainedListView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instruction_input_layout" />
 

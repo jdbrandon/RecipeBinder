@@ -19,6 +19,7 @@ import com.jeffbrandon.recipebinder.data.InstructionAdapter
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.widgets.IngredientInputDialog
+import com.jeffbrandon.recipebinder.widgets.UpdateInstructionDialog
 import kotlinx.android.synthetic.main.activity_view_recipe.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -29,8 +30,10 @@ import timber.log.Timber
 
 class ViewRecipeActivity : RecipeActivity() {
     private var mode: Int = VIEW
-    private lateinit var deferredDialog: Deferred<IngredientInputDialog>
-    private val dialog: IngredientInputDialog by lazy { runBlocking { deferredDialog.await() } }
+    private lateinit var deferredIngredientDialog: Deferred<IngredientInputDialog>
+    private val ingredientDialog: IngredientInputDialog by lazy { runBlocking { deferredIngredientDialog.await() } }
+    private lateinit var deferredInstructionDialog: Deferred<UpdateInstructionDialog>
+    private val instructionDialog: UpdateInstructionDialog by lazy { runBlocking { deferredInstructionDialog.await() } }
     override lateinit var ingredientAdapter: IngredientAdapter
     override lateinit var instructionAdapter: InstructionAdapter
     private var crossToCheckAnimation: AnimatedVectorDrawableCompat? = null
@@ -61,11 +64,12 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     override fun launchDeferredTasks() {
-        deferredDialog = async { IngredientInputDialog(this@ViewRecipeActivity) }
+        deferredIngredientDialog = async { IngredientInputDialog(this@ViewRecipeActivity) }
+        deferredInstructionDialog = async { UpdateInstructionDialog(this@ViewRecipeActivity) }
     }
 
     private fun setupButtonListeners() {
-        add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientAdapter) }
+        add_ingredient_button.setOnClickListener { ingredientDialog.addIngredientListener(ingredientAdapter) }
         add_instruction_button.setOnClickListener { addInstructionClick() }
         if(mode.isEditing())
             action_button.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
@@ -161,7 +165,6 @@ class ViewRecipeActivity : RecipeActivity() {
         setCommonViewVisibility(mode.isEditing())
         when(mode) {
             VIEW -> {
-                setTagsVisibility(View.VISIBLE)
                 ingredients_list_view.visibility = View.VISIBLE
                 instructions_list_view.visibility = View.VISIBLE
                 add_ingredient_button.visibility = View.GONE
@@ -187,9 +190,7 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun setTagsVisibility(visible: Int) {
-        cook_type_chips.visibility = visible
-        //dish_type_chips.visibility = visible
-        tags_group.visibility = visible
+        tags_edit_chip_layout.visibility = visible
     }
 
     private fun setIngredientsVisibility(visible: Int) {
@@ -204,8 +205,10 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun setCommonViewVisibility(editing: Boolean) {
         title_text_view.text = if(editing) getString(R.string.recipe_editor) else getString(R.string.recipe_details)
-        recipe_name_view_layout.visibility = if(editing) View.GONE else View.VISIBLE
-        recipe_name_edit_layout.visibility = if(editing) View.VISIBLE else View.GONE
+        recipe_name_view_layout.visibility = if(editing) View.INVISIBLE else View.VISIBLE
+        recipe_name_edit_layout.visibility = if(editing) View.VISIBLE else View.INVISIBLE
+        tags_view_chip_group.visibility = if(editing) View.GONE else View.VISIBLE
+        tags_edit_chip_layout.visibility = if(editing) View.VISIBLE else View.GONE
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -222,6 +225,10 @@ class ViewRecipeActivity : RecipeActivity() {
             }
             R.id.option_down -> {
                 moveItemDown(info)
+                true
+            }
+            R.id.option_update -> {
+                updateItem(info)
                 true
             }
             R.id.option_delete -> {
@@ -243,6 +250,13 @@ class ViewRecipeActivity : RecipeActivity() {
         when(menuInfo.targetView.id) {
             R.id.ingredient_view -> ingredientAdapter.moveDown(menuInfo.position)
             R.id.instruction_view -> instructionAdapter.moveDown(menuInfo.position)
+        }
+    }
+
+    private fun updateItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
+        when(menuInfo.targetView.id) {
+            R.id.ingredient_view -> ingredientDialog.updateIngredientListener(ingredientAdapter, menuInfo.position)
+            R.id.instruction_view -> instructionDialog.updateInstruction(instructionAdapter, menuInfo.position)
         }
     }
 
@@ -286,7 +300,12 @@ class ViewRecipeActivity : RecipeActivity() {
             R.id.chip_sous_vide -> mutableListOf(RecipeTag.SOUS_VIDE)
             else -> mutableListOf()
         }
-        //TODO entree side dessert soup etc. tags
+        when(dish_type_chips.checkedChipId) {
+            R.id.chip_entree -> res.add(RecipeTag.ENTREE)
+            R.id.chip_side -> res.add(RecipeTag.SIDE)
+            R.id.chip_soup -> res.add(RecipeTag.SOUP)
+            R.id.chip_dessert -> res.add(RecipeTag.DESSERT)
+        }
         res.apply {
             if(chip_fast.isChecked)
                 add(RecipeTag.FAST)
@@ -303,15 +322,11 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun setTagViews(tags: List<RecipeTag>) {
-        val editing = mode == EDIT_TAGS
-        //TODO add dish type tags
-        (cook_type_chips.children + tags_group.children).forEach {
-            (it as Chip).apply {
-                val checked = getTagForChip(it) in tags
-                isChecked = checked // Required for data
-                isClickable = editing
-                visibility = if(checked || editing) View.VISIBLE else View.GONE
-            }
+        tags_view_chip_group.removeAllViews()
+        for(tag in tags)
+            tags_view_chip_group.addView(tag.toChipView(this))
+        (cook_type_chips.children + dish_type_chips.children + tags_group.children).forEach {
+            (it as Chip).apply { isChecked = getTagForChip(it) in tags }
         }
     }
 
@@ -326,19 +341,25 @@ class ViewRecipeActivity : RecipeActivity() {
             chip_healthy.id -> RecipeTag.HEALTHY
             chip_vegetarian.id -> RecipeTag.VEGETARIAN
             chip_vegan.id -> RecipeTag.VEGAN
-            //TODO add dish type tags
+            chip_entree.id -> RecipeTag.ENTREE
+            chip_side.id -> RecipeTag.SIDE
+            chip_soup.id -> RecipeTag.SOUP
+            chip_dessert.id -> RecipeTag.DESSERT
             else -> throw IllegalArgumentException("Unknown chip argument")
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun tagsClick(v: View) {
         switchMode(EDIT_TAGS)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun ingredientsClick(v: View) {
         switchMode(EDIT_INGREDIENTS)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun instructionsClick(v: View) {
         switchMode(EDIT_INSTRUCTIONS)
     }
@@ -351,10 +372,10 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     companion object {
-        const val VIEW: Int = 0
-        const val EDIT_TAGS: Int = 1
-        const val EDIT_INGREDIENTS: Int = 2
-        const val EDIT_INSTRUCTIONS: Int = 3
+        const val VIEW = 0
+        const val EDIT_TAGS = 1
+        const val EDIT_INGREDIENTS = 2
+        const val EDIT_INSTRUCTIONS = 3
         private fun Int.isEditing(): Boolean {
             return when(this) {
                 EDIT_TAGS,
