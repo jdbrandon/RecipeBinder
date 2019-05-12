@@ -7,7 +7,6 @@ import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.data.InstructionAdapter
-import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

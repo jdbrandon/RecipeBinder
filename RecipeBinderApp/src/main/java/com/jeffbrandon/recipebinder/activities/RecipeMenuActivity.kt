@@ -5,12 +5,11 @@ import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.LiveData
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,19 +32,24 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
 
     private val recipeMenuAdapter: RecipeAdapter by lazy { runBlocking { deferredMenuAdapter.await() } }
 
-    private lateinit var recipeLiveData: LiveData<List<RecipeData>>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        recipeLiveData = recipePersistentData.fetchAllRecipes()
-        recipeLiveData.observe(this, this)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         deferredMenuAdapter = async(Dispatchers.IO) {
             RecipeAdapter(this@RecipeMenuActivity,
-                          recipeLiveData.value?.toMutableList() ?: mutableListOf()
+                          recipePersistentData.fetchAllRecipes().toMutableList()
             )
         }
         setContentView(R.layout.activity_recipe_menu)
+
+        recipe_filter_text.addTextChangedListener { text ->
+            launch(Dispatchers.IO) {
+                val filterList = recipePersistentData.fetchAllRecipes("%$text%")
+                launch(Dispatchers.Main) {
+                    recipeMenuAdapter.setDataSource(filterList)
+                }
+            }
+        }
+
         setupNewRecipeButton()
         viewManager = LinearLayoutManager(this)
         recyclerView = recipe_recycler_view.apply {
