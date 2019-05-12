@@ -20,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/ingredient_list_text_size"
-        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/quantity"
         app:layout_constraintTop_toTopOf="parent" />
 
