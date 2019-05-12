@@ -55,4 +55,9 @@
         <item name="layout_constraintHeight_min">80dp</item>
     </style>
 
+    <style name="checkboxStyle" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:minWidth">1dp</item>
+        <item name="android:minHeight">1dp</item>
+    </style>
+
 </resources>
