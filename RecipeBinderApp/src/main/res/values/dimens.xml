@@ -5,8 +5,8 @@
     <dimen name="view_recipe_title_margin_end">20dp</dimen>
     <dimen name="view_recipe_content_margin_start">24dp</dimen>
     <dimen name="view_recipe_content_margin_end">20dp</dimen>
-    <dimen name="ingredient_list_text_size">10pt</dimen>
-    <dimen name="item_text_size">14pt</dimen>
-    <dimen name="title_text_size">16pt</dimen>
+    <dimen name="ingredient_list_text_size">8pt</dimen>
+    <dimen name="item_text_size">8pt</dimen>
+    <dimen name="title_text_size">12pt</dimen>
     <dimen name="square_corner">4dp</dimen>
 </resources>

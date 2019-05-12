@@ -87,7 +87,7 @@ class IngredientInputDialog(context: Context) {
             Pair(context.getString(R.string.quart), context.getString(R.string.quart_shorthand)),
             Pair(context.getString(R.string.gallon), context.getString(R.string.gallon_shorthand)),
             Pair(context.getString(R.string.liter), context.getString(R.string.liter_shorthand)),
-            Pair(context.getString(R.string.milliliter), context.getString(R.string.mililiter_shorthand)),
+            Pair(context.getString(R.string.milliliter), context.getString(R.string.milliliter_shorthand)),
             Pair(context.getString(R.string.pound), context.getString(R.string.pound_shorthand)),
             Pair(context.getString(R.string.gram), context.getString(R.string.gram_shorthand))
         )
@@ -116,7 +116,7 @@ class IngredientInputDialog(context: Context) {
         fractionTextView = v.findViewById(R.id.fraction_text_view)
         unitsTextView = v.findViewById(R.id.units_text_view)
         unitsChipGroup = v.findViewById(R.id.unit_chips)
-        fractionChipGroup = v.findViewById(R.id.frac_chip_group)
+        fractionChipGroup = v.findViewById(R.id.fraction_chip_group)
 
         v.findViewById<MaterialButton>(R.id.button_input_0)
             .setOnClickListener { numberKeyListener(it as MaterialButton) }

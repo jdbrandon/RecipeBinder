@@ -177,10 +177,10 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
     fun amountString(): CharSequence {
         val num = StringBuilder("%4.2f".format(amount))
-        val frac = num.substring(num.lastIndex - 1)
+        val fraction = num.substring(num.lastIndex - 1)
         num.replace(num.length - 3, num.length, "")
         if(num.toString() == "0") num.clear()
-        when(frac) {
+        when(fraction) {
             "00" -> {
             }
             "25" -> num.apply {
@@ -198,7 +198,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             "75" -> num.apply {
                 append(" 3/4")
             }
-            else -> Timber.d("unable to format $frac")
+            else -> Timber.d("unable to format $fraction")
         }
         return num.append(" $unit\t").toString()
     }

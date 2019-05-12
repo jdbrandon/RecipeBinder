@@ -38,7 +38,6 @@
     <string name="symbol_dot">.</string>
     <string name="ingredient">Ingredient</string>
     <string name="quantity">quantity</string>
-    <string name="colon">:</string>
     <string name="delete">Delete</string>
     <string name="move_down">Move Down</string>
     <string name="move_up">Move Up</string>
@@ -67,7 +66,7 @@
     <string name="quart_shorthand">qt</string>
     <string name="gallon_shorthand">gal</string>
     <string name="liter_shorthand">l</string>
-    <string name="mililiter_shorthand">ml</string>
+    <string name="milliliter_shorthand">ml</string>
     <string name="pound_shorthand">lb</string>
     <string name="gram_shorthand">g</string>
     <string name="tags">Tags</string>
