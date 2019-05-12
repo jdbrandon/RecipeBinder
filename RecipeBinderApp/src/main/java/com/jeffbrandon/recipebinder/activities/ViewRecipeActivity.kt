@@ -126,11 +126,6 @@ class ViewRecipeActivity : RecipeActivity() {
             saveRecipeState()
     }
 
-    override fun onResume() {
-        super.onResume()
-        showCorrectViews()
-    }
-
     /**
      * Called from [onResume]
      */
@@ -154,7 +149,7 @@ class ViewRecipeActivity : RecipeActivity() {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
                     setTagViews(currentRecipe.tags)
-                    recipe_name_view.text = currentRecipe.name
+                    title_text_view.text = currentRecipe.name
                     recipe_name.setText(currentRecipe.name)
                     cook_time_view.text = cookTime
                     cook_time.setText(cookTime)
@@ -197,7 +192,7 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun setTagsVisibility(visible: Int) {
-        tags_edit_chip_layout.visibility = visible
+        tags_layout.visibility = visible
     }
 
     private fun setIngredientsVisibility(visible: Int) {
@@ -211,11 +206,11 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun setCommonViewVisibility(editing: Boolean) {
-        title_text_view.text = if(editing) getString(R.string.recipe_editor) else getString(R.string.recipe_details)
+        title_text_view.text = if(editing) "Edit ${currentRecipe.name}" else currentRecipe.name
         recipe_name_view_layout.visibility = if(!editing) View.VISIBLE else View.INVISIBLE
         recipe_name_edit_layout.visibility = if(editing) View.VISIBLE else View.INVISIBLE
-        tags_view_chip_group.visibility = if(!editing) View.VISIBLE else View.GONE
-        tags_edit_chip_layout.visibility = if(editing) View.VISIBLE else View.GONE
+        tags_section_title.visibility = if(editing) View.VISIBLE else View.GONE
+        tags_layout.visibility = if(editing) View.VISIBLE else View.GONE
         ingredients_list_view.visibility = if(!editing) View.VISIBLE else View.GONE
         instructions_list_view.visibility = if(!editing) View.VISIBLE else View.GONE
         ingredients_list_view_large.visibility = if(editing) View.VISIBLE else View.GONE
@@ -296,7 +291,7 @@ class ViewRecipeActivity : RecipeActivity() {
                 currentRecipe = dbInput
             } else Timber.w("Tried to update recipe with uninitialized id")
             launch(Dispatchers.Main) {
-                recipe_name_view.text = name
+                title_text_view.text = name
                 cook_time_view.text = if(time == 0) "" else time.toString()
                 setTagViews(tags)
             }
@@ -333,9 +328,6 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun setTagViews(tags: List<RecipeTag>) {
-        tags_view_chip_group.removeAllViews()
-        for(tag in tags)
-            tags_view_chip_group.addView(tag.toChipView(this))
         (cook_type_chips.children + dish_type_chips.children + tags_group.children).forEach {
             (it as Chip).apply { isChecked = getTagForChip(it) in tags }
         }

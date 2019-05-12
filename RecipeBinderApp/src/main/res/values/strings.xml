@@ -55,8 +55,6 @@
     <string name="view_mode_extra">viewMode</string>
     <string name="recipe_filter">Recipe filter</string>
     <string name="add_recipe">Add Recipe</string>
-    <string name="recipe_details">Recipe Details</string>
-    <string name="recipe_editor">Recipe Editor</string>
     <string name="toast_save">Recipe data saved</string>
     <string name="cup_shorthand">c</string>
     <string name="ounce_shorthand">oz</string>
@@ -76,4 +74,7 @@
     <string name="dessert">Dessert</string>
     <string name="update_instruction">Update instruction</string>
     <string name="update">Update</string>
+    <string name="cook_type">Cook type</string>
+    <string name="course">Course</string>
+    <string name="other_information">Other information</string>
 </resources>
