@@ -78,7 +78,7 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
                         launch(Dispatchers.IO) {
                             //add basic recipe to db
                             val r = RecipeData()
-                            r.name = name
+                            r.name = name.capitalize()
                             r.id = recipePersistentData.insertRecipe(r)
                             launch(Dispatchers.Default) {
                                 navigateToEditRecipeActivity(r.id!!)

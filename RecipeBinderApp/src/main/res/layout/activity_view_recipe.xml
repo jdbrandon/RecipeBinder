@@ -129,6 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_recipe_content_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tags_section_title">
@@ -261,6 +262,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_section_title" />
 
+        <ListView
+            android:id="@+id/ingredients_list_view_large"
+            style="@style/LargeConstrainedListView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_ingredient_button"
             android:layout_width="wrap_content"
@@ -283,7 +290,7 @@
             android:textSize="@dimen/item_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view" />
+            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view_large" />
 
         <!-- Instruction Views -->
         <com.google.android.material.textfield.TextInputLayout
@@ -310,6 +317,12 @@
             style="@style/SmallConstrainedListView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instruction_input_layout" />
+
+        <ListView
+            android:id="@+id/instructions_list_view_large"
+            style="@style/LargeConstrainedListView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instructions_list_view" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_instruction_button"

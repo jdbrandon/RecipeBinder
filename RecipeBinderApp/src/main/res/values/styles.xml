@@ -46,12 +46,12 @@
     </style>
 
     <style name="LargeConstrainedListView" parent="ConstrainedListView">
-        <item name="layout_constraintHeight_max">300dp</item>
+        <item name="layout_constraintHeight_max">400dp</item>
         <item name="layout_constraintHeight_min">100dp</item>
     </style>
 
     <style name="SmallConstrainedListView" parent="ConstrainedListView">
-        <item name="layout_constraintHeight_max">130dp</item>
+        <item name="layout_constraintHeight_max">150dp</item>
         <item name="layout_constraintHeight_min">80dp</item>
     </style>
 

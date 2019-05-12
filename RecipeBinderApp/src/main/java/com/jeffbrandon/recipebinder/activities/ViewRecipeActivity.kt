@@ -77,6 +77,8 @@ class ViewRecipeActivity : RecipeActivity() {
 
         registerForContextMenu(ingredients_list_view)
         registerForContextMenu(instructions_list_view)
+        registerForContextMenu(ingredients_list_view_large)
+        registerForContextMenu(instructions_list_view_large)
     }
 
     private fun addInstructionClick() {
@@ -101,7 +103,7 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun saveInstructionClick() {
         if(!instruction_input.text.isNullOrEmpty()) {
-            instructionAdapter.add(Instruction(instruction_input.text.toString()))
+            instructionAdapter.add(Instruction(instruction_input.text.toString().capitalize()))
             instruction_input.text!!.clear()
         }
         action_button.visibility = View.VISIBLE
@@ -124,6 +126,11 @@ class ViewRecipeActivity : RecipeActivity() {
             saveRecipeState()
     }
 
+    override fun onResume() {
+        super.onResume()
+        showCorrectViews()
+    }
+
     /**
      * Called from [onResume]
      */
@@ -137,7 +144,7 @@ class ViewRecipeActivity : RecipeActivity() {
         intent.run {
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.database_recipe_id))
-                mode = extras!!.getInt(getString(R.string.view_mode_extra), VIEW)
+                mode = extras!!.getInt(getString(R.string.view_mode_extra), mode)
                 currentRecipe = recipePersistentData.fetchRecipe(id)
                 val ingredients = currentRecipe.ingredientsJson
                 val instructions = currentRecipe.instructionsJson
@@ -153,6 +160,8 @@ class ViewRecipeActivity : RecipeActivity() {
                     cook_time.setText(cookTime)
                     ingredients_list_view.adapter = ingredientAdapter
                     instructions_list_view.adapter = instructionAdapter
+                    ingredients_list_view_large.adapter = ingredientAdapter
+                    instructions_list_view_large.adapter = instructionAdapter
                     loading_panel.visibility = View.GONE
                     view_activity_content.visibility = View.VISIBLE
                     showCorrectViews()
@@ -165,8 +174,6 @@ class ViewRecipeActivity : RecipeActivity() {
         setCommonViewVisibility(mode.isEditing())
         when(mode) {
             VIEW -> {
-                ingredients_list_view.visibility = View.VISIBLE
-                instructions_list_view.visibility = View.VISIBLE
                 add_ingredient_button.visibility = View.GONE
                 add_instruction_button.visibility = View.GONE
             }
@@ -194,21 +201,25 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun setIngredientsVisibility(visible: Int) {
-        ingredients_list_view.visibility = visible
+        ingredients_list_view_large.visibility = visible
         add_ingredient_button.visibility = visible
     }
 
     private fun setInstructionsVisibility(visible: Int) {
-        instructions_list_view.visibility = visible
+        instructions_list_view_large.visibility = visible
         add_instruction_button.visibility = visible
     }
 
     private fun setCommonViewVisibility(editing: Boolean) {
         title_text_view.text = if(editing) getString(R.string.recipe_editor) else getString(R.string.recipe_details)
-        recipe_name_view_layout.visibility = if(editing) View.INVISIBLE else View.VISIBLE
+        recipe_name_view_layout.visibility = if(!editing) View.VISIBLE else View.INVISIBLE
         recipe_name_edit_layout.visibility = if(editing) View.VISIBLE else View.INVISIBLE
-        tags_view_chip_group.visibility = if(editing) View.GONE else View.VISIBLE
+        tags_view_chip_group.visibility = if(!editing) View.VISIBLE else View.GONE
         tags_edit_chip_layout.visibility = if(editing) View.VISIBLE else View.GONE
+        ingredients_list_view.visibility = if(!editing) View.VISIBLE else View.GONE
+        instructions_list_view.visibility = if(!editing) View.VISIBLE else View.GONE
+        ingredients_list_view_large.visibility = if(editing) View.VISIBLE else View.GONE
+        instructions_list_view_large.visibility = if(editing) View.VISIBLE else View.GONE
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -275,7 +286,7 @@ class ViewRecipeActivity : RecipeActivity() {
             val ingredients = ingredientAdapter.getData()
             val instructions = instructionAdapter.getData()
             val dbInput = RecipeData(id,
-                                     name,
+                                     name.capitalize(),
                                      time,
                                      tags,
                                      ingredients,
