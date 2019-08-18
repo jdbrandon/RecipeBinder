@@ -3,7 +3,7 @@
     package="com.jeffbrandon.recipebinder">
 
     <application
-        android:name="com.jeffbrandon.recipebinder.RecipeBinderApp"
+        android:name=".RecipeBinderApp"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
