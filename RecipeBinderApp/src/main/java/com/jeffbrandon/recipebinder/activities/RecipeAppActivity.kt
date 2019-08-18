@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.jeffbrandon.recipebinder.R
@@ -31,6 +32,7 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         job = SupervisorJob()
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         deferredDb = async(Dispatchers.IO) { RecipeDatabase.getInstance(this@RecipeAppActivity).recipeDao() }
     }
 
@@ -52,7 +54,7 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
     fun navigateToEditRecipeActivity(id: Long) {
         startActivity(getViewActivityIntent(id).apply {
             putExtra(getString(R.string.view_mode_extra),
-                     ViewRecipeActivity.EDIT)
+                     ViewRecipeActivity.EDIT_TAGS)
         })
     }
 

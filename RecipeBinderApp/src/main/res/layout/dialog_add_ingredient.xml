@@ -4,16 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/dialog_margin"
-    android:layout_marginBottom="@dimen/dialog_margin"
+    android:layout_marginTop="@dimen/min_margin"
+    android:layout_marginBottom="@dimen/min_margin"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <LinearLayout
         android:id="@+id/input_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginEnd="@dimen/dialog_margin"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -21,24 +19,28 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/TextInputStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:hint="@string/quantity"
+                app:boxCornerRadiusBottomEnd="@dimen/square_corner"
+                app:boxCornerRadiusTopEnd="@dimen/square_corner">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/quantity_input"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:enabled="false"
-                    android:hint="@string/quantity" />
+                    android:enabled="false" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/fraction_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="33dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="4dp"
                 android:layout_toStartOf="@id/units_text_view"
+                android:textSize="7pt"
                 tools:ignore="RelativeOverlap" />
 
             <TextView
@@ -46,30 +48,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="33dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="7pt" />
         </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ingredient_layout"
+            style="@style/TextInputStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:hint="@string/ingredient"
+            app:boxCornerRadiusBottomStart="@dimen/square_corner"
+            app:boxCornerRadiusTopStart="@dimen/square_corner">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ingredient_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences"
-                android:hint="@string/ingredient" />
+                android:inputType="textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginEnd="@dimen/dialog_margin">
+        android:layout_marginStart="@dimen/min_margin"
+        android:layout_marginEnd="@dimen/min_margin">
 
         <GridLayout
             android:id="@+id/number_grid_layout"
@@ -156,7 +162,7 @@
         </GridLayout>
 
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/frac_chip_group"
+            android:id="@+id/fraction_chip_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -194,8 +200,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="@dimen/dialog_margin"
-        android:layout_marginEnd="@dimen/dialog_margin">
+        android:layout_marginStart="@dimen/min_margin"
+        android:layout_marginEnd="@dimen/min_margin">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/unit_chips"

@@ -4,18 +4,15 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextInputStyle"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="20dp"
-        android:hint="@string/recipe_name">
+        android:layout_marginTop="@dimen/min_margin"
+        android:hint="@string/update_instruction">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_new_recipe_name"
+            android:id="@+id/update_instruction_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
     </com.google.android.material.textfield.TextInputLayout>
 </RelativeLayout>

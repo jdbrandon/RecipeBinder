@@ -15,18 +15,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="Theme.MaterialComponents">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="AppTheme.PopupOverlay" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
-
     <style name="CheckableChip" parent="@style/Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
         <item name="android:textColor">@color/text_color_chip_state_list</item>
@@ -36,7 +24,40 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="RecipeCheckableChip" parent="@style/CheckableChip">
-        <item name="android:visibility">gone</item>
+    <style name="TextInputStyle" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusBottomStart">24dp</item>
+        <item name="boxCornerRadiusBottomEnd">24dp</item>
+        <item name="boxCornerRadiusTopStart">24dp</item>
+        <item name="boxCornerRadiusTopEnd">24dp</item>
+        <item name="android:layout_marginStart">@dimen/min_margin</item>
+        <item name="android:layout_marginEnd">@dimen/min_margin</item>
     </style>
+
+    <style name="RoundButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
+        <item name="borderWidth">2dp</item>
+    </style>
+
+    <style name="ConstrainedListView" parent="Widget.AppCompat.ListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginStart">@dimen/view_recipe_content_margin_start</item>
+        <item name="android:layout_marginEnd">@dimen/view_recipe_content_margin_end</item>
+        <item name="android:clickable">false</item>
+    </style>
+
+    <style name="LargeConstrainedListView" parent="ConstrainedListView">
+        <item name="layout_constraintHeight_max">400dp</item>
+        <item name="layout_constraintHeight_min">100dp</item>
+    </style>
+
+    <style name="SmallConstrainedListView" parent="ConstrainedListView">
+        <item name="layout_constraintHeight_max">150dp</item>
+        <item name="layout_constraintHeight_min">80dp</item>
+    </style>
+
+    <style name="checkboxStyle" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:minWidth">1dp</item>
+        <item name="android:minHeight">1dp</item>
+    </style>
+
 </resources>

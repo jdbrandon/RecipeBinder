@@ -12,26 +12,15 @@
         android:textSize="@dimen/ingredient_list_text_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_max="100dp"
+        app:layout_constraintWidth_max="200dp"
         app:layout_constraintWidth_min="80dp" />
 
     <TextView
-        android:id="@+id/colon_view"
-        android:layout_width="0dp"
+        android:id="@+id/ingredient_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/colon"
         android:textSize="@dimen/ingredient_list_text_size"
         app:layout_constraintStart_toEndOf="@id/quantity"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_min="48dp" />
-
-    <TextView
-        android:id="@+id/ingredient_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/ingredient_list_text_size"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/colon_view"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

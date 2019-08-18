@@ -7,9 +7,11 @@ import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.core.view.children
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.chip.Chip
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.data.Instruction
@@ -17,6 +19,7 @@ import com.jeffbrandon.recipebinder.data.InstructionAdapter
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.widgets.IngredientInputDialog
+import com.jeffbrandon.recipebinder.widgets.UpdateInstructionDialog
 import kotlinx.android.synthetic.main.activity_view_recipe.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -27,88 +30,116 @@ import timber.log.Timber
 
 class ViewRecipeActivity : RecipeActivity() {
     private var mode: Int = VIEW
-    private lateinit var deferredDialog: Deferred<IngredientInputDialog>
-    private val dialog: IngredientInputDialog by lazy { runBlocking { deferredDialog.await() } }
+    private lateinit var deferredIngredientDialog: Deferred<IngredientInputDialog>
+    private val ingredientDialog: IngredientInputDialog by lazy { runBlocking { deferredIngredientDialog.await() } }
+    private lateinit var deferredInstructionDialog: Deferred<UpdateInstructionDialog>
+    private val instructionDialog: UpdateInstructionDialog by lazy { runBlocking { deferredInstructionDialog.await() } }
     override lateinit var ingredientAdapter: IngredientAdapter
     override lateinit var instructionAdapter: InstructionAdapter
     private var crossToCheckAnimation: AnimatedVectorDrawableCompat? = null
     private var checkToCrossAnimation: AnimatedVectorDrawableCompat? = null
-    private val editButtonAnimatedVector: AnimatedVectorDrawableCompat?
-        get() = AnimatedVectorDrawableCompat.create(this, R.drawable.edit_to_save)
+    private val editButtonAnimatedVector: AnimatedVectorDrawableCompat? by lazy {
+        AnimatedVectorDrawableCompat.create(this, R.drawable.edit_to_save)
+    }
     private val saveButtonAnimatedVector: AnimatedVectorDrawableCompat? by lazy {
-        AnimatedVectorDrawableCompat.create(this,
-                                            R.drawable.save_to_edit)
+        AnimatedVectorDrawableCompat.create(this, R.drawable.save_to_edit)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_view_recipe)
+        setMode(intent, savedInstanceState)
+        setupButtonListeners()
+        crossToCheckAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.cross_to_check)
+        checkToCrossAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.check_to_cross)
+    }
+
+    private fun setMode(intent: Intent?, savedInstanceState: Bundle?) {
+        intent?.run {
+            mode = getIntExtra(getString(R.string.view_mode_extra), mode)
+        }
+        savedInstanceState?.run {
+            mode = getInt(getString(R.string.view_mode_extra), mode)
+        }
+    }
+
+    override fun launchDeferredTasks() {
+        deferredIngredientDialog = async { IngredientInputDialog(this@ViewRecipeActivity) }
+        deferredInstructionDialog = async { UpdateInstructionDialog(this@ViewRecipeActivity) }
+    }
+
+    private fun setupButtonListeners() {
+        add_ingredient_button.setOnClickListener { ingredientDialog.addIngredientListener(ingredientAdapter) }
+        add_instruction_button.setOnClickListener { addInstructionClick() }
+        if(mode.isEditing())
+            action_button.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
+        else action_button.setOnClickListener { editActionListener() }
+
+        registerForContextMenu(ingredients_list_view)
+        registerForContextMenu(instructions_list_view)
+        registerForContextMenu(ingredients_list_view_large)
+        registerForContextMenu(instructions_list_view_large)
+    }
+
+    private fun addInstructionClick() {
+        action_button.visibility = View.GONE
+        instruction_input_layout.visibility = View.VISIBLE
+        add_instruction_button.animateWithCallback(crossToCheckAnimation!!) { saveInstructionClick() }
     }
 
     private fun editActionListener() {
-        mode = EDIT
+        mode = EDIT_TAGS
         showCorrectViews()
-        action_button.setImageDrawable(editButtonAnimatedVector)
-        (action_button.drawable as Animatable).start()
-        action_button.setOnClickListener { saveActionListener() }
+        action_button.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
     }
 
     private fun saveActionListener() {
         mode = VIEW
         showCorrectViews()
         saveRecipeState()
-        action_button.setImageDrawable(saveButtonAnimatedVector)
-        (action_button.drawable as Animatable).start()
-        action_button.setOnClickListener { editActionListener() }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_recipe)
-        setupButtonListeners()
-        crossToCheckAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.cross_to_check)
-        checkToCrossAnimation = AnimatedVectorDrawableCompat.create(this, R.drawable.check_to_cross)
-    }
-
-    override fun launchDeferredTasks() {
-        deferredDialog = async { IngredientInputDialog(this@ViewRecipeActivity) }
-    }
-
-    private fun setupButtonListeners() {
-        add_ingredient_button.setOnClickListener { dialog.addIngredientListener(ingredientAdapter) }
-        add_instruction_button.setOnClickListener { addInstructionClick() }
-        action_button.setOnClickListener { editActionListener() }
-        registerForContextMenu(ingredients_list_view)
-        registerForContextMenu(instructions_list_view)
-    }
-
-    private fun addInstructionClick() {
-        action_button.visibility = View.GONE
-        instruction_input_layout.visibility = View.VISIBLE
-        add_instruction_button.setImageDrawable(crossToCheckAnimation)
-        (add_instruction_button.drawable as Animatable).start()
-        add_instruction_button.setOnClickListener { saveInstructionClick() }
+        Toast.makeText(this, getString(R.string.toast_save), Toast.LENGTH_SHORT).show()
+        action_button.animateWithCallback(saveButtonAnimatedVector) { editActionListener() }
     }
 
     private fun saveInstructionClick() {
         if(!instruction_input.text.isNullOrEmpty()) {
-            instructionAdapter.add(Instruction(instruction_input.text.toString()))
+            instructionAdapter.add(Instruction(instruction_input.text.toString().capitalize()))
             instruction_input.text!!.clear()
         }
         action_button.visibility = View.VISIBLE
         instruction_input_layout.visibility = View.GONE
         hideKeyboard()
-        add_instruction_button.setImageDrawable(checkToCrossAnimation)
-        (add_instruction_button.drawable as Animatable).start()
-        add_instruction_button.setOnClickListener { addInstructionClick() }
+        add_instruction_button.animateWithCallback(checkToCrossAnimation) { addInstructionClick() }
+    }
+
+    private fun FloatingActionButton.animateWithCallback(animatedDrawable: AnimatedVectorDrawableCompat?,
+                                                         callback: () -> Unit) {
+        setImageDrawable(animatedDrawable)
+        (drawable as Animatable).start()
+        setOnClickListener { callback() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(getString(R.string.view_mode_extra), mode)
         super.onSaveInstanceState(outState)
-        if(mode == EDIT)
+        if(mode.isEditing())
             saveRecipeState()
     }
 
+    /**
+     * Called from [onResume]
+     */
     override fun populateViews(intent: Intent?) {
-        intent?.apply {
+        if(intent == null) {
+            Timber.w("No recipe ID passed through intent: not sure how to populate views")
+            Timber.i("exiting")
+            finish()
+            return // Ensures kotlin knows intent is not null
+        }
+        intent.run {
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.database_recipe_id))
-                mode = extras!!.getInt(getString(R.string.view_mode_extra), VIEW)
+                mode = extras!!.getInt(getString(R.string.view_mode_extra), mode)
                 currentRecipe = recipePersistentData.fetchRecipe(id)
                 val ingredients = currentRecipe.ingredientsJson
                 val instructions = currentRecipe.instructionsJson
@@ -118,12 +149,14 @@ class ViewRecipeActivity : RecipeActivity() {
                     ingredientAdapter = populateIngredients(ingredients)
                     instructionAdapter = populateInstructions(instructions)
                     setTagViews(currentRecipe.tags)
-                    recipe_name_view.text = currentRecipe.name
+                    title_text_view.text = currentRecipe.name
                     recipe_name.setText(currentRecipe.name)
                     cook_time_view.text = cookTime
                     cook_time.setText(cookTime)
                     ingredients_list_view.adapter = ingredientAdapter
                     instructions_list_view.adapter = instructionAdapter
+                    ingredients_list_view_large.adapter = ingredientAdapter
+                    instructions_list_view_large.adapter = instructionAdapter
                     loading_panel.visibility = View.GONE
                     view_activity_content.visibility = View.VISIBLE
                     showCorrectViews()
@@ -133,21 +166,55 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun showCorrectViews() {
+        setCommonViewVisibility(mode.isEditing())
         when(mode) {
             VIEW -> {
-                recipe_name_view_layout.visibility = View.VISIBLE
-                recipe_name_edit_layout.visibility = View.INVISIBLE
                 add_ingredient_button.visibility = View.GONE
                 add_instruction_button.visibility = View.GONE
             }
-            EDIT -> {
-                recipe_name_view_layout.visibility = View.GONE
-                recipe_name_edit_layout.visibility = View.VISIBLE
-                add_ingredient_button.visibility = View.VISIBLE
-                add_instruction_button.visibility = View.VISIBLE
+            EDIT_TAGS -> {
                 setTagViews(currentRecipe.tags)
+                setTagsVisibility(View.VISIBLE)
+                setIngredientsVisibility(View.GONE)
+                setInstructionsVisibility(View.GONE)
+            }
+            EDIT_INGREDIENTS -> {
+                setTagsVisibility(View.GONE)
+                setIngredientsVisibility(View.VISIBLE)
+                setInstructionsVisibility(View.GONE)
+            }
+            EDIT_INSTRUCTIONS -> {
+                setTagsVisibility(View.GONE)
+                setIngredientsVisibility(View.GONE)
+                setInstructionsVisibility(View.VISIBLE)
             }
         }
+    }
+
+    private fun setTagsVisibility(visible: Int) {
+        tags_layout.visibility = visible
+    }
+
+    private fun setIngredientsVisibility(visible: Int) {
+        ingredients_list_view_large.visibility = visible
+        add_ingredient_button.visibility = visible
+    }
+
+    private fun setInstructionsVisibility(visible: Int) {
+        instructions_list_view_large.visibility = visible
+        add_instruction_button.visibility = visible
+    }
+
+    private fun setCommonViewVisibility(editing: Boolean) {
+        title_text_view.text = if(editing) "Edit ${currentRecipe.name}" else currentRecipe.name
+        recipe_name_view_layout.visibility = if(!editing) View.VISIBLE else View.INVISIBLE
+        recipe_name_edit_layout.visibility = if(editing) View.VISIBLE else View.INVISIBLE
+        tags_section_title.visibility = if(editing) View.VISIBLE else View.GONE
+        tags_layout.visibility = if(editing) View.VISIBLE else View.GONE
+        ingredients_list_view.visibility = if(!editing) View.VISIBLE else View.GONE
+        instructions_list_view.visibility = if(!editing) View.VISIBLE else View.GONE
+        ingredients_list_view_large.visibility = if(editing) View.VISIBLE else View.GONE
+        instructions_list_view_large.visibility = if(editing) View.VISIBLE else View.GONE
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -164,6 +231,10 @@ class ViewRecipeActivity : RecipeActivity() {
             }
             R.id.option_down -> {
                 moveItemDown(info)
+                true
+            }
+            R.id.option_update -> {
+                updateItem(info)
                 true
             }
             R.id.option_delete -> {
@@ -188,6 +259,13 @@ class ViewRecipeActivity : RecipeActivity() {
         }
     }
 
+    private fun updateItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
+        when(menuInfo.targetView.id) {
+            R.id.ingredient_view -> ingredientDialog.updateIngredientListener(ingredientAdapter, menuInfo.position)
+            R.id.instruction_view -> instructionDialog.updateInstruction(instructionAdapter, menuInfo.position)
+        }
+    }
+
     private fun deleteItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
         when(menuInfo.targetView.id) {
             R.id.ingredient_view -> ingredientAdapter.delete(menuInfo.position)
@@ -203,7 +281,7 @@ class ViewRecipeActivity : RecipeActivity() {
             val ingredients = ingredientAdapter.getData()
             val instructions = instructionAdapter.getData()
             val dbInput = RecipeData(id,
-                                     name,
+                                     name.capitalize(),
                                      time,
                                      tags,
                                      ingredients,
@@ -213,7 +291,7 @@ class ViewRecipeActivity : RecipeActivity() {
                 currentRecipe = dbInput
             } else Timber.w("Tried to update recipe with uninitialized id")
             launch(Dispatchers.Main) {
-                recipe_name_view.text = name
+                title_text_view.text = name
                 cook_time_view.text = if(time == 0) "" else time.toString()
                 setTagViews(tags)
             }
@@ -227,6 +305,12 @@ class ViewRecipeActivity : RecipeActivity() {
             R.id.chip_oven -> mutableListOf(RecipeTag.OVEN)
             R.id.chip_sous_vide -> mutableListOf(RecipeTag.SOUS_VIDE)
             else -> mutableListOf()
+        }
+        when(dish_type_chips.checkedChipId) {
+            R.id.chip_entree -> res.add(RecipeTag.ENTREE)
+            R.id.chip_side -> res.add(RecipeTag.SIDE)
+            R.id.chip_soup -> res.add(RecipeTag.SOUP)
+            R.id.chip_dessert -> res.add(RecipeTag.DESSERT)
         }
         res.apply {
             if(chip_fast.isChecked)
@@ -243,15 +327,9 @@ class ViewRecipeActivity : RecipeActivity() {
         return res
     }
 
-    override fun setTagViews(tags: List<RecipeTag>) {
-        val editing = mode == EDIT
-        (cook_type_chips.children + tags_group.children).forEach {
-            (it as Chip).apply {
-                val checked = getTagForChip(it) in tags
-                isChecked = checked // Required for data
-                isClickable = editing
-                visibility = if(checked || editing) View.VISIBLE else View.GONE
-            }
+    private fun setTagViews(tags: List<RecipeTag>) {
+        (cook_type_chips.children + dish_type_chips.children + tags_group.children).forEach {
+            (it as Chip).apply { isChecked = getTagForChip(it) in tags }
         }
     }
 
@@ -266,12 +344,48 @@ class ViewRecipeActivity : RecipeActivity() {
             chip_healthy.id -> RecipeTag.HEALTHY
             chip_vegetarian.id -> RecipeTag.VEGETARIAN
             chip_vegan.id -> RecipeTag.VEGAN
+            chip_entree.id -> RecipeTag.ENTREE
+            chip_side.id -> RecipeTag.SIDE
+            chip_soup.id -> RecipeTag.SOUP
+            chip_dessert.id -> RecipeTag.DESSERT
             else -> throw IllegalArgumentException("Unknown chip argument")
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
+    fun tagsClick(v: View) {
+        switchMode(EDIT_TAGS)
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun ingredientsClick(v: View) {
+        switchMode(EDIT_INGREDIENTS)
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun instructionsClick(v: View) {
+        switchMode(EDIT_INSTRUCTIONS)
+    }
+
+    private fun switchMode(newMode: Int) {
+        if(mode.isEditing() && mode != newMode) {
+            mode = newMode
+            showCorrectViews()
+        }
+    }
+
     companion object {
-        const val VIEW: Int = 0
-        const val EDIT: Int = 1
+        const val VIEW = 0
+        const val EDIT_TAGS = 1
+        const val EDIT_INGREDIENTS = 2
+        const val EDIT_INSTRUCTIONS = 3
+        private fun Int.isEditing(): Boolean {
+            return when(this) {
+                EDIT_TAGS,
+                EDIT_INGREDIENTS,
+                EDIT_INSTRUCTIONS -> true
+                else -> false
+            }
+        }
     }
 }

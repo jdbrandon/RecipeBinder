@@ -7,7 +7,6 @@ import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.data.InstructionAdapter
-import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,6 +18,10 @@ abstract class RecipeActivity : RecipeAppActivity() {
     }
 
     protected var id: Long = BAD_ID
+
+    /**
+     * The current [RecipeData]
+     */
     protected lateinit var currentRecipe: RecipeData
 
     abstract val ingredientAdapter: AppendableAdapter<Ingredient>
@@ -52,6 +55,8 @@ abstract class RecipeActivity : RecipeAppActivity() {
         return InstructionAdapter(this, instructions.toMutableList())
     }
 
+    /**
+     * Called in [onResume], populates views with fresh data
+     */
     abstract fun populateViews(intent: Intent?)
-    abstract fun setTagViews(tags: List<RecipeTag>)
 }
