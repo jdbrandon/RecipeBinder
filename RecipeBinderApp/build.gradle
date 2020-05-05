@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    buildToolsVersion = '30.0.0-rc3'
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.jeffbrandon.recipebinder"
@@ -16,18 +17,15 @@ android {
         versionCode major << 16 | minor << 8 | patch
         versionName "$major.$minor.$patch"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
     }
-
     lintOptions {
         abortOnError = false
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -38,10 +36,10 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = "1.8"
     }
-    buildToolsVersion = '28.0.3'
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    viewBinding.enabled = true
 }
 
 dependencies {
