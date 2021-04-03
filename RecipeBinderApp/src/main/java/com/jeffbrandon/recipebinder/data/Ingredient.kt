@@ -1,8 +1,10 @@
 package com.jeffbrandon.recipebinder.data
 
 import com.jeffbrandon.recipebinder.enums.UnitType
+import com.squareup.moshi.JsonClass
 import timber.log.Timber
 
+@JsonClass(generateAdapter = true)
 data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
     fun convertTo(type: UnitType): Float {
