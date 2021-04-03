@@ -7,36 +7,24 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import com.jeffbrandon.recipebinder.R
-import com.jeffbrandon.recipebinder.room.RecipeDao
-import com.jeffbrandon.recipebinder.room.RecipeDatabase
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 
-/**
- * @deprecated use [NewRecipeAppActivity]
- */
-abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
-
-    private lateinit var job: Job
+abstract class NewRecipeAppActivity : DaggerAppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
 
-    private lateinit var deferredDb: Deferred<RecipeDao>
-    protected val recipePersistentData by lazy { runBlocking { deferredDb.await() } }
+    private lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         job = SupervisorJob()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        deferredDb = async(Dispatchers.IO) { RecipeDatabase.getInstance(this@RecipeAppActivity).recipeDao() }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -57,7 +45,7 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
     fun navigateToEditRecipeActivity(id: Long) {
         startActivity(getViewActivityIntent(id).apply {
             putExtra(getString(R.string.view_mode_extra),
-                     ViewRecipeActivity.EDIT_TAGS)
+                ViewRecipeActivity.EDIT_TAGS)
         })
     }
 
