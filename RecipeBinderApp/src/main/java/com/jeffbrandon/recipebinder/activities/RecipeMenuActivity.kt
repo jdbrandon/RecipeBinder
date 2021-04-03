@@ -15,20 +15,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
+import com.jeffbrandon.recipebinder.databinding.ContentRecipeMenuBinding
 import com.jeffbrandon.recipebinder.room.RecipeData
-import kotlinx.android.synthetic.main.content_recipe_menu.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
+import java.util.*
 
 class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var deferredMenuAdapter: Deferred<RecipeAdapter>
+    private lateinit var binding: ContentRecipeMenuBinding
 
     private val recipeMenuAdapter: RecipeAdapter by lazy { runBlocking { deferredMenuAdapter.await() } }
 
@@ -39,9 +41,10 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
                           recipePersistentData.fetchAllRecipes().toMutableList()
             )
         }
-        setContentView(R.layout.activity_recipe_menu)
+        binding = ContentRecipeMenuBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        recipe_filter_text.addTextChangedListener { text ->
+        binding.recipeFilterText.addTextChangedListener { text ->
             launch(Dispatchers.IO) {
                 val filterList = recipePersistentData.fetchAllRecipes("%$text%")
                 launch(Dispatchers.Main) {
@@ -52,16 +55,16 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
 
         setupNewRecipeButton()
         viewManager = LinearLayoutManager(this)
-        recyclerView = recipe_recycler_view.apply {
+        recyclerView = binding.recipeRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = recipeMenuAdapter
         }
-        registerForContextMenu(recipe_recycler_view)
+        registerForContextMenu(binding.recipeRecyclerView)
     }
 
     private fun setupNewRecipeButton() {
-        add_recipe_button.setOnClickListener {
+        binding.addRecipeButton.setOnClickListener {
             //Open a Dialog to create a recipe
             val newRecipeDialogContent = View.inflate(this, R.layout.dialog_create_recipe, null)
             val input = newRecipeDialogContent.findViewById<EditText>(R.id.input_new_recipe_name)
@@ -82,7 +85,7 @@ class RecipeMenuActivity : RecipeAppActivity(), Observer<List<RecipeData>> {
                         launch(Dispatchers.IO) {
                             //add basic recipe to db
                             val r = RecipeData()
-                            r.name = name.capitalize()
+                            r.name = name.capitalize(Locale.getDefault())
                             r.id = recipePersistentData.insertRecipe(r)
                             launch(Dispatchers.Default) {
                                 navigateToEditRecipeActivity(r.id!!)
