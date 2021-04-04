@@ -1,7 +1,5 @@
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="NewApi">
+    xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">
         <vector
             android:name="cross_to_check"
@@ -39,6 +37,17 @@
                     android:valueTo="M 19 13 L 13.257 13 L 13.068 13 L 10.995 13 L 10.743 13 L 5 13 L 5 11 L 10.869 11 L 10.995 11 L 13.068 11 L 13.257 11 L 19 11 L 19 13 L 19 13"
                     android:valueType="pathType" />
             </set>
+        </aapt:attr>
+    </target>
+    <target android:name="group">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="250"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="rotation"
+                android:valueFrom="0"
+                android:valueTo="270"
+                android:valueType="floatType" />
         </aapt:attr>
     </target>
 </animated-vector>

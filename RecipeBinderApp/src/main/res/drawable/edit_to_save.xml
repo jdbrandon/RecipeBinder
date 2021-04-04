@@ -1,7 +1,5 @@
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="NewApi">
+    xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">
         <vector
             android:name="vector"
@@ -60,6 +58,7 @@
         <aapt:attr name="android:animation">
             <objectAnimator
                 android:duration="90"
+                android:interpolator="@android:interpolator/linear_out_slow_in"
                 android:propertyName="fillAlpha"
                 android:startOffset="410"
                 android:valueFrom="0"

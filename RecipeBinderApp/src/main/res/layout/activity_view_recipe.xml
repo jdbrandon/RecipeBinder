@@ -14,7 +14,8 @@
         android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
         android:layout_marginBottom="@dimen/min_margin"
         android:textSize="@dimen/title_text_size"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:transitionName="@string/name_transition" />
 
     <RelativeLayout
         android:id="@+id/loading_panel"
@@ -275,6 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/min_margin"
             android:visibility="gone"
+            android:contentDescription="@string/add_ingredient_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
             app:srcCompat="@drawable/ic_add_white_24dp" />
@@ -332,6 +334,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/min_margin"
             android:visibility="gone"
+            android:contentDescription="@string/add_instruction_button"
             app:layout_constraintBottom_toTopOf="@id/action_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructions_section_view"
@@ -344,6 +347,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
+            android:contentDescription="@string/edit_save_mode_toggle_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/edit_to_save" />

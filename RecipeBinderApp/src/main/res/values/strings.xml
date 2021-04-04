@@ -78,4 +78,7 @@
     <string name="course">Course</string>
     <string name="other_information">Other information</string>
     <string name="recipe_list">recipe list</string>
+    <string name="add_ingredient_button">add ingredient button</string>
+    <string name="add_instruction_button">add instruction button</string>
+    <string name="edit_save_mode_toggle_button">edit save mode toggle button</string>
 </resources>
