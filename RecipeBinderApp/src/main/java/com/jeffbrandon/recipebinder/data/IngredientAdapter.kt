@@ -17,7 +17,7 @@ class IngredientAdapter(context: Context,
         val quantityView = view.findViewById(R.id.quantity) as TextView?
         val ingredientView = view.findViewById(R.id.ingredient_name) as TextView?
         dataSource[position].let { ingredient ->
-            quantityView?.apply { text = ingredient.amountString() }
+            quantityView?.apply { text = ingredient.amountString(view.context) }
             ingredientView?.apply { text = ingredient.name }
         }
         return view

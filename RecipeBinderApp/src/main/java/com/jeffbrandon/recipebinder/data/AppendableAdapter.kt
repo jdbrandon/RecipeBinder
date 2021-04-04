@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.widget.BaseAdapter
 import timber.log.Timber
 
-abstract class AppendableAdapter<T>(protected val context: Context, protected val dataSource: MutableList<T>) :
+abstract class AppendableAdapter<T>(
+    protected val context: Context,
+    protected val dataSource: MutableList<T>
+) :
     BaseAdapter() {
-    protected val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    protected val inflater =
+        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getItem(position: Int): T = dataSource[position]
     override fun getItemId(position: Int): Long = dataSource[position].hashCode().toLong()
@@ -27,21 +31,21 @@ abstract class AppendableAdapter<T>(protected val context: Context, protected va
     fun getData(): List<T> = dataSource
 
     fun moveUp(position: Int) {
-        if(position == 0) return
+        if (position == 0) return
         val tmp = remove(position)
         add(position - 1, tmp)
         notifyDataSetChanged()
     }
 
     fun moveDown(position: Int) {
-        if(position == dataSource.lastIndex) return
+        if (position == dataSource.lastIndex) return
         val tmp = remove(position)
         add(position + 1, tmp)
         notifyDataSetChanged()
     }
 
     fun update(position: Int, item: T) {
-        if(position > 0 && position < dataSource.size) {
+        if (position in 0 until dataSource.size) {
             dataSource[position] = item
             notifyDataSetChanged()
         } else Timber.w("Tried to update outside bounds of data source")

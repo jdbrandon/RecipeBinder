@@ -7,7 +7,7 @@
         style="@style/TextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/min_margin"
+        android:layout_marginTop="@dimen/margin_small"
         android:hint="@string/update_instruction">
 
         <com.google.android.material.textfield.TextInputEditText

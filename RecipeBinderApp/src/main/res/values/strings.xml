@@ -29,11 +29,11 @@
     <string name="table_spoon">Table Spoon</string>
     <string name="ounce">Ounce</string>
     <string name="cup">Cup</string>
-    <string name="_3_quarters">3/4</string>
-    <string name="_2_thirds">2/3</string>
-    <string name="_1_half">1/2</string>
-    <string name="_1_third">1/3</string>
-    <string name="_1_quarter">1/4</string>
+    <string name="_3_quarters">&#190;</string>
+    <string name="_2_thirds">\u2154</string>
+    <string name="_1_half">&#189;</string>
+    <string name="_1_third">&#8531;</string>
+    <string name="_1_quarter">&#188;</string>
     <string name="_0">0</string>
     <string name="symbol_dot">.</string>
     <string name="ingredient">Ingredient</string>
@@ -81,4 +81,5 @@
     <string name="add_ingredient_button">add ingredient button</string>
     <string name="add_instruction_button">add instruction button</string>
     <string name="edit_save_mode_toggle_button">edit save mode toggle button</string>
+    <string name="name_transition">nameTransitionId</string>
 </resources>

@@ -1,12 +1,16 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="min_margin">4dp</dimen>
-    <dimen name="view_recipe_title_margin_start">20dp</dimen>
-    <dimen name="view_recipe_title_margin_end">20dp</dimen>
-    <dimen name="view_recipe_content_margin_start">24dp</dimen>
-    <dimen name="view_recipe_content_margin_end">20dp</dimen>
-    <dimen name="ingredient_list_text_size">8pt</dimen>
-    <dimen name="item_text_size">8pt</dimen>
-    <dimen name="title_text_size">12pt</dimen>
+    <dimen name="margin_fab">@dimen/margin_medium</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_xlarge">24dp</dimen>
+    <dimen name="view_recipe_title_margin_start">@dimen/margin_large</dimen>
+    <dimen name="view_recipe_title_margin_end">@dimen/margin_large</dimen>
+    <dimen name="view_recipe_content_margin_start">@dimen/margin_xlarge</dimen>
+    <dimen name="view_recipe_content_margin_end">@dimen/margin_large</dimen>
+    <dimen name="ingredient_list_text_size">16sp</dimen>
+    <dimen name="item_text_size">16sp</dimen>
+    <dimen name="title_text_size">24sp</dimen>
     <dimen name="square_corner">4dp</dimen>
+    <dimen name="ingredient_dialog_input_width">150dp</dimen>
 </resources>

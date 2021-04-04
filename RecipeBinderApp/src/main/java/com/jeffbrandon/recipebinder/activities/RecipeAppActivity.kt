@@ -65,7 +65,7 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
         startActivity(getViewActivityIntent(id))
     }
 
-    fun getViewActivityIntent(id: Long): Intent {
+    private fun getViewActivityIntent(id: Long): Intent {
         return Intent(this, ViewRecipeActivity::class.java).apply {
             putExtra(getString(R.string.database_recipe_id), id)
         }

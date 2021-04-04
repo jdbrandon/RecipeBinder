@@ -1,5 +1,7 @@
 package com.jeffbrandon.recipebinder.data
 
+import android.content.Context
+import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.squareup.moshi.JsonClass
 import timber.log.Timber
@@ -8,7 +10,7 @@ import timber.log.Timber
 data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
     fun convertTo(type: UnitType): Float {
-        return when(unit) {
+        return when (unit) {
             UnitType.GALLON -> gallonTo(type)
             UnitType.QUART -> quartTo(type)
             UnitType.PINT -> pintTo(type)
@@ -25,7 +27,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun gallonTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON -> amount
             UnitType.QUART -> amount * 4
             UnitType.PINT -> amount * 8
@@ -40,7 +42,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun quartTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON -> amount / 4
             UnitType.QUART -> amount
             UnitType.PINT -> amount * 2
@@ -55,7 +57,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun pintTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON -> amount / 8
             UnitType.QUART -> amount / 2
             UnitType.PINT -> amount
@@ -70,7 +72,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun cupTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON -> amount / 16
             UnitType.QUART -> amount / 4
             UnitType.PINT -> amount / 2
@@ -85,7 +87,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun ounceTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON -> amount / 128
             UnitType.QUART -> amount / 32
             UnitType.PINT, UnitType.POUND -> amount / 16
@@ -100,7 +102,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun tableSpoonTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON -> amount / 256
             UnitType.QUART -> amount / 64
             UnitType.PINT -> amount / 32
@@ -115,7 +117,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun teaSpoonTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON -> amount / 768
             UnitType.QUART -> amount / 192
             UnitType.PINT -> amount / 96
@@ -130,7 +132,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun poundTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GRAM -> amount * 453.592f
             UnitType.POUND -> amount
             UnitType.OUNCE -> amount * 16
@@ -139,7 +141,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun literTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON -> amount * 0.264172f
             UnitType.QUART -> amount * 1.05669f
             UnitType.PINT -> amount * 2.11338f
@@ -154,7 +156,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun milliLiterTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GALLON,
             UnitType.QUART,
             UnitType.PINT,
@@ -169,7 +171,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     }
 
     private fun gramTo(type: UnitType): Float {
-        return when(type) {
+        return when (type) {
             UnitType.GRAM -> amount
             UnitType.POUND -> amount * 0.00220462f
             UnitType.OUNCE -> amount * 0.035274f
@@ -177,31 +179,43 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
-    fun amountString(): CharSequence {
-        val num = StringBuilder("%4.2f".format(amount))
-        val fraction = num.substring(num.lastIndex - 1)
-        num.replace(num.length - 3, num.length, "")
-        if(num.toString() == "0") num.clear()
-        when(fraction) {
-            "00" -> {
+    fun amountString(context: Context): CharSequence {
+        val num = StringBuilder()
+        if (amountWhole() > 0) num.append(amountWhole())
+        when ((amountFraction() * 100).toInt()) {
+            0 -> Unit
+            25 -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_quarter))
             }
-            "25" -> num.apply {
-                append(" 1/4")
+            33 -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_third))
             }
-            "33" -> num.apply {
-                append(" 1/3")
+            50 -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_half))
             }
-            "50" -> num.apply {
-                append(" 1/2")
+            66 -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._2_thirds))
             }
-            "66", "67" -> num.apply {
-                append(" 2/3")
+            75 -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._3_quarters))
             }
-            "75" -> num.apply {
-                append(" 3/4")
-            }
-            else -> Timber.d("unable to format $fraction")
+            else -> Timber.e("Failed to format ${amountFraction()}")
         }
-        return num.append(" $unit\t").toString()
+        when (unit) {
+            UnitType.NONE -> Unit
+            else -> {
+                if (num.isNotEmpty()) num.append(" ")
+                num.append(unit)
+            }
+        }
+        return num.toString()
     }
+
+    private fun amountWhole() = amount.toInt()
+    private fun amountFraction() = amount - amountWhole()
 }
