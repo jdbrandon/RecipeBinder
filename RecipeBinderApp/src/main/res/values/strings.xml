@@ -77,4 +77,5 @@
     <string name="cook_type">Cook type</string>
     <string name="course">Course</string>
     <string name="other_information">Other information</string>
+    <string name="recipe_list">recipe list</string>
 </resources>
