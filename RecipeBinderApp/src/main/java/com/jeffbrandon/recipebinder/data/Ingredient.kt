@@ -47,6 +47,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
     fun amountWhole() = amount.toInt()
 
+    @SuppressWarnings("MagicNumber")
     fun amountFraction(): FractionalMeasurement = when (((amount - amountWhole()) * 100).toInt()) {
         25 -> FractionalMeasurement.QUARTER
         33 -> FractionalMeasurement.THIRD
@@ -73,6 +74,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun gallonTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount
@@ -88,6 +90,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun quartTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount / 4
@@ -103,6 +106,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun pintTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount / 8
@@ -118,6 +122,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun cupTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount / 16
@@ -133,6 +138,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun ounceTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount / 128
@@ -148,6 +154,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun tableSpoonTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount / 256
@@ -163,6 +170,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun teaSpoonTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount / 768
@@ -178,6 +186,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun poundTo(type: UnitType): Float {
         return when (type) {
             UnitType.GRAM -> amount * 453.592f
@@ -187,6 +196,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun literTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount * 0.264172f
@@ -202,6 +212,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun milliLiterTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON,
@@ -217,6 +228,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun gramTo(type: UnitType): Float {
         return when (type) {
             UnitType.GRAM -> amount

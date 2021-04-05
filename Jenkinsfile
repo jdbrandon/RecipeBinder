@@ -47,10 +47,14 @@ pipeline {
                 // Run Lint and analyse the results
                 sh './gradlew lintDebug'
                 sh './gradlew lintRelease'
+                sh './gradlew detekt'
                 recordIssues(
                   enabledForFailure: true,
                   aggregatingResults: true,
-                  tool: androidLintParser(pattern: '**/*lint-results*.xml')
+                  tools: [
+                    androidLintParser(pattern: '**/*lint-results*.xml'),
+                    detekt(pattern: '**/detekt.xml'),
+                  ]
                 )
             }
         }
