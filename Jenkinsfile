@@ -47,11 +47,7 @@ pipeline {
                 // Run Lint and analyse the results
                 sh './gradlew lintDebug'
                 sh './gradlew lintRelease'
-                recordIssues(
-                  enabledForFailure: true,
-                  aggregatingResults: true,
-                  tools: [androidLintParser()]
-                  )
+                recordIssues enabledForFailure: true, tool: androidLintParser()
             }
         }
     }
