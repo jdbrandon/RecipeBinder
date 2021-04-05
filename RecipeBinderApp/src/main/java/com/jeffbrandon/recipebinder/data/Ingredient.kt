@@ -2,12 +2,59 @@ package com.jeffbrandon.recipebinder.data
 
 import android.content.Context
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.enums.FractionalMeasurement
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.squareup.moshi.JsonClass
-import timber.log.Timber
 
 @JsonClass(generateAdapter = true)
 data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
+
+    fun amountString(context: Context): CharSequence {
+        val num = StringBuilder()
+        if (amountWhole() > 0) num.append(amountWhole())
+        when (amountFraction()) {
+            FractionalMeasurement.ZERO -> Unit
+            FractionalMeasurement.QUARTER -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_quarter))
+            }
+            FractionalMeasurement.THIRD -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_third))
+            }
+            FractionalMeasurement.HALF -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_half))
+            }
+            FractionalMeasurement.THIRD_TWO -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._2_thirds))
+            }
+            FractionalMeasurement.QUARTER_THREE -> num.apply {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._3_quarters))
+            }
+        }
+        when (unit) {
+            UnitType.NONE -> Unit
+            else -> {
+                if (num.isNotEmpty()) num.append(" ")
+                num.append(unit)
+            }
+        }
+        return num.toString()
+    }
+
+    fun amountWhole() = amount.toInt()
+
+    fun amountFraction(): FractionalMeasurement = when (((amount - amountWhole()) * 100).toInt()) {
+        25 -> FractionalMeasurement.QUARTER
+        33 -> FractionalMeasurement.THIRD
+        50 -> FractionalMeasurement.HALF
+        66 -> FractionalMeasurement.THIRD_TWO
+        75 -> FractionalMeasurement.QUARTER_THREE
+        else -> FractionalMeasurement.ZERO
+    }
 
     fun convertTo(type: UnitType): Float {
         return when (unit) {
@@ -178,44 +225,4 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             else -> throw IllegalArgumentException("Cannot convert gram to $type")
         }
     }
-
-    fun amountString(context: Context): CharSequence {
-        val num = StringBuilder()
-        if (amountWhole() > 0) num.append(amountWhole())
-        when ((amountFraction() * 100).toInt()) {
-            0 -> Unit
-            25 -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._1_quarter))
-            }
-            33 -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._1_third))
-            }
-            50 -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._1_half))
-            }
-            66 -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._2_thirds))
-            }
-            75 -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._3_quarters))
-            }
-            else -> Timber.e("Failed to format ${amountFraction()}")
-        }
-        when (unit) {
-            UnitType.NONE -> Unit
-            else -> {
-                if (num.isNotEmpty()) num.append(" ")
-                num.append(unit)
-            }
-        }
-        return num.toString()
-    }
-
-    private fun amountWhole() = amount.toInt()
-    private fun amountFraction() = amount - amountWhole()
 }

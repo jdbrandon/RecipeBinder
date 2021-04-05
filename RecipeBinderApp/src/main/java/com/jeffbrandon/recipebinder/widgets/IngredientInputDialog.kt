@@ -1,17 +1,15 @@
 package com.jeffbrandon.recipebinder.widgets
 
 import android.content.Context
-import android.nfc.FormatException
 import android.view.View
-import android.widget.Checkable
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.chip.Chip
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.databinding.DialogAddIngredientBinding
+import com.jeffbrandon.recipebinder.enums.FractionalMeasurement
 import com.jeffbrandon.recipebinder.enums.UnitType
-import timber.log.Timber
 
 class IngredientInputDialog(context: Context) {
     private var id: Int = -1
@@ -28,17 +26,13 @@ class IngredientInputDialog(context: Context) {
     private var selectedUnit: String?
         get() = unit
         set(v) {
-            unit = v.also {
-                binder.quantityInputLayout.suffixText = getSuffix(selectedFraction, it)
-            }
+            unit = v.also { updateQuantitySuffix(selectedFraction, it) }
         }
     private var fraction: String? = null
     private var selectedFraction: String?
         get() = fraction
         set(v) {
-            fraction = v.also {
-                binder.quantityInputLayout.suffixText = getSuffix(it, selectedUnit)
-            }
+            fraction = v.also { updateQuantitySuffix(it, selectedUnit) }
         }
 
     private val dialog by lazy {
@@ -46,7 +40,7 @@ class IngredientInputDialog(context: Context) {
             .setView(view)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 val amount =
-                    computeAmount(binder.quantityInput.text.toString(), getSelectedFraction())
+                    computeAmount(binder.quantityInput.text?.trim(), getSelectedFraction())
                 val type = getSelectedType()
                 val newIngredient = Ingredient(binder.ingredientInput.text.toString(), amount, type)
                 when (action) {
@@ -78,10 +72,10 @@ class IngredientInputDialog(context: Context) {
         dialog.show()
     }
 
-    fun updateIngredientListener(context: Context, ingredientAdapter: IngredientAdapter, pos: Int) {
+    fun updateIngredientListener(ingredientAdapter: IngredientAdapter, pos: Int) {
         this.ingredientAdapter = ingredientAdapter
         action = Mode.UPDATE
-        binder.populateViews(ingredientAdapter.getItem(pos), context)
+        binder.populateViews(ingredientAdapter.getItem(pos))
         id = pos
         dialog.show()
     }
@@ -152,11 +146,17 @@ class IngredientInputDialog(context: Context) {
             else null
     }
 
-    private fun getSuffix(fraction: String?, unit: String?): CharSequence? {
-        return fraction?.let { safeFraction ->
+    private fun updateQuantitySuffix(fraction: String?, unit: String?) {
+        val suffix = fraction?.let { safeFraction ->
             unit?.let { unit -> "$safeFraction $unit" } ?: safeFraction
         }
             ?: unit
+        binder.quantityInputLayout.suffixText = suffix
+        // Setting isExpandedHintEnabled doesn't animate, this is hacky but works
+        if (binder.quantityInput.text.isNullOrBlank()) {
+            if (!suffix.isNullOrBlank()) binder.quantityInput.setText(" ")
+            else binder.quantityInput.setText("")
+        }
     }
 
     private fun DialogAddIngredientBinding.setupAddIngredientViews() {
@@ -190,81 +190,62 @@ class IngredientInputDialog(context: Context) {
         }
     }
 
-    private fun DialogAddIngredientBinding.populateViews(ingredient: Ingredient, context: Context) {
-        val amountInfo = ingredient.amountString(context).split(" ")
-        when (amountInfo.size) {
-            1 -> quantityInput.setText(amountInfo[0])
-            2 -> {
-                quantityInput.setText(amountInfo[0])
-                //check to see if it's a float or not
-                if (amountInfo[1].toFloatOrNull() != null) setFraction(amountInfo[1])
-                else setUnit(amountInfo[1])
-            }
-            3 -> {
-                quantityInput.setText(amountInfo[0])
-                setFraction(amountInfo[1])
-                setUnit(amountInfo[2])
-            }
-            else -> {
-                Timber.w("Failing to parse amount string!")
-                throw FormatException(
-                    "Unexpected amount string format ${
-                        ingredient.amountString(
-                            context
-                        )
-                    }"
-                )
-            }
-        }
+    private fun DialogAddIngredientBinding.populateViews(ingredient: Ingredient) {
+        val whole = ingredient.amountWhole()
+        setFraction(ingredient.amountFraction())
+        setUnit(ingredient.unit)
+        quantityInput.setText(if (whole != 0) whole.toString() else "")
         ingredientInput.setText(ingredient.name)
     }
 
-    private fun DialogAddIngredientBinding.setUnit(s: String) {
-        when (UnitType.fromString(s)) {
-            UnitType.GALLON -> selectUnit(gallonChip, s)
-            UnitType.QUART -> selectUnit(quartChip, s)
-            UnitType.PINT -> selectUnit(pintChip, s)
-            UnitType.CUP -> selectUnit(cupChip, s)
-            UnitType.OUNCE -> selectUnit(ounceChip, s)
-            UnitType.TABLE_SPOON -> selectUnit(tbspChip, s)
-            UnitType.TEA_SPOON -> selectUnit(tspChip, s)
-            UnitType.POUND -> selectUnit(poundChip, s)
-            UnitType.LITER -> selectUnit(literChip, s)
-            UnitType.MILLILITER -> selectUnit(milliliterChip, s)
-            UnitType.GRAM -> selectUnit(gramChip, s)
+    private fun DialogAddIngredientBinding.setUnit(type: UnitType) {
+        when (type) {
+            UnitType.GALLON -> selectUnit(gallonChip)
+            UnitType.QUART -> selectUnit(quartChip)
+            UnitType.PINT -> selectUnit(pintChip)
+            UnitType.CUP -> selectUnit(cupChip)
+            UnitType.OUNCE -> selectUnit(ounceChip)
+            UnitType.TABLE_SPOON -> selectUnit(tbspChip)
+            UnitType.TEA_SPOON -> selectUnit(tspChip)
+            UnitType.POUND -> selectUnit(poundChip)
+            UnitType.LITER -> selectUnit(literChip)
+            UnitType.MILLILITER -> selectUnit(milliliterChip)
+            UnitType.GRAM -> selectUnit(gramChip)
             UnitType.NONE -> selectedUnit = null
         }
     }
 
-    private fun selectUnit(v: Checkable, unit: String) {
-        selectedUnit = unit
+    private fun selectUnit(v: Chip) {
+        selectedUnit = v.text.toString()
         v.isChecked = true
     }
 
-    private fun DialogAddIngredientBinding.setFraction(s: String) {
-        when (s) {
-            oneQuarter -> selectFraction(chipInputQuarter, s)
-            oneThird -> selectFraction(chipInputThird, s)
-            oneHalf -> selectFraction(chipInputHalf, s)
-            twoThirds -> selectFraction(chipInput2Thirds, s)
-            threeQuarter -> selectFraction(chipInput3Quarter, s)
+    private fun DialogAddIngredientBinding.setFraction(fraction: FractionalMeasurement) {
+        when (fraction) {
+            FractionalMeasurement.QUARTER -> selectFraction(chipInputQuarter)
+            FractionalMeasurement.THIRD -> selectFraction(chipInputThird)
+            FractionalMeasurement.HALF -> selectFraction(chipInputHalf)
+            FractionalMeasurement.THIRD_TWO -> selectFraction(chipInput2Thirds)
+            FractionalMeasurement.QUARTER_THREE -> selectFraction(chipInput3Quarter)
             else -> selectedFraction = null
         }
     }
 
-    private fun selectFraction(v: Checkable, fraction: String) {
-        selectedFraction = fraction
+    private fun selectFraction(v: Chip) {
+        selectedFraction = v.text.toString()
         v.isChecked = true
     }
 
-    private fun computeAmount(whole: String, fraction: Float): Float {
-        val n = if (whole.isEmpty()) 0.0f else whole.toFloat()
+    private fun computeAmount(whole: CharSequence?, fraction: Float): Float {
+        val n = if (whole.isNullOrEmpty()) 0f else whole.toString().toFloat()
         return n + fraction
     }
 
     private fun DialogAddIngredientBinding.clearValues() {
         quantityInput.text!!.clear()
         quantityInputLayout.suffixText = ""
+        fraction = null
+        unit = null
         ingredientInput.text!!.clear()
         ingredientInput.clearFocus()
         unitChips.clearCheck()

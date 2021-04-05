@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/instruction_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="true"
@@ -7,9 +8,9 @@
     android:orientation="horizontal">
 
     <com.google.android.material.checkbox.MaterialCheckBox
+        style="@style/checkboxStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/checkboxStyle"
         android:focusable="false" />
 
     <TextView
@@ -17,7 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="@dimen/ingredient_list_text_size"
-        android:singleLine="false" />
+        android:singleLine="false"
+        android:textSize="@dimen/ingredient_list_text_size" />
 
 </LinearLayout>

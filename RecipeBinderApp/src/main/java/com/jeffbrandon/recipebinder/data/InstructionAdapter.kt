@@ -13,7 +13,6 @@ class InstructionAdapter(context: Context,
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(layout, parent, false)
-        view.id = R.id.instruction_view
         val textView = view.findViewById<TextView>(R.id.instruction_text)
         dataSource[position].let { instruction ->
             textView?.apply { text = instruction.text }
