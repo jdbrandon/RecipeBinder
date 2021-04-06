@@ -11,8 +11,7 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
-class RecipeMenuViewModel @Inject constructor(dao: Lazy<RecipeDao>) : ViewModel(),
-    CoroutineScope {
+class RecipeMenuViewModel @Inject constructor(dao: Lazy<RecipeDao>) : ViewModel(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
     private val job = SupervisorJob()
