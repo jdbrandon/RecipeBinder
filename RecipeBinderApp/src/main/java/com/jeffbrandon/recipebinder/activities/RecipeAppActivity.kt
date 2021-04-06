@@ -10,34 +10,36 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeDao
-import com.jeffbrandon.recipebinder.room.RecipeDatabase
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 /**
  * @deprecated use [NewRecipeAppActivity]
  */
+@AndroidEntryPoint
 abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
 
-    private lateinit var job: Job
     override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
+        get() = coroutineContextImpl
 
+    @Inject lateinit var job: Job
+    @Inject lateinit var coroutineContextImpl: CoroutineContext
+    @Inject lateinit var db: Lazy<RecipeDao>
     private lateinit var deferredDb: Deferred<RecipeDao>
-    protected val recipePersistentData by lazy { runBlocking { deferredDb.await() } }
+    protected val recipePersistentData by lazy { runBlocking(Dispatchers.IO) { deferredDb.await() } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        job = SupervisorJob()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        deferredDb =
-            async(Dispatchers.IO) { RecipeDatabase.getInstance(this@RecipeAppActivity).recipeDao() }
+        deferredDb = async(Dispatchers.IO) { db.get() }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -8,21 +8,23 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.jeffbrandon.recipebinder.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
+@AndroidEntryPoint
 abstract class NewRecipeAppActivity : AppCompatActivity(), CoroutineScope {
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
 
-    private lateinit var job: Job
+    override val coroutineContext: CoroutineContext
+        get() = coroutineContextImpl
+
+    @Inject lateinit var job: Job
+    @Inject lateinit var coroutineContextImpl: CoroutineContext
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        job = SupervisorJob()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
