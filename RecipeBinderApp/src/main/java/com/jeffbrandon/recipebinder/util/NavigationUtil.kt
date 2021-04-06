@@ -6,9 +6,8 @@ import androidx.core.content.ContextCompat
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.activities.ViewRecipeActivity
 
-class NavigationUtil {
+class NavigationUtil private constructor() {
     companion object {
-
         fun viewRecipe(context: Context, id: Long) =
             ContextCompat.startActivity(context, viewIntent(context, id), null)
 
@@ -21,10 +20,7 @@ class NavigationUtil {
             }
 
         private fun editIntent(context: Context, id: Long): Intent = viewIntent(context, id).apply {
-            putExtra(
-                context.getString(R.string.view_mode_extra),
-                ViewRecipeActivity.EDIT_TAGS
-            )
+            putExtra(context.getString(R.string.view_mode_extra), ViewRecipeActivity.EDIT_TAGS)
         }
     }
 }

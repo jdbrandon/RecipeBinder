@@ -36,14 +36,15 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         job = SupervisorJob()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        deferredDb = async(Dispatchers.IO) { RecipeDatabase.getInstance(this@RecipeAppActivity).recipeDao() }
+        deferredDb =
+            async(Dispatchers.IO) { RecipeDatabase.getInstance(this@RecipeAppActivity).recipeDao() }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
@@ -56,8 +57,7 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
 
     fun navigateToEditRecipeActivity(id: Long) {
         startActivity(getViewActivityIntent(id).apply {
-            putExtra(getString(R.string.view_mode_extra),
-                     ViewRecipeActivity.EDIT_TAGS)
+            putExtra(getString(R.string.view_mode_extra), ViewRecipeActivity.EDIT_TAGS)
         })
     }
 
@@ -73,7 +73,7 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
 
     protected fun hideKeyboard() {
         val view = findViewById<View>(android.R.id.content)
-        if(view != null) {
+        if (view != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }

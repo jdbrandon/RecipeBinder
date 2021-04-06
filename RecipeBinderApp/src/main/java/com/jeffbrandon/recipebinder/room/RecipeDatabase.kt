@@ -7,7 +7,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(entities = [RecipeData::class], version = 1)
-@TypeConverters(IngredientListConverter::class, InstructionConverter::class, RecipeTagConverter::class)
+@TypeConverters(IngredientListConverter::class,
+                InstructionConverter::class,
+                RecipeTagConverter::class)
 abstract class RecipeDatabase : RoomDatabase() {
 
     abstract fun recipeDao(): RecipeDao
@@ -18,12 +20,9 @@ abstract class RecipeDatabase : RoomDatabase() {
         fun getInstance(context: Context): RecipeDatabase {
             INSTANCE?.also { return it }
             synchronized(RecipeDatabase::class) {
-                INSTANCE = Room.databaseBuilder(
-                    context.applicationContext,
-                    RecipeDatabase::class.java,
-                    "recipesBinderRecipes"
-                )
-                    .build()
+                INSTANCE = Room.databaseBuilder(context.applicationContext,
+                                                RecipeDatabase::class.java,
+                                                "recipesBinderRecipes").build()
             }
             return INSTANCE!!
         }

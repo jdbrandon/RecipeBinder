@@ -221,7 +221,8 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.CUP,
             UnitType.OUNCE,
             UnitType.TABLE_SPOON,
-            UnitType.TEA_SPOON -> literTo(type) / 1000.0f
+            UnitType.TEA_SPOON,
+            -> literTo(type) / 1000.0f
             UnitType.LITER -> amount / 1000.0f
             UnitType.MILLILITER -> amount
             else -> throw IllegalArgumentException("Cannot convert milliliter to $type")

@@ -15,7 +15,7 @@ import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 
 class RecipeMenuViewBinder constructor(
     private val viewModel: RecipeMenuViewModel,
@@ -50,7 +50,7 @@ class RecipeMenuViewBinder constructor(
 
     private fun setupNewRecipeButton() {
         binder.addRecipeButton.setOnClickListener {
-            //Open a Dialog to create a recipe
+            // Open a Dialog to create a recipe
             val newRecipeDialogContent =
                 View.inflate(viewRoot.context, R.layout.dialog_create_recipe, null)
             val input = ViewCompat.requireViewById<EditText>(newRecipeDialogContent,
@@ -61,13 +61,13 @@ class RecipeMenuViewBinder constructor(
                     Timber.i("Creating a new recipe: $name")
                     if (name.isEmpty()) {
                         Timber.d("Recipe needs a name")
-                        //make a toast
+                        // make a toast
                         Toast.makeText(viewRoot.context,
                                        R.string.toast_recipe_name,
                                        Toast.LENGTH_SHORT).show()
                     } else {
                         viewModel.launch {
-                            //add basic recipe to db
+                            // add basic recipe to db
                             val recipeData =
                                 RecipeData().copy(name = name.capitalize(Locale.getDefault()))
                             val id = viewModel.insert(recipeData)
@@ -87,5 +87,4 @@ class RecipeMenuViewBinder constructor(
     }
 
     fun selectedPosition(): Int? = (binder.recipeRecyclerView.adapter as RecipeAdapter).position
-
 }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <TextView
         android:id="@+id/title_text_view"
@@ -15,19 +17,22 @@
         android:layout_marginBottom="@dimen/margin_small"
         android:textSize="@dimen/title_text_size"
         android:textStyle="bold"
-        android:transitionName="@string/name_transition" />
+        android:transitionName="@string/name_transition"
+        />
 
     <RelativeLayout
         android:id="@+id/loading_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true" />
+            android:indeterminate="true"
+            />
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        android:visibility="visible">
+        android:visibility="visible"
+        >
 
         <LinearLayout
             android:id="@+id/recipe_name_view_layout"
@@ -43,14 +49,16 @@
             android:layout_height="0dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@id/recipe_name_edit_layout"
-            app:layout_constraintTop_toTopOf="@id/recipe_name_edit_layout">
+            app:layout_constraintTop_toTopOf="@id/recipe_name_edit_layout"
+            >
 
             <TextView
                 android:id="@+id/cook_time_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/view_recipe_content_margin_start"
-                android:textSize="@dimen/item_text_size" />
+                android:textSize="@dimen/item_text_size"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,7 +66,8 @@
                 android:layout_marginStart="@dimen/margin_small"
                 android:layout_marginEnd="@dimen/view_recipe_title_margin_end"
                 android:text="@string/minutes"
-                android:textSize="@dimen/item_text_size" />
+                android:textSize="@dimen/item_text_size"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -68,7 +77,8 @@
             android:baselineAligned="false"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            >
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/TextInputStyle"
@@ -78,12 +88,14 @@
                 android:layout_weight="4"
                 android:hint="@string/recipe_name"
                 app:boxCornerRadiusBottomEnd="@dimen/square_corner"
-                app:boxCornerRadiusTopEnd="@dimen/square_corner">
+                app:boxCornerRadiusTopEnd="@dimen/square_corner"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/recipe_name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,13 +107,15 @@
                 android:layout_weight="1"
                 android:hint="@string/minutes"
                 app:boxCornerRadiusBottomStart="@dimen/square_corner"
-                app:boxCornerRadiusTopStart="@dimen/square_corner">
+                app:boxCornerRadiusTopStart="@dimen/square_corner"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/cook_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -120,7 +134,8 @@
             android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recipe_name_edit_layout" />
+            app:layout_constraintTop_toBottomOf="@id/recipe_name_edit_layout"
+            />
 
         <LinearLayout
             android:id="@+id/tags_layout"
@@ -132,40 +147,47 @@
             android:orientation="vertical"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tags_section_title">
+            app:layout_constraintTop_toBottomOf="@id/tags_section_title"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cook_type"
                 android:textSize="@dimen/item_text_size"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/cook_type_chips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:singleSelection="true">
+                app:singleSelection="true"
+                >
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_instant_pot"
                     style="@style/CheckableChip"
-                    android:text="@string/instant_pot" />
+                    android:text="@string/instant_pot"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_stove"
                     style="@style/CheckableChip"
-                    android:text="@string/stove_top" />
+                    android:text="@string/stove_top"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_oven"
                     style="@style/CheckableChip"
-                    android:text="@string/oven" />
+                    android:text="@string/oven"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_sous_vide"
                     style="@style/CheckableChip"
-                    android:text="@string/sous_vide" />
+                    android:text="@string/sous_vide"
+                    />
             </com.google.android.material.chip.ChipGroup>
 
             <TextView
@@ -173,33 +195,39 @@
                 android:layout_height="wrap_content"
                 android:text="@string/course"
                 android:textSize="@dimen/item_text_size"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/dish_type_chips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:singleSelection="true">
+                app:singleSelection="true"
+                >
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_entree"
                     style="@style/CheckableChip"
-                    android:text="@string/entree" />
+                    android:text="@string/entree"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_side"
                     style="@style/CheckableChip"
-                    android:text="@string/side" />
+                    android:text="@string/side"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_soup"
                     style="@style/CheckableChip"
-                    android:text="@string/soup" />
+                    android:text="@string/soup"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_dessert"
                     style="@style/CheckableChip"
-                    android:text="@string/dessert" />
+                    android:text="@string/dessert"
+                    />
             </com.google.android.material.chip.ChipGroup>
 
             <TextView
@@ -207,39 +235,46 @@
                 android:layout_height="wrap_content"
                 android:text="@string/other_information"
                 android:textSize="@dimen/item_text_size"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/tags_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:singleLine="false"
-                app:singleSelection="false">
+                app:singleSelection="false"
+                >
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_fast"
                     style="@style/CheckableChip"
-                    android:text="@string/fast" />
+                    android:text="@string/fast"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_easy"
                     style="@style/CheckableChip"
-                    android:text="@string/easy" />
+                    android:text="@string/easy"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_healthy"
                     style="@style/CheckableChip"
-                    android:text="@string/healthy" />
+                    android:text="@string/healthy"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_vegetarian"
                     style="@style/CheckableChip"
-                    android:text="@string/vegetarian" />
+                    android:text="@string/vegetarian"
+                    />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_vegan"
                     style="@style/CheckableChip"
-                    android:text="@string/vegan" />
+                    android:text="@string/vegan"
+                    />
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
         <!-- End Tags Views -->
@@ -255,31 +290,35 @@
             android:textSize="@dimen/item_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tags_layout" />
+            app:layout_constraintTop_toBottomOf="@id/tags_layout"
+            />
 
         <!-- Ingredient Views -->
         <ListView
             android:id="@+id/ingredients_list_view"
             style="@style/SmallConstrainedListView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title" />
+            app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
+            />
 
         <ListView
             android:id="@+id/ingredients_list_view_large"
             style="@style/LargeConstrainedListView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view" />
+            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view"
+            />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_ingredient_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
-            android:visibility="gone"
             android:contentDescription="@string/add_ingredient_button"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ingredients_section_title"
-            app:srcCompat="@drawable/ic_add_white_24dp" />
+            app:srcCompat="@drawable/ic_add_white_24dp"
+            />
 
         <!-- End Ingredient Views -->
         <TextView
@@ -294,7 +333,8 @@
             android:textSize="@dimen/item_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view_large" />
+            app:layout_constraintTop_toBottomOf="@id/ingredients_list_view_large"
+            />
 
         <!-- Instruction Views -->
         <com.google.android.material.textfield.TextInputLayout
@@ -307,39 +347,44 @@
             android:hint="@string/instruction"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instructions_section_view">
+            app:layout_constraintTop_toBottomOf="@id/instructions_section_view"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/instruction_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ListView
             android:id="@+id/instructions_list_view"
             style="@style/SmallConstrainedListView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instruction_input_layout" />
+            app:layout_constraintTop_toBottomOf="@id/instruction_input_layout"
+            />
 
         <ListView
             android:id="@+id/instructions_list_view_large"
             style="@style/LargeConstrainedListView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instructions_list_view" />
+            app:layout_constraintTop_toBottomOf="@id/instructions_list_view"
+            />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_instruction_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
-            android:visibility="gone"
             android:contentDescription="@string/add_instruction_button"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/action_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructions_section_view"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/cross_to_check" />
+            app:srcCompat="@drawable/cross_to_check"
+            />
 
         <!-- End Instruction Views -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -350,6 +395,7 @@
             android:contentDescription="@string/edit_save_mode_toggle_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/edit_to_save" />
+            app:srcCompat="@drawable/edit_to_save"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

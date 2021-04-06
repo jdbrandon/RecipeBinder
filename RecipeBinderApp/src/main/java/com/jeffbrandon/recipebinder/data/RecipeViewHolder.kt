@@ -7,7 +7,8 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
 import timber.log.Timber
 
-class RecipeViewHolder(view: View, itemClickCallback: (Long) -> Unit) : RecyclerView.ViewHolder(view) {
+class RecipeViewHolder(view: View, itemClickCallback: (Long) -> Unit) :
+    RecyclerView.ViewHolder(view) {
 
     private var id: Long = -1
     private var nameView: TextView = view.findViewById(R.id.recipe_name)

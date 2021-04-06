@@ -13,8 +13,8 @@ class RecipeAdapter(private val recipeList: List<RecipeData>, private val cb: (L
     val position: Int? get() = currentPosition
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recipe_menu_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.recipe_menu_item, parent, false)
         return RecipeViewHolder(view, cb).also { viewHolder ->
             view.setOnLongClickListener {
                 currentPosition = viewHolder.adapterPosition

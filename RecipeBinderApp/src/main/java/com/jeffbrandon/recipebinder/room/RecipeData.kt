@@ -8,13 +8,12 @@ import com.jeffbrandon.recipebinder.enums.RecipeTag
 
 @Entity
 data class RecipeData(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long?,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     val name: String,
     val cookTime: Int,
     val tags: MutableList<RecipeTag>,
     val ingredientsJson: List<Ingredient>,
-    val instructionsJson: List<Instruction>
+    val instructionsJson: List<Instruction>,
 ) {
     constructor() : this(null, "", 0, mutableListOf(), listOf(), listOf())
 }

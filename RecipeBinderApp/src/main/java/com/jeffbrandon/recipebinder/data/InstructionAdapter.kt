@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.jeffbrandon.recipebinder.R
 
-class InstructionAdapter(context: Context,
-                         instructions: MutableList<Instruction>,
-                         private val layout: Int = R.layout.instruction_list_item) :
-    AppendableAdapter<Instruction>(context, instructions) {
+class InstructionAdapter(
+    context: Context,
+    instructions: MutableList<Instruction>,
+    private val layout: Int = R.layout.instruction_list_item,
+) : AppendableAdapter<Instruction>(context, instructions) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(layout, parent, false)

@@ -7,9 +7,8 @@ import timber.log.Timber
 
 abstract class AppendableAdapter<T>(
     protected val context: Context,
-    protected val dataSource: MutableList<T>
-) :
-    BaseAdapter() {
+    protected val dataSource: MutableList<T>,
+) : BaseAdapter() {
     protected val inflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 

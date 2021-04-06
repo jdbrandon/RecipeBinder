@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_small"
     android:layout_marginBottom="@dimen/margin_small"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <LinearLayout
         android:id="@+id/input_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/quantity_input_layout"
@@ -20,13 +23,15 @@
             android:layout_height="wrap_content"
             android:hint="@string/quantity"
             app:boxCornerRadiusBottomEnd="@dimen/square_corner"
-            app:boxCornerRadiusTopEnd="@dimen/square_corner">
+            app:boxCornerRadiusTopEnd="@dimen/square_corner"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/quantity_input"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="number" />
+                android:inputType="number"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -36,13 +41,15 @@
             android:layout_height="wrap_content"
             android:hint="@string/ingredient"
             app:boxCornerRadiusBottomStart="@dimen/square_corner"
-            app:boxCornerRadiusTopStart="@dimen/square_corner">
+            app:boxCornerRadiusTopStart="@dimen/square_corner"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ingredient_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences" />
+                android:inputType="textCapSentences"
+                />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -51,7 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small">
+        android:layout_marginEnd="@dimen/margin_small"
+        >
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/fraction_chip_group"
@@ -59,32 +67,38 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="4dp"
-            app:singleSelection="true">
+            app:singleSelection="true"
+            >
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_quarter"
                 style="@style/CheckableChip"
-                android:text="@string/_1_quarter" />
+                android:text="@string/_1_quarter"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_third"
                 style="@style/CheckableChip"
-                android:text="@string/_1_third" />
+                android:text="@string/_1_third"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_half"
                 style="@style/CheckableChip"
-                android:text="@string/_1_half" />
+                android:text="@string/_1_half"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_2_thirds"
                 style="@style/CheckableChip"
-                android:text="@string/_2_thirds" />
+                android:text="@string/_2_thirds"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_input_3_quarter"
                 style="@style/CheckableChip"
-                android:text="@string/_3_quarters" />
+                android:text="@string/_3_quarters"
+                />
         </com.google.android.material.chip.ChipGroup>
     </LinearLayout>
 
@@ -93,68 +107,81 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small">
+        android:layout_marginEnd="@dimen/margin_small"
+        >
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/unit_chips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:singleSelection="true">
+            app:singleSelection="true"
+            >
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/cup_chip"
                 style="@style/CheckableChip"
-                android:text="@string/cup" />
+                android:text="@string/cup"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/ounce_chip"
                 style="@style/CheckableChip"
-                android:text="@string/ounce" />
+                android:text="@string/ounce"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/tbsp_chip"
                 style="@style/CheckableChip"
-                android:text="@string/table_spoon" />
+                android:text="@string/table_spoon"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/tsp_chip"
                 style="@style/CheckableChip"
-                android:text="@string/tea_spoon" />
+                android:text="@string/tea_spoon"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/pint_chip"
                 style="@style/CheckableChip"
-                android:text="@string/pint" />
+                android:text="@string/pint"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/quart_chip"
                 style="@style/CheckableChip"
-                android:text="@string/quart" />
+                android:text="@string/quart"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/gallon_chip"
                 style="@style/CheckableChip"
-                android:text="@string/gallon" />
+                android:text="@string/gallon"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/liter_chip"
                 style="@style/CheckableChip"
-                android:text="@string/liter" />
+                android:text="@string/liter"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/milliliter_chip"
                 style="@style/CheckableChip"
-                android:text="@string/milliliter" />
+                android:text="@string/milliliter"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/pound_chip"
                 style="@style/CheckableChip"
-                android:text="@string/pound" />
+                android:text="@string/pound"
+                />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/gram_chip"
                 style="@style/CheckableChip"
-                android:text="@string/gram" />
+                android:text="@string/gram"
+                />
 
         </com.google.android.material.chip.ChipGroup>
     </LinearLayout>

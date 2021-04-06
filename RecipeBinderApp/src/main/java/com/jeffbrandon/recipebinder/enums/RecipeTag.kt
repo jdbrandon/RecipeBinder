@@ -20,7 +20,7 @@ enum class RecipeTag {
     SOUP;
 
     override fun toString(): String {
-        return when(this) {
+        return when (this) {
             INSTANT_POT -> "Instant Pot"
             STOVE -> "Stove Top"
             OVEN -> "Oven"
@@ -40,8 +40,8 @@ enum class RecipeTag {
     fun toChipView(context: Context): Chip {
         return Chip(context).apply {
             text = this@RecipeTag.toString()
-            layoutParams =
-                ChipGroup.LayoutParams(ChipGroup.LayoutParams.WRAP_CONTENT, ChipGroup.LayoutParams.WRAP_CONTENT)
+            layoutParams = ChipGroup.LayoutParams(ChipGroup.LayoutParams.WRAP_CONTENT,
+                                                  ChipGroup.LayoutParams.WRAP_CONTENT)
             isChecked = true
         }
     }

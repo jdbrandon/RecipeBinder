@@ -34,7 +34,8 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="TextInputStyle" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="TextInputStyle"
+        parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxCornerRadiusBottomStart">24dp</item>
         <item name="boxCornerRadiusBottomEnd">24dp</item>
         <item name="boxCornerRadiusTopStart">24dp</item>

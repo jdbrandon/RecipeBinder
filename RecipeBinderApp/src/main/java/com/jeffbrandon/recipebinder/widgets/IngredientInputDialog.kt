@@ -36,22 +36,18 @@ class IngredientInputDialog(context: Context) {
         }
 
     private val dialog by lazy {
-        AlertDialog.Builder(context)
-            .setView(view)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val amount =
-                    computeAmount(binder.quantityInput.text?.trim(), getSelectedFraction())
-                val type = getSelectedType()
-                val newIngredient = Ingredient(binder.ingredientInput.text.toString(), amount, type)
-                when (action) {
-                    Mode.ADD -> ingredientAdapter.add(newIngredient)
-                    Mode.UPDATE -> ingredientAdapter.update(id, newIngredient)
-                }
-                binder.clearValues()
+        AlertDialog.Builder(context).setView(view).setPositiveButton(android.R.string.ok) { _, _ ->
+            val amount = computeAmount(binder.quantityInput.text?.trim(), getSelectedFraction())
+            val type = getSelectedType()
+            val newIngredient = Ingredient(binder.ingredientInput.text.toString(), amount, type)
+            when (action) {
+                Mode.ADD -> ingredientAdapter.add(newIngredient)
+                Mode.UPDATE -> ingredientAdapter.update(id, newIngredient)
             }
-            .setNegativeButton(android.R.string.cancel) { _, _ ->
-                binder.clearValues()
-            }.create()
+            binder.clearValues()
+        }.setNegativeButton(android.R.string.cancel) { _, _ ->
+            binder.clearValues()
+        }.create()
     }
 
     init {
@@ -64,7 +60,6 @@ class IngredientInputDialog(context: Context) {
         }
         binder.setupAddIngredientViews()
     }
-
 
     fun addIngredientListener(ingredientAdapter: IngredientAdapter) {
         this.ingredientAdapter = ingredientAdapter
@@ -97,60 +92,54 @@ class IngredientInputDialog(context: Context) {
         }
     }
 
-    private fun getSelectedFraction(): Float {
+    private fun getSelectedFraction(): FractionalMeasurement {
         return when (binder.fractionChipGroup.checkedChipId) {
-            R.id.chip_input_quarter -> 0.25f
-            R.id.chip_input_third -> 0.33f
-            R.id.chip_input_half -> 0.5f
-            R.id.chip_input_2_thirds -> 0.66f
-            R.id.chip_input_3_quarter -> 0.75f
-            else -> 0.0f
+            R.id.chip_input_quarter -> FractionalMeasurement.QUARTER
+            R.id.chip_input_third -> FractionalMeasurement.THIRD
+            R.id.chip_input_half -> FractionalMeasurement.HALF
+            R.id.chip_input_2_thirds -> FractionalMeasurement.THIRD_TWO
+            R.id.chip_input_3_quarter -> FractionalMeasurement.QUARTER_THREE
+            else -> FractionalMeasurement.ZERO
         }
     }
 
     private val unitMap: HashMap<String, String> =
-        hashMapOf(
-            Pair(context.getString(R.string.cup), context.getString(R.string.cup_shorthand)),
-            Pair(context.getString(R.string.ounce), context.getString(R.string.ounce_shorthand)),
-            Pair(
-                context.getString(R.string.table_spoon),
-                context.getString(R.string.tablespoon_shorthand)
-            ),
-            Pair(
-                context.getString(R.string.tea_spoon),
-                context.getString(R.string.teaspoon_shorthand)
-            ),
-            Pair(context.getString(R.string.pint), context.getString(R.string.pint_shorthand)),
-            Pair(context.getString(R.string.quart), context.getString(R.string.quart_shorthand)),
-            Pair(context.getString(R.string.gallon), context.getString(R.string.gallon_shorthand)),
-            Pair(context.getString(R.string.liter), context.getString(R.string.liter_shorthand)),
-            Pair(
-                context.getString(R.string.milliliter),
-                context.getString(R.string.milliliter_shorthand)
-            ),
-            Pair(context.getString(R.string.pound), context.getString(R.string.pound_shorthand)),
-            Pair(context.getString(R.string.gram), context.getString(R.string.gram_shorthand))
-        )
+        hashMapOf(Pair(context.getString(R.string.cup), context.getString(R.string.cup_shorthand)),
+                  Pair(context.getString(R.string.ounce),
+                       context.getString(R.string.ounce_shorthand)),
+                  Pair(context.getString(R.string.table_spoon),
+                       context.getString(R.string.tablespoon_shorthand)),
+                  Pair(context.getString(R.string.tea_spoon),
+                       context.getString(R.string.teaspoon_shorthand)),
+                  Pair(context.getString(R.string.pint),
+                       context.getString(R.string.pint_shorthand)),
+                  Pair(context.getString(R.string.quart),
+                       context.getString(R.string.quart_shorthand)),
+                  Pair(context.getString(R.string.gallon),
+                       context.getString(R.string.gallon_shorthand)),
+                  Pair(context.getString(R.string.liter),
+                       context.getString(R.string.liter_shorthand)),
+                  Pair(context.getString(R.string.milliliter),
+                       context.getString(R.string.milliliter_shorthand)),
+                  Pair(context.getString(R.string.pound),
+                       context.getString(R.string.pound_shorthand)),
+                  Pair(context.getString(R.string.gram),
+                       context.getString(R.string.gram_shorthand)))
 
     private fun unitChipListener(v: Chip) {
-        selectedUnit =
-            if (selectedUnit != unitMap[v.text])
-                unitMap[v.text]
-            else null
+        selectedUnit = if (selectedUnit != unitMap[v.text]) unitMap[v.text]
+        else null
     }
 
     private fun fractionChipListener(v: Chip) = v.text.toString().let { text ->
-        selectedFraction =
-            if (selectedFraction != text)
-                text
-            else null
+        selectedFraction = if (selectedFraction != text) text
+        else null
     }
 
     private fun updateQuantitySuffix(fraction: String?, unit: String?) {
         val suffix = fraction?.let { safeFraction ->
             unit?.let { unit -> "$safeFraction $unit" } ?: safeFraction
-        }
-            ?: unit
+        } ?: unit
         binder.quantityInputLayout.suffixText = suffix
         // Setting isExpandedHintEnabled doesn't animate, this is hacky but works
         if (binder.quantityInput.text.isNullOrBlank()) {
@@ -160,26 +149,22 @@ class IngredientInputDialog(context: Context) {
     }
 
     private fun DialogAddIngredientBinding.setupAddIngredientViews() {
-        val fractionChipList = listOf(
-            chipInputQuarter,
-            chipInputThird,
-            chipInputHalf,
-            chipInput2Thirds,
-            chipInput3Quarter
-        )
-        val unitChipList = listOf(
-            cupChip,
-            ounceChip,
-            tbspChip,
-            tspChip,
-            pintChip,
-            quartChip,
-            gallonChip,
-            literChip,
-            milliliterChip,
-            poundChip,
-            gramChip
-        )
+        val fractionChipList = listOf(chipInputQuarter,
+                                      chipInputThird,
+                                      chipInputHalf,
+                                      chipInput2Thirds,
+                                      chipInput3Quarter)
+        val unitChipList = listOf(cupChip,
+                                  ounceChip,
+                                  tbspChip,
+                                  tspChip,
+                                  pintChip,
+                                  quartChip,
+                                  gallonChip,
+                                  literChip,
+                                  milliliterChip,
+                                  poundChip,
+                                  gramChip)
 
         fractionChipList.forEach { view ->
             view.setOnClickListener { fractionChipListener(it as Chip) }
@@ -236,9 +221,9 @@ class IngredientInputDialog(context: Context) {
         v.isChecked = true
     }
 
-    private fun computeAmount(whole: CharSequence?, fraction: Float): Float {
+    private fun computeAmount(whole: CharSequence?, fraction: FractionalMeasurement): Float {
         val n = if (whole.isNullOrEmpty()) 0f else whole.toString().toFloat()
-        return n + fraction
+        return n + fraction.toFloat()
     }
 
     private fun DialogAddIngredientBinding.clearValues() {

@@ -15,7 +15,7 @@ enum class UnitType {
     NONE;
 
     override fun toString(): String {
-        return when(this) {
+        return when (this) {
             GALLON -> "gal"
             QUART -> "qt"
             PINT -> "pt"
@@ -33,7 +33,7 @@ enum class UnitType {
 
     companion object {
         fun fromString(s: String): UnitType {
-            return when(s) {
+            return when (s) {
                 "gal" -> GALLON
                 "qt" -> QUART
                 "pt" -> PINT

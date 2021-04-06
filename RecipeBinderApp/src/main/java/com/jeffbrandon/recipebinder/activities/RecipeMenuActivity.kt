@@ -25,7 +25,7 @@ class RecipeMenuActivity : NewRecipeAppActivity() {
     override fun onCreateContextMenu(
         menu: ContextMenu?,
         v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
+        menuInfo: ContextMenu.ContextMenuInfo?,
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         menuInflater.inflate(R.menu.recipe_menu, menu)

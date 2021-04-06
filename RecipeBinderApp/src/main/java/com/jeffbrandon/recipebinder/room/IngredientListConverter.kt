@@ -4,14 +4,13 @@ import androidx.room.TypeConverter
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.moshi.MoshiSingletons
 
-class IngredientListConverter {
+class IngredientListConverter private constructor() {
 
     companion object {
-
         @TypeConverter
         @JvmStatic
         fun toString(ingredients: List<Ingredient>): String {
-            return when(ingredients.size) {
+            return when (ingredients.size) {
                 0 -> ""
                 else -> MoshiSingletons.ingredientConverter.toJson(ingredients)
             }
@@ -21,7 +20,7 @@ class IngredientListConverter {
         @JvmStatic
         fun toListIngredient(json: String): List<Ingredient> {
             json.run {
-                if(isEmpty()) return listOf()
+                if (isEmpty()) return listOf()
                 return MoshiSingletons.ingredientConverter.fromJson(this)!!
             }
         }

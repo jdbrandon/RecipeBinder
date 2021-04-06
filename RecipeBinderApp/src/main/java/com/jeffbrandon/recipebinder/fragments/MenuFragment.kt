@@ -1,7 +1,8 @@
 package com.jeffbrandon.recipebinder.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.jeffbrandon.recipebinder.R

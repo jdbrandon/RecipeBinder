@@ -27,7 +27,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 
 class ViewRecipeActivity : RecipeActivity() {
     private var mode: Int = VIEW
@@ -73,13 +73,10 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun ActivityViewRecipeBinding.setupButtonListeners() {
         addIngredientButton.setOnClickListener {
-            ingredientDialog.addIngredientListener(
-                ingredientAdapter
-            )
+            ingredientDialog.addIngredientListener(ingredientAdapter)
         }
         addInstructionButton.setOnClickListener { addInstructionClick() }
-        if (mode.isEditing())
-            actionButton.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
+        if (mode.isEditing()) actionButton.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
         else actionButton.setOnClickListener { editActionListener() }
 
         registerForContextMenu(ingredientsListView)
@@ -87,7 +84,6 @@ class ViewRecipeActivity : RecipeActivity() {
         registerForContextMenu(ingredientsListViewLarge)
         registerForContextMenu(instructionsListViewLarge)
     }
-
 
     private fun ActivityViewRecipeBinding.addInstructionClick() {
         actionButton.visibility = View.GONE
@@ -112,11 +108,8 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun ActivityViewRecipeBinding.saveInstructionClick() {
         if (!instructionInput.text.isNullOrEmpty()) {
-            instructionAdapter.add(
-                Instruction(
-                    instructionInput.text.toString().capitalize(Locale.getDefault())
-                )
-            )
+            instructionAdapter.add(Instruction(instructionInput.text.toString()
+                                                   .capitalize(Locale.getDefault())))
             instructionInput.text!!.clear()
         }
         actionButton.visibility = View.VISIBLE
@@ -127,7 +120,7 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun FloatingActionButton.animateWithCallback(
         animatedDrawable: AnimatedVectorDrawableCompat?,
-        callback: () -> Unit
+        callback: () -> Unit,
     ) {
         setImageDrawable(animatedDrawable)
         (drawable as Animatable).start()
@@ -137,8 +130,7 @@ class ViewRecipeActivity : RecipeActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(getString(R.string.view_mode_extra), mode)
         super.onSaveInstanceState(outState)
-        if (mode.isEditing())
-            binding.saveRecipeState()
+        if (mode.isEditing()) binding.saveRecipeState()
     }
 
     /**
@@ -237,7 +229,7 @@ class ViewRecipeActivity : RecipeActivity() {
     override fun onCreateContextMenu(
         menu: ContextMenu?,
         v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
+        menuInfo: ContextMenu.ContextMenuInfo?,
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         menuInflater.inflate(R.menu.edit_menu, menu)
@@ -282,14 +274,10 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun updateItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
         when (menuInfo.targetView.id) {
-            R.id.ingredient_view -> ingredientDialog.updateIngredientListener(
-                ingredientAdapter,
-                menuInfo.position
-            )
-            R.id.instruction_view -> instructionDialog.updateInstruction(
-                instructionAdapter,
-                menuInfo.position
-            )
+            R.id.ingredient_view -> ingredientDialog.updateIngredientListener(ingredientAdapter,
+                                                                              menuInfo.position)
+            R.id.instruction_view -> instructionDialog.updateInstruction(instructionAdapter,
+                                                                         menuInfo.position)
         }
     }
 
@@ -307,14 +295,12 @@ class ViewRecipeActivity : RecipeActivity() {
             val tags = buildTagsList()
             val ingredients = ingredientAdapter.getData()
             val instructions = instructionAdapter.getData()
-            val dbInput = RecipeData(
-                id,
-                name.capitalize(Locale.getDefault()),
-                time,
-                tags,
-                ingredients,
-                instructions
-            )
+            val dbInput = RecipeData(id,
+                                     name.capitalize(Locale.getDefault()),
+                                     time,
+                                     tags,
+                                     ingredients,
+                                     instructions)
             if (dbInput.id != BAD_ID) {
                 recipePersistentData.updateRecipe(dbInput)
                 currentRecipe = dbInput
@@ -342,16 +328,11 @@ class ViewRecipeActivity : RecipeActivity() {
             R.id.chip_dessert -> res.add(RecipeTag.DESSERT)
         }
         res.apply {
-            if (chipFast.isChecked)
-                add(RecipeTag.FAST)
-            if (chipEasy.isChecked)
-                add(RecipeTag.EASY)
-            if (chipHealthy.isChecked)
-                add(RecipeTag.HEALTHY)
-            if (chipVegetarian.isChecked)
-                add(RecipeTag.VEGETARIAN)
-            if (chipVegan.isChecked)
-                add(RecipeTag.VEGAN)
+            if (chipFast.isChecked) add(RecipeTag.FAST)
+            if (chipEasy.isChecked) add(RecipeTag.EASY)
+            if (chipHealthy.isChecked) add(RecipeTag.HEALTHY)
+            if (chipVegetarian.isChecked) add(RecipeTag.VEGETARIAN)
+            if (chipVegan.isChecked) add(RecipeTag.VEGAN)
         }
         return res
     }
@@ -412,7 +393,8 @@ class ViewRecipeActivity : RecipeActivity() {
             return when (this) {
                 EDIT_TAGS,
                 EDIT_INGREDIENTS,
-                EDIT_INSTRUCTIONS -> true
+                EDIT_INSTRUCTIONS,
+                -> true
                 else -> false
             }
         }

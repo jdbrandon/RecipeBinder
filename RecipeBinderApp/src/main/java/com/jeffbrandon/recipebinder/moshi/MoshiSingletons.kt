@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 
-class MoshiSingletons {
+class MoshiSingletons private constructor() {
     companion object {
         private val instance by lazy {
             Moshi.Builder().build()

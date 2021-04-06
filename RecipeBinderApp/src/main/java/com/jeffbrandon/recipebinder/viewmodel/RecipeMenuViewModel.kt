@@ -1,12 +1,18 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.text.Editable
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.jeffbrandon.recipebinder.room.RecipeDao
 import com.jeffbrandon.recipebinder.room.RecipeData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.Lazy
-import kotlinx.coroutines.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 

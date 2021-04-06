@@ -44,14 +44,12 @@ abstract class RecipeActivity : RecipeAppActivity() {
     }
 
     protected fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter {
-        if(ingredients.isNullOrEmpty())
-            return IngredientAdapter(this, mutableListOf())
+        if (ingredients.isNullOrEmpty()) return IngredientAdapter(this, mutableListOf())
         return IngredientAdapter(this, ingredients.toMutableList())
     }
 
     protected fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter {
-        if(instructions.isNullOrEmpty())
-            return InstructionAdapter(this, mutableListOf())
+        if (instructions.isNullOrEmpty()) return InstructionAdapter(this, mutableListOf())
         return InstructionAdapter(this, instructions.toMutableList())
     }
 
