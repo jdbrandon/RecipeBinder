@@ -4,32 +4,32 @@ import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jeffbrandon.recipebinder.room.RecipeDao
 import com.jeffbrandon.recipebinder.room.RecipeData
+import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
-class RecipeMenuViewModel @Inject constructor(dao: Lazy<RecipeDao>) : ViewModel(), CoroutineScope {
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
-    private val job = SupervisorJob()
-    private val recipes: MutableLiveData<List<RecipeData>> by lazy<MutableLiveData<List<RecipeData>>> {
-        MutableLiveData()
+class RecipeMenuViewModel @Inject constructor(
+    dataSource: Lazy<RecipeMenuDataSource>,
+    override val coroutineContext: CoroutineContext,
+) : ViewModel(), CoroutineScope {
+    private val recipes by lazy {
+        MutableLiveData<List<RecipeData>>()
     }.also { loadRecipes() }
-    private val data by lazy { dao.get() }
+    private val data by lazy { dataSource.get() }
     private var filter: String? = null
 
     override fun onCleared() {
         super.onCleared()
-        job.cancel()
+        coroutineContext.cancel()
     }
 
     fun getRecipes(): LiveData<List<RecipeData>> = recipes

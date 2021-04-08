@@ -145,7 +145,7 @@ class ViewRecipeActivity : RecipeActivity() {
         }
         intent.run {
             launch(Dispatchers.IO) {
-                id = extras!!.getLong(getString(R.string.database_recipe_id))
+                id = extras!!.getLong(getString(R.string.extra_recipe_id))
                 mode = extras!!.getInt(getString(R.string.view_mode_extra), mode)
                 currentRecipe = recipePersistentData.fetchRecipe(id)
                 val ingredients = currentRecipe.ingredientsJson

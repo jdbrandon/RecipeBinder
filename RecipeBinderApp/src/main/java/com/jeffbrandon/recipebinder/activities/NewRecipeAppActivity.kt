@@ -8,20 +8,8 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.jeffbrandon.recipebinder.R
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
-@AndroidEntryPoint
-abstract class NewRecipeAppActivity : AppCompatActivity(), CoroutineScope {
-
-    override val coroutineContext: CoroutineContext
-        get() = coroutineContextImpl
-
-    @Inject lateinit var job: Job
-    @Inject lateinit var coroutineContextImpl: CoroutineContext
+abstract class NewRecipeAppActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +24,6 @@ abstract class NewRecipeAppActivity : AppCompatActivity(), CoroutineScope {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
     }
 
     protected fun hideKeyboard() {
