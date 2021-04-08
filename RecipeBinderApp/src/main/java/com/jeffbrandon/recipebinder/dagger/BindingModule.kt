@@ -13,8 +13,8 @@ import dagger.hilt.components.SingletonComponent
 interface BindingModule {
 
     @Binds
-    fun bindRecipeDataSource(dao: RecipeDao) : RecipeDataSource
+    fun bindRecipeDataSource(dao: RecipeDao): RecipeDataSource
 
     @Binds
-    fun bindRecipeMenuDataSource(dao: RecipeDao) : RecipeMenuDataSource
+    fun bindRecipeMenuDataSource(dao: RecipeDao): RecipeMenuDataSource
 }

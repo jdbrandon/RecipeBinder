@@ -23,8 +23,9 @@ class NewRecipeActivity : NewRecipeAppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
-        val recipeId = intent.getLongExtra(getString(R.string.extra_recipe_id),
-                          BAD_ID).takeIf { it != BAD_ID } ?: error("Recipe id not supplied")
+        val recipeId =
+            intent.getLongExtra(getString(R.string.extra_recipe_id), BAD_ID).takeIf { it != BAD_ID }
+                ?: error("Recipe id not supplied")
         viewModel.setRecipe(recipeId)
         val fragment =
             when (RecipeMode.fromOrdinal(intent.getIntExtra(getString(R.string.extra_view_mode),

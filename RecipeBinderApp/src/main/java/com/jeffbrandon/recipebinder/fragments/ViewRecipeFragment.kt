@@ -17,13 +17,12 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_view_recipe) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getRecipe().observe(viewLifecycleOwner) { recipe ->
-            with(binder){
+            with(binder) {
                 recipe.run {
                     cookTimeView.text = cookTime.toString()
                     nameText.text = name
                     requireActivity().supportFragmentManager.beginTransaction()
-                        .add(R.id.list_fragment_container, IngredientFragment())
-                        .commit()
+                        .add(R.id.list_fragment_container, IngredientFragment()).commit()
                 }
             }
         }
