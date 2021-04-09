@@ -1,5 +1,6 @@
 package com.jeffbrandon.recipebinder.room
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.jeffbrandon.recipebinder.data.Ingredient
@@ -12,8 +13,8 @@ data class RecipeData(
     val name: String,
     val cookTime: Int,
     val tags: MutableList<RecipeTag>,
-    val ingredientsJson: List<Ingredient>,
-    val instructionsJson: List<Instruction>,
+    @ColumnInfo(name = "ingredientsJson") val ingredients: List<Ingredient>,
+    @ColumnInfo(name = "instructionsJson") val instructions: List<Instruction>,
 ) {
     constructor() : this(null, "", 0, mutableListOf(), listOf(), listOf())
 }
