@@ -75,6 +75,8 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation "androidx.arch.core:core-testing:$arch_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_version"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:3.1.0"
     androidTestImplementation 'androidx.test:runner:1.4.0-alpha05'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0-alpha05'
 

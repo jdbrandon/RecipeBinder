@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-//TODO : this may need to be assisted activity context for the dialog itself
+// TODO : this may need to be assisted activity context for the dialog itself
 class IngredientInputDialog @Inject constructor(@ApplicationContext context: Context) {
     private var id: Int = -1
     private lateinit var ingredientAdapter: IngredientAdapter

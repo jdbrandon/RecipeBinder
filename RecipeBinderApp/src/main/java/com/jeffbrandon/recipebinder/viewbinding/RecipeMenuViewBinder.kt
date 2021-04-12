@@ -7,37 +7,35 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
 import com.jeffbrandon.recipebinder.databinding.ContentRecipeMenuBinding
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Locale
 
-class RecipeMenuViewBinder @AssistedInject constructor(
-    @Assisted private val viewModel: RecipeMenuViewModel,
-    private val scope: CoroutineScope,
-    @Assisted private val viewRoot: View,
-    @Assisted lifecycle: LifecycleOwner,
-    @Assisted vc: ViewContract,
+class RecipeMenuViewBinder(
+    private val viewModel: RecipeMenuViewModel,
+    private val viewRoot: View,
+    lifecycle: LifecycleOwner,
+    vc: ViewContract,
 ) {
     interface ViewContract {
         fun registerContextMenu(v: View)
         fun unregisterContextMenu(v: View)
     }
 
+    private val scope = lifecycle.lifecycleScope
+
     private val binder: ContentRecipeMenuBinding =
         ContentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot,
                                                                  R.id.recipe_content_root))
 
     init {
-
         binder.recipeRecyclerView.setHasFixedSize(true)
         viewModel.getRecipes().observe(lifecycle) {
             vc.unregisterContextMenu(binder.recipeRecyclerView)
@@ -47,7 +45,7 @@ class RecipeMenuViewBinder @AssistedInject constructor(
             vc.registerContextMenu(binder.recipeRecyclerView)
         }
         binder.recipeFilterText.addTextChangedListener { text ->
-            viewModel.filter(if (text.isNullOrEmpty()) null else text)
+            viewModel.filter(if (text.isNullOrEmpty()) null else text.toString())
         }
         setupNewRecipeButton()
     }
@@ -73,8 +71,10 @@ class RecipeMenuViewBinder @AssistedInject constructor(
                         // add basic recipe to db
                         val recipeData =
                             RecipeData().copy(name = name.capitalize(Locale.getDefault()))
-                        val id = viewModel.insertAsync(recipeData)
-                        scope.launch { NavigationUtil.editRecipe(viewRoot.context, id.await()) }
+                         scope.launch {
+                            val id = viewModel.insert(recipeData)
+                            NavigationUtil.editRecipe(viewRoot.context, id)
+                        }
                     }
                 }.setNegativeButton(android.R.string.cancel) { dialog, _ ->
                     Timber.i("canceling recipe creation")
