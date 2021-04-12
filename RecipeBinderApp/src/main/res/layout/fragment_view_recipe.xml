@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_large"
     tools:showIn="@layout/activity_recipe"
     >
 
@@ -12,7 +13,14 @@
         android:id="@+id/name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@id/cook_time_view"
+        android:paddingStart="0dp"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingBottom="@dimen/margin_medium"
+        android:textSize="@dimen/title_text_size"
+        android:textStyle="bold"
+        android:transitionName="@string/name_transition"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -21,19 +29,34 @@
         android:id="@+id/cook_time_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/name_text"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingHorizontal="@dimen/margin_small"
+        android:paddingBottom="@dimen/margin_xlarge"
+        android:textSize="@dimen/item_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name_text"
         />
 
-    <FrameLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:paddingHorizontal="@dimen/margin_small"
+        android:text="@string/minutes"
+        android:textSize="@dimen/item_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/cook_time_view"
+        app:layout_constraintTop_toTopOf="@id/cook_time_view"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/list_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/name_text"
+        app:layout_constraintTop_toBottomOf="@id/cook_time_view"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

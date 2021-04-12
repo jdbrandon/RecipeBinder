@@ -13,15 +13,19 @@ import com.jeffbrandon.recipebinder.databinding.ContentRecipeMenuBinding
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Locale
 
-class RecipeMenuViewBinder constructor(
-    private val viewModel: RecipeMenuViewModel,
-    private val viewRoot: View,
-    lifecycle: LifecycleOwner,
-    vc: ViewContract,
+class RecipeMenuViewBinder @AssistedInject constructor(
+    @Assisted private val viewModel: RecipeMenuViewModel,
+    private val scope: CoroutineScope,
+    @Assisted private val viewRoot: View,
+    @Assisted lifecycle: LifecycleOwner,
+    @Assisted vc: ViewContract,
 ) {
     interface ViewContract {
         fun registerContextMenu(v: View)
@@ -66,13 +70,11 @@ class RecipeMenuViewBinder constructor(
                                        R.string.toast_recipe_name,
                                        Toast.LENGTH_SHORT).show()
                     } else {
-                        viewModel.launch {
-                            // add basic recipe to db
-                            val recipeData =
-                                RecipeData().copy(name = name.capitalize(Locale.getDefault()))
-                            val id = viewModel.insert(recipeData)
-                            NavigationUtil.editRecipe(viewRoot.context, id)
-                        }
+                        // add basic recipe to db
+                        val recipeData =
+                            RecipeData().copy(name = name.capitalize(Locale.getDefault()))
+                        val id = viewModel.insertAsync(recipeData)
+                        scope.launch { NavigationUtil.editRecipe(viewRoot.context, id.await()) }
                     }
                 }.setNegativeButton(android.R.string.cancel) { dialog, _ ->
                     Timber.i("canceling recipe creation")

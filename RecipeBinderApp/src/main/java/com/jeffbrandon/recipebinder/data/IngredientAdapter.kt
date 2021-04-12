@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.jeffbrandon.recipebinder.R
 
+/**
+ * @deprecated
+ */
 class IngredientAdapter(
     context: Context,
     ingredients: MutableList<Ingredient>,

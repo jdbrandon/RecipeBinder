@@ -1,48 +1,22 @@
 package com.jeffbrandon.recipebinder.enums
 
 import android.content.Context
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
+import com.jeffbrandon.recipebinder.R
 
-enum class RecipeTag {
-    INSTANT_POT,
-    STOVE,
-    OVEN,
-    SOUS_VIDE,
-    FAST,
-    EASY,
-    HEALTHY,
-    VEGETARIAN,
-    VEGAN,
-    ENTREE,
-    SIDE,
-    DESSERT,
-    SOUP;
+enum class RecipeTag(private val resId: Int) {
+    INSTANT_POT(R.string.instant_pot),
+    STOVE(R.string.stove_top),
+    OVEN(R.string.oven),
+    SOUS_VIDE(R.string.sous_vide),
+    FAST(R.string.fast),
+    EASY(R.string.easy),
+    HEALTHY(R.string.healthy),
+    VEGETARIAN(R.string.vegetarian),
+    VEGAN(R.string.vegan),
+    ENTREE(R.string.entree),
+    SIDE(R.string.side),
+    DESSERT(R.string.dessert),
+    SOUP(R.string.dessert);
 
-    override fun toString(): String {
-        return when (this) {
-            INSTANT_POT -> "Instant Pot"
-            STOVE -> "Stove Top"
-            OVEN -> "Oven"
-            SOUS_VIDE -> "Sous Vide"
-            FAST -> "Fast"
-            EASY -> "Easy"
-            HEALTHY -> "Healthy"
-            VEGETARIAN -> "Vegetarian"
-            VEGAN -> "Vegan"
-            ENTREE -> "Entree"
-            SIDE -> "Side"
-            DESSERT -> "Dessert"
-            SOUP -> "Soup"
-        }
-    }
-
-    fun toChipView(context: Context): Chip {
-        return Chip(context).apply {
-            text = this@RecipeTag.toString()
-            layoutParams = ChipGroup.LayoutParams(ChipGroup.LayoutParams.WRAP_CONTENT,
-                                                  ChipGroup.LayoutParams.WRAP_CONTENT)
-            isChecked = true
-        }
-    }
+    fun getString(context: Context) = context.getString(resId)
 }

@@ -9,16 +9,16 @@ import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
     dataSource: Lazy<RecipeDataSource>,
-    override val coroutineContext: CoroutineContext,
-) : ViewModel(), CoroutineScope {
+    private val scope: CoroutineScope,
+) : ViewModel() {
     private companion object {
         private const val BAD_ID = -1L
     }
@@ -27,6 +27,11 @@ class RecipeViewModel @Inject constructor(
     private var recipeId: Long = BAD_ID
     private val recipe = MutableLiveData<RecipeData>()
 
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
+    }
+
     fun getRecipe(): LiveData<RecipeData> = recipe
 
     fun setRecipe(id: Long) {
@@ -34,7 +39,7 @@ class RecipeViewModel @Inject constructor(
         fetchRecipe()
     }
 
-    private fun fetchRecipe() = launch(Dispatchers.IO) {
+    private fun fetchRecipe() = scope.launch(Dispatchers.IO) {
         recipeId.takeIf { it != BAD_ID }?.let {
             data.fetchRecipe(recipeId).also { recipeData ->
                 withContext(Dispatchers.Main) {

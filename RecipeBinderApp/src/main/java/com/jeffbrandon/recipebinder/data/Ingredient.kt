@@ -39,7 +39,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.NONE -> Unit
             else -> {
                 if (num.isNotEmpty()) num.append(" ")
-                num.append(unit)
+                num.append(unit.getString(context))
             }
         }
         return num.toString()

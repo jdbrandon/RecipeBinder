@@ -10,18 +10,18 @@ import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.databinding.DialogAddIngredientBinding
 import com.jeffbrandon.recipebinder.enums.FractionalMeasurement
 import com.jeffbrandon.recipebinder.enums.UnitType
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class IngredientInputDialog(context: Context) {
+@Singleton
+//TODO : this may need to be assisted activity context for the dialog itself
+class IngredientInputDialog @Inject constructor(@ApplicationContext context: Context) {
     private var id: Int = -1
+    private lateinit var ingredientAdapter: IngredientAdapter
     private val view = View.inflate(context, R.layout.dialog_add_ingredient, null)
     private val binder = DialogAddIngredientBinding.bind(view)
     private var action = Mode.ADD
-    private val oneQuarter: String
-    private val oneThird: String
-    private val oneHalf: String
-    private val twoThirds: String
-    private val threeQuarter: String
-    private lateinit var ingredientAdapter: IngredientAdapter
     private var unit: String? = null
     private var selectedUnit: String?
         get() = unit
@@ -51,23 +51,16 @@ class IngredientInputDialog(context: Context) {
     }
 
     init {
-        with(context) {
-            oneQuarter = getString(R.string._1_quarter)
-            oneThird = getString(R.string._1_third)
-            oneHalf = getString(R.string._1_half)
-            twoThirds = getString(R.string._2_thirds)
-            threeQuarter = getString(R.string._3_quarters)
-        }
         binder.setupAddIngredientViews()
     }
 
-    fun addIngredientListener(ingredientAdapter: IngredientAdapter) {
+    fun add(ingredientAdapter: IngredientAdapter) {
         this.ingredientAdapter = ingredientAdapter
         action = Mode.ADD
         dialog.show()
     }
 
-    fun updateIngredientListener(ingredientAdapter: IngredientAdapter, pos: Int) {
+    fun update(ingredientAdapter: IngredientAdapter, pos: Int) {
         this.ingredientAdapter = ingredientAdapter
         action = Mode.UPDATE
         binder.populateViews(ingredientAdapter.getItem(pos))
@@ -103,28 +96,28 @@ class IngredientInputDialog(context: Context) {
         }
     }
 
-    private val unitMap: HashMap<String, String> =
-        hashMapOf(Pair(context.getString(R.string.cup), context.getString(R.string.cup_shorthand)),
-                  Pair(context.getString(R.string.ounce),
-                       context.getString(R.string.ounce_shorthand)),
-                  Pair(context.getString(R.string.table_spoon),
-                       context.getString(R.string.tablespoon_shorthand)),
-                  Pair(context.getString(R.string.tea_spoon),
-                       context.getString(R.string.teaspoon_shorthand)),
-                  Pair(context.getString(R.string.pint),
-                       context.getString(R.string.pint_shorthand)),
-                  Pair(context.getString(R.string.quart),
-                       context.getString(R.string.quart_shorthand)),
-                  Pair(context.getString(R.string.gallon),
-                       context.getString(R.string.gallon_shorthand)),
-                  Pair(context.getString(R.string.liter),
-                       context.getString(R.string.liter_shorthand)),
-                  Pair(context.getString(R.string.milliliter),
-                       context.getString(R.string.milliliter_shorthand)),
-                  Pair(context.getString(R.string.pound),
-                       context.getString(R.string.pound_shorthand)),
-                  Pair(context.getString(R.string.gram),
-                       context.getString(R.string.gram_shorthand)))
+    private val unitMap: HashMap<String, String> = hashMapOf(Pair(context.getString(R.string.cup),
+                                                                  context.getString(R.string.abbreviation_cup)),
+                                                             Pair(context.getString(R.string.ounce),
+                                                                  context.getString(R.string.abbreviation_ounce)),
+                                                             Pair(context.getString(R.string.table_spoon),
+                                                                  context.getString(R.string.abbreviation_tablespoon)),
+                                                             Pair(context.getString(R.string.tea_spoon),
+                                                                  context.getString(R.string.abbreviation_teaspoon)),
+                                                             Pair(context.getString(R.string.pint),
+                                                                  context.getString(R.string.abbreviation_pint)),
+                                                             Pair(context.getString(R.string.quart),
+                                                                  context.getString(R.string.abbreviation_quart)),
+                                                             Pair(context.getString(R.string.gallon),
+                                                                  context.getString(R.string.abbreviation_gallon)),
+                                                             Pair(context.getString(R.string.liter),
+                                                                  context.getString(R.string.abbreviation_liter)),
+                                                             Pair(context.getString(R.string.milliliter),
+                                                                  context.getString(R.string.abbreviation_milliliter)),
+                                                             Pair(context.getString(R.string.pound),
+                                                                  context.getString(R.string.abbreviation_pound)),
+                                                             Pair(context.getString(R.string.gram),
+                                                                  context.getString(R.string.abbreviation_gram)))
 
     private fun unitChipListener(v: Chip) {
         selectedUnit = if (selectedUnit != unitMap[v.text]) unitMap[v.text]

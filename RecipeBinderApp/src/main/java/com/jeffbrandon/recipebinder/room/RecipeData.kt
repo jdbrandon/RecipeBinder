@@ -12,7 +12,7 @@ data class RecipeData(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     val name: String,
     val cookTime: Int,
-    val tags: MutableList<RecipeTag>,
+    val tags: List<RecipeTag>,
     @ColumnInfo(name = "ingredientsJson") val ingredients: List<Ingredient>,
     @ColumnInfo(name = "instructionsJson") val instructions: List<Instruction>,
 ) {

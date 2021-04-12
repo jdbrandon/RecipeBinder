@@ -17,7 +17,7 @@ class RecipeAdapter(private val recipeList: List<RecipeData>, private val cb: (L
             LayoutInflater.from(parent.context).inflate(R.layout.recipe_menu_item, parent, false)
         return RecipeViewHolder(view, cb).also { viewHolder ->
             view.setOnLongClickListener {
-                currentPosition = viewHolder.adapterPosition
+                currentPosition = viewHolder.bindingAdapterPosition
                 false
             }
         }

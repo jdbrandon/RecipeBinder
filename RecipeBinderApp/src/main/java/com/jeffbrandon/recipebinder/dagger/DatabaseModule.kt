@@ -9,14 +9,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class ProviderModule {
+class DatabaseModule {
 
     @Provides
     @Singleton
@@ -24,10 +21,4 @@ class ProviderModule {
         Room.databaseBuilder(context.applicationContext,
                              RecipeDatabase::class.java,
                              "recipesBinderRecipes").build().recipeDao()
-
-    @Provides
-    fun providesJob(): Job = SupervisorJob()
-
-    @Provides
-    fun providesCoroutineContext(job: Job) = job + Dispatchers.Main
 }

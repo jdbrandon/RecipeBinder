@@ -59,7 +59,7 @@ abstract class RecipeAppActivity : AppCompatActivity(), CoroutineScope {
 
     fun navigateToEditRecipeActivity(id: Long) {
         startActivity(getViewActivityIntent(id).apply {
-            putExtra(getString(R.string.view_mode_extra), ViewRecipeActivity.EDIT_TAGS)
+            putExtra(getString(R.string.extra_view_mode), ViewRecipeActivity.EDIT_TAGS)
         })
     }
 

@@ -21,20 +21,23 @@ import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.widgets.IngredientInputDialog
 import com.jeffbrandon.recipebinder.widgets.UpdateInstructionDialog
-import kotlinx.coroutines.Deferred
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.util.Locale
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ViewRecipeActivity : RecipeActivity() {
     private var mode: Int = VIEW
-    private lateinit var deferredIngredientDialog: Deferred<IngredientInputDialog>
-    private val ingredientDialog: IngredientInputDialog by lazy { runBlocking { deferredIngredientDialog.await() } }
-    private lateinit var deferredInstructionDialog: Deferred<UpdateInstructionDialog>
-    private val instructionDialog: UpdateInstructionDialog by lazy { runBlocking { deferredInstructionDialog.await() } }
+    @Inject lateinit var deferredIngredientDialog: Lazy<IngredientInputDialog>
+    private val ingredientDialog: IngredientInputDialog
+        get() = deferredIngredientDialog.get()
+    @Inject lateinit var deferredInstructionDialog: Lazy<UpdateInstructionDialog>
+    private val instructionDialog: UpdateInstructionDialog
+        get() = deferredInstructionDialog.get()
     override lateinit var ingredientAdapter: IngredientAdapter
     override lateinit var instructionAdapter: InstructionAdapter
     private var crossToCheckAnimation: AnimatedVectorDrawableCompat? = null
@@ -59,21 +62,16 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun setMode(intent: Intent?, savedInstanceState: Bundle?) {
         intent?.run {
-            mode = getIntExtra(getString(R.string.view_mode_extra), mode)
+            mode = getIntExtra(getString(R.string.extra_view_mode), mode)
         }
         savedInstanceState?.run {
-            mode = getInt(getString(R.string.view_mode_extra), mode)
+            mode = getInt(getString(R.string.extra_view_mode), mode)
         }
-    }
-
-    override fun launchDeferredTasks() {
-        deferredIngredientDialog = async { IngredientInputDialog(this@ViewRecipeActivity) }
-        deferredInstructionDialog = async { UpdateInstructionDialog(this@ViewRecipeActivity) }
     }
 
     private fun ActivityViewRecipeBinding.setupButtonListeners() {
         addIngredientButton.setOnClickListener {
-            ingredientDialog.addIngredientListener(ingredientAdapter)
+            ingredientDialog.add(ingredientAdapter)
         }
         addInstructionButton.setOnClickListener { addInstructionClick() }
         if (mode.isEditing()) actionButton.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
@@ -128,7 +126,7 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(getString(R.string.view_mode_extra), mode)
+        outState.putInt(getString(R.string.extra_view_mode), mode)
         super.onSaveInstanceState(outState)
         if (mode.isEditing()) binding.saveRecipeState()
     }
@@ -146,7 +144,7 @@ class ViewRecipeActivity : RecipeActivity() {
         intent.run {
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.extra_recipe_id))
-                mode = extras!!.getInt(getString(R.string.view_mode_extra), mode)
+                mode = extras!!.getInt(getString(R.string.extra_view_mode), mode)
                 currentRecipe = recipePersistentData.fetchRecipe(id)
                 val ingredients = currentRecipe.ingredients
                 val instructions = currentRecipe.instructions
@@ -274,10 +272,11 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun updateItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
         when (menuInfo.targetView.id) {
-            R.id.ingredient_view -> ingredientDialog.updateIngredientListener(ingredientAdapter,
-                                                                              menuInfo.position)
-            R.id.instruction_view -> instructionDialog.updateInstruction(instructionAdapter,
-                                                                         menuInfo.position)
+            R.id.ingredient_view -> ingredientDialog.update(ingredientAdapter,
+                                                            menuInfo.position)
+            R.id.instruction_view -> instructionDialog.show(this,
+                                                            instructionAdapter,
+                                                            menuInfo.position)
         }
     }
 

@@ -1,52 +1,26 @@
 package com.jeffbrandon.recipebinder.enums
 
-enum class UnitType {
-    GALLON,
-    QUART,
-    PINT,
-    CUP,
-    OUNCE,
-    TABLE_SPOON,
-    TEA_SPOON,
-    POUND,
-    LITER,
-    MILLILITER,
-    GRAM,
-    NONE;
+import android.content.Context
+import com.jeffbrandon.recipebinder.R
 
-    override fun toString(): String {
+enum class UnitType(private val abbreviationResId: Int) {
+    GALLON(R.string.abbreviation_gallon),
+    QUART(R.string.abbreviation_quart),
+    PINT(R.string.abbreviation_pint),
+    CUP(R.string.abbreviation_cup),
+    OUNCE(R.string.abbreviation_ounce),
+    TABLE_SPOON(R.string.abbreviation_tablespoon),
+    TEA_SPOON(R.string.abbreviation_teaspoon),
+    POUND(R.string.abbreviation_pound),
+    LITER(R.string.abbreviation_liter),
+    MILLILITER(R.string.abbreviation_milliliter),
+    GRAM(R.string.abbreviation_gram),
+    NONE(-1);
+
+    fun getString(context: Context): String {
         return when (this) {
-            GALLON -> "gal"
-            QUART -> "qt"
-            PINT -> "pt"
-            CUP -> "c"
-            OUNCE -> "oz"
-            TABLE_SPOON -> "tbp"
-            TEA_SPOON -> "tsp"
-            POUND -> "lb"
-            LITER -> "l"
-            MILLILITER -> "ml"
-            GRAM -> "g"
             NONE -> ""
-        }
-    }
-
-    companion object {
-        fun fromString(s: String): UnitType {
-            return when (s) {
-                "gal" -> GALLON
-                "qt" -> QUART
-                "pt" -> PINT
-                "c" -> CUP
-                "oz" -> OUNCE
-                "tbp" -> TABLE_SPOON
-                "tsp" -> TEA_SPOON
-                "lb" -> POUND
-                "l" -> LITER
-                "ml" -> MILLILITER
-                "g" -> GRAM
-                else -> NONE
-            }
+            else -> context.getString(abbreviationResId)
         }
     }
 }
