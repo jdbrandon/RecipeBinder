@@ -13,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -48,22 +47,15 @@ class RecipeMenuViewModelTest {
         underTest = RecipeMenuViewModel(lazySource).also { it.filter(null) }
     }
 
-    @After
-    fun after() {
-        coroutineRule.cleanupTestCoroutines()
-    }
-
     @Test
-    fun getRecipes() = runBlockingTest {
+    fun `test get`() = coroutineRule.runBlockingTest {
         // Simple test to make sure mocking is set up correctly
-        underTest.getRecipes().observeForTest {
-            advanceUntilIdle()
-            assertEquals("contents are correct", recipeList, underTest.getRecipes().value)
-        }
+        val result = underTest.getRecipes().getOrAwaitValue()
+        assertEquals("contents are correct", recipeList, result)
     }
 
     @Test
-    fun `test delete`() = runBlockingTest {
+    fun `test delete`() = coroutineRule.runBlockingTest {
         whenever(dataSource.deleteRecipe(any())).then {
             recipeList.remove(TestRecipeData.RECIPE_1)
             TestRecipeData.ID_1.toInt()
@@ -71,7 +63,6 @@ class RecipeMenuViewModelTest {
 
         underTest.getRecipes().observeForTest {
             underTest.delete(recipeList.indexOf(TestRecipeData.RECIPE_1))
-            advanceUntilIdle()
         }
         val result = underTest.getRecipes().getOrAwaitValue()
 
@@ -80,13 +71,9 @@ class RecipeMenuViewModelTest {
     }
 
     @Test
-    fun `test insert and delete`() {
+    fun `test insert`() = coroutineRule.runBlockingTest {
         val insertRecipe = RecipeData().copy(id = INSERT_ID)
         whenever(dataSource.insertRecipe(eq(insertRecipe))).thenReturn(INSERT_ID)
-        whenever(dataSource.deleteRecipe(eq(insertRecipe))).then {
-            recipeList.remove(insertRecipe)
-            INSERT_ID.toInt()
-        }
 
         underTest.getRecipes().observeForTest {
             runBlocking {
