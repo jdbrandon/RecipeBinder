@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.jeffbrandon.recipebinder.R
@@ -14,28 +15,42 @@ import com.jeffbrandon.recipebinder.databinding.ContentRecipeMenuBinding
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Locale
+import javax.inject.Inject
 
-class RecipeMenuViewBinder(
-    private val viewModel: RecipeMenuViewModel,
-    private val viewRoot: View,
-    lifecycle: LifecycleOwner,
-    vc: ViewContract,
-) {
+@Module
+@InstallIn(FragmentComponent::class)
+class RecipeMenuViewBinder @Inject constructor() {
     interface ViewContract {
         fun registerContextMenu(v: View)
         fun unregisterContextMenu(v: View)
     }
 
-    private val scope = lifecycle.lifecycleScope
+    private lateinit var viewModel: RecipeMenuViewModel
+    private lateinit var viewRoot: View
+    private lateinit var lifecycle: LifecycleOwner
+    private val scope: LifecycleCoroutineScope by lazy { lifecycle.lifecycleScope }
 
-    private val binder: ContentRecipeMenuBinding =
+    private val binder: ContentRecipeMenuBinding by lazy {
         ContentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot,
                                                                  R.id.recipe_content_root))
+    }
 
-    init {
+    fun bind(
+        vm: RecipeMenuViewModel,
+        view: View,
+        lifecycle: LifecycleOwner,
+        vc: ViewContract,
+    ) {
+        viewModel = vm
+        viewRoot = view
+        this.lifecycle = lifecycle
+
         binder.recipeRecyclerView.setHasFixedSize(true)
         viewModel.getRecipes().observe(lifecycle) {
             vc.unregisterContextMenu(binder.recipeRecyclerView)
@@ -71,7 +86,7 @@ class RecipeMenuViewBinder(
                         // add basic recipe to db
                         val recipeData =
                             RecipeData().copy(name = name.capitalize(Locale.getDefault()))
-                         scope.launch {
+                        scope.launch {
                             val id = viewModel.insert(recipeData)
                             NavigationUtil.editRecipe(viewRoot.context, id)
                         }

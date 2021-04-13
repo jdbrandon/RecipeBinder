@@ -7,17 +7,25 @@ import com.jeffbrandon.recipebinder.databinding.FragmentViewRecipeBinding
 import com.jeffbrandon.recipebinder.fragments.ViewFragmentPagerAdapter
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.viewmodel.RecipeViewModel
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
+import javax.inject.Inject
 
-class ViewRecipeViewBinder(
-    viewModel: RecipeViewModel,
-    viewRoot: View,
-    activity: FragmentActivity,
-    lifecycleOwner: LifecycleOwner,
-) {
+@Module
+@InstallIn(FragmentComponent::class)
+class ViewRecipeViewBinder @Inject constructor() {
 
+    private lateinit var viewRoot: View
     private val binder by lazy { FragmentViewRecipeBinding.bind(viewRoot) }
 
-    init {
+    fun bind(
+        viewModel: RecipeViewModel,
+        view: View,
+        activity: FragmentActivity,
+        lifecycleOwner: LifecycleOwner,
+    ) {
+        viewRoot = view
         viewModel.getRecipe().observe(lifecycleOwner) { recipe -> onNewRecipe(recipe) }
         binder.listFragmentContainer.adapter = ViewFragmentPagerAdapter(activity)
     }

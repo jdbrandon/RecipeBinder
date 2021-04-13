@@ -145,7 +145,7 @@ class ViewRecipeActivity : RecipeActivity() {
             launch(Dispatchers.IO) {
                 id = extras!!.getLong(getString(R.string.extra_recipe_id))
                 mode = extras!!.getInt(getString(R.string.extra_view_mode), mode)
-                currentRecipe = recipePersistentData.fetchRecipe(id)
+                //currentRecipe = recipePersistentData.fetchRecipe(id)
                 val ingredients = currentRecipe.ingredients
                 val instructions = currentRecipe.instructions
                 val time = if (currentRecipe.cookTime == 0) ""

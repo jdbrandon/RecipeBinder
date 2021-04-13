@@ -10,16 +10,17 @@ import com.jeffbrandon.recipebinder.viewbinding.RecipeMenuViewBinder
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MenuFragment : Fragment(R.layout.content_recipe_menu), RecipeMenuViewBinder.ViewContract {
 
-    private lateinit var viewBinder: RecipeMenuViewBinder
+    @Inject lateinit var viewBinder: RecipeMenuViewBinder
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val vm: RecipeMenuViewModel by activityViewModels()
-        viewBinder = RecipeMenuViewBinder(vm, view, this, this)
+        viewBinder.bind(vm, view, this, this)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

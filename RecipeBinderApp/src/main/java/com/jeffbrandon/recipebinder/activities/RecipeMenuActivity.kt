@@ -13,8 +13,8 @@ class RecipeMenuActivity : NewRecipeAppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
-        supportFragmentManager.beginTransaction().add(R.id.fragment_container, MenuFragment())
-            .commit()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, MenuFragment::class.java, null).commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
