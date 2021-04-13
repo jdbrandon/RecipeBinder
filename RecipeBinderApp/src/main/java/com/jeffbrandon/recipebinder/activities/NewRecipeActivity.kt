@@ -22,7 +22,8 @@ class NewRecipeActivity : NewRecipeAppActivity() {
             when (intent.getSerializableExtra(getString(R.string.extra_view_mode)) as? RecipeMode) {
                 RecipeMode.VIEW -> ViewRecipeFragment::class.java.also { Timber.i("got view fragment") }
                 RecipeMode.EDIT -> EditRecipeFragment::class.java.also { Timber.i("got edit fragment") }
-                else -> ViewRecipeFragment::class.java.also { Timber.w("unable to get RecipeMode, falling back to VIEW") }
+                else ->
+                    ViewRecipeFragment::class.java.also { Timber.w("unable to get RecipeMode, falling back to VIEW") }
             }
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment, null)
             .commit()
