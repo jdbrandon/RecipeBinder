@@ -8,7 +8,6 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewbinding.ViewRecipeViewBinder
 import com.jeffbrandon.recipebinder.viewmodel.RecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -18,7 +17,6 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_view_recipe) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.i("fragment view created")
         binder.bind(viewModel, requireView(), requireActivity(), viewLifecycleOwner)
     }
 }

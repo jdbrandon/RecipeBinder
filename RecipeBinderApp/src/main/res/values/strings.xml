@@ -71,4 +71,5 @@
     <string name="add_instruction_button">add instruction button</string>
     <string name="edit_save_mode_toggle_button">edit save mode toggle button</string>
     <string name="name_transition">nameTransitionId</string>
+    <string name="cook_time_hint">Cook Time</string>
 </resources>
