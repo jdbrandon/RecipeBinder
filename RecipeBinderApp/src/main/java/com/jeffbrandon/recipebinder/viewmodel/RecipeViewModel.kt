@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipeViewModel @Inject constructor(
+open class RecipeViewModel @Inject constructor(
     dataSource: Lazy<RecipeDataSource>,
     state: SavedStateHandle,
     @ApplicationContext context: Context,

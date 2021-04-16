@@ -72,4 +72,7 @@
     <string name="edit_save_mode_toggle_button">edit save mode toggle button</string>
     <string name="name_transition">nameTransitionId</string>
     <string name="cook_time_hint">Cook Time</string>
+    <string name="metadata">Metadata</string>
+    <string name="edit_recipe_title">Recipe Editor</string>
+    <string name="advance">Advance</string>
 </resources>
