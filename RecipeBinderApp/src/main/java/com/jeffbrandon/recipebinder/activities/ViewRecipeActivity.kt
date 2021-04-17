@@ -273,8 +273,7 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun updateItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
         when (menuInfo.targetView.id) {
-            R.id.ingredient_view -> ingredientDialog.update(ingredientAdapter,
-                                                            menuInfo.position)
+            R.id.ingredient_view -> ingredientDialog.update(ingredientAdapter, menuInfo.position)
             R.id.instruction_view -> instructionDialog.show(this,
                                                             instructionAdapter,
                                                             menuInfo.position)

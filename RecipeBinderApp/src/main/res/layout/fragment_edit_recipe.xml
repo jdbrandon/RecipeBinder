@@ -9,9 +9,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/margin_large"
         android:text="@string/edit_recipe_title"
         android:textSize="@dimen/title_text_size"
-        android:paddingHorizontal="@dimen/margin_large"
         android:textStyle="bold"
         />
 
