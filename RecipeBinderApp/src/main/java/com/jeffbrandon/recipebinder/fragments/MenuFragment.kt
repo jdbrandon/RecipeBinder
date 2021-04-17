@@ -28,6 +28,7 @@ class MenuFragment : Fragment(R.layout.content_recipe_menu), RecipeMenuViewBinde
         val position = viewBinder.selectedPosition()
         return when (item.itemId) {
             R.id.recipe_menu_delete -> position?.let { viewBinder.delete(it) } ?: true
+            R.id.recipe_menu_edit -> position?.let { viewBinder.edit(it) } ?: true
             else -> super.onContextItemSelected(item)
         }
     }

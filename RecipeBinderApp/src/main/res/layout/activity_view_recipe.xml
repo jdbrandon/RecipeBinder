@@ -120,7 +120,6 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- Tags Views -->
         <TextView
             android:id="@+id/tags_section_title"
             android:layout_width="wrap_content"
@@ -137,147 +136,19 @@
             app:layout_constraintTop_toBottomOf="@id/recipe_name_edit_layout"
             />
 
-        <LinearLayout
+        <include
             android:id="@+id/tags_layout"
+            layout="@layout/edit_tags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_recipe_content_margin_start"
             android:layout_marginEnd="@dimen/view_recipe_content_margin_end"
             android:animateLayoutChanges="true"
-            android:orientation="vertical"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tags_section_title"
-            >
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cook_type"
-                android:textSize="@dimen/item_text_size"
-                android:textStyle="italic"
-                />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cook_type_chips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                >
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_instant_pot"
-                    style="@style/CheckableChip"
-                    android:text="@string/instant_pot"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_stove"
-                    style="@style/CheckableChip"
-                    android:text="@string/stove_top"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_oven"
-                    style="@style/CheckableChip"
-                    android:text="@string/oven"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_sous_vide"
-                    style="@style/CheckableChip"
-                    android:text="@string/sous_vide"
-                    />
-            </com.google.android.material.chip.ChipGroup>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/course"
-                android:textSize="@dimen/item_text_size"
-                android:textStyle="italic"
-                />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/dish_type_chips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                >
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_entree"
-                    style="@style/CheckableChip"
-                    android:text="@string/entree"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_side"
-                    style="@style/CheckableChip"
-                    android:text="@string/side"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_soup"
-                    style="@style/CheckableChip"
-                    android:text="@string/soup"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_dessert"
-                    style="@style/CheckableChip"
-                    android:text="@string/dessert"
-                    />
-            </com.google.android.material.chip.ChipGroup>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/other_information"
-                android:textSize="@dimen/item_text_size"
-                android:textStyle="italic"
-                />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/tags_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:singleLine="false"
-                app:singleSelection="false"
-                >
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_fast"
-                    style="@style/CheckableChip"
-                    android:text="@string/fast"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_easy"
-                    style="@style/CheckableChip"
-                    android:text="@string/easy"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_healthy"
-                    style="@style/CheckableChip"
-                    android:text="@string/healthy"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_vegetarian"
-                    style="@style/CheckableChip"
-                    android:text="@string/vegetarian"
-                    />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_vegan"
-                    style="@style/CheckableChip"
-                    android:text="@string/vegan"
-                    />
-            </com.google.android.material.chip.ChipGroup>
-        </LinearLayout>
-        <!-- End Tags Views -->
         <TextView
             android:id="@+id/ingredients_section_title"
             android:layout_width="wrap_content"

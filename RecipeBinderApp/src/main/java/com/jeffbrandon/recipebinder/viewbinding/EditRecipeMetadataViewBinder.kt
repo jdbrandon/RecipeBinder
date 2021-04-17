@@ -3,6 +3,7 @@ package com.jeffbrandon.recipebinder.viewbinding
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeMetadataBinding
+import com.jeffbrandon.recipebinder.enums.RecipeTag.Companion.viewMap
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import javax.inject.Inject
 
@@ -12,9 +13,15 @@ class EditRecipeMetadataViewBinder @Inject constructor() {
     fun bind(viewModel: EditRecipeViewModel, viewRoot: View, lifecycle: LifecycleOwner) {
         binder = FragmentEditRecipeMetadataBinding.bind(viewRoot)
         viewModel.getRecipe().observe(lifecycle) { recipe ->
-            with(binder) {
+            with(binder.meta) {
                 name.setText(recipe.name)
                 cookTime.setText(recipe.cookTime.toString())
+            }
+            with(binder.tags) {
+                val tagMap = viewMap()
+                recipe.tags.forEach { tag ->
+                    tagMap[tag]?.apply { isChecked = true } ?: error("Unmapped tag")
+                }
             }
         }
     }

@@ -17,6 +17,7 @@ import com.jeffbrandon.recipebinder.data.IngredientAdapter
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.data.InstructionAdapter
 import com.jeffbrandon.recipebinder.databinding.ActivityViewRecipeBinding
+import com.jeffbrandon.recipebinder.databinding.EditTagsBinding
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.widgets.IngredientInputDialog
@@ -154,7 +155,7 @@ class ViewRecipeActivity : RecipeActivity() {
                     with(binding) {
                         ingredientAdapter = populateIngredients(ingredients)
                         instructionAdapter = populateInstructions(instructions)
-                        setTagViews(currentRecipe.tags)
+                        tagsLayout.setTagViews(currentRecipe.tags)
                         titleTextView.text = currentRecipe.name
                         recipeName.setText(currentRecipe.name)
                         cookTimeView.text = time
@@ -180,7 +181,7 @@ class ViewRecipeActivity : RecipeActivity() {
                 addInstructionButton.visibility = View.GONE
             }
             EDIT_TAGS -> {
-                setTagViews(currentRecipe.tags)
+                tagsLayout.setTagViews(currentRecipe.tags)
                 setTagsVisibility(View.VISIBLE)
                 setIngredientsVisibility(View.GONE)
                 setInstructionsVisibility(View.GONE)
@@ -199,7 +200,7 @@ class ViewRecipeActivity : RecipeActivity() {
     }
 
     private fun ActivityViewRecipeBinding.setTagsVisibility(visible: Int) {
-        tagsLayout.visibility = visible
+        tagsLayout.tagsLayout.visibility = visible
     }
 
     private fun ActivityViewRecipeBinding.setIngredientsVisibility(visible: Int) {
@@ -217,7 +218,7 @@ class ViewRecipeActivity : RecipeActivity() {
         recipeNameViewLayout.visibility = if (!editing) View.VISIBLE else View.INVISIBLE
         recipeNameEditLayout.visibility = if (editing) View.VISIBLE else View.INVISIBLE
         tagsSectionTitle.visibility = if (editing) View.VISIBLE else View.GONE
-        tagsLayout.visibility = if (editing) View.VISIBLE else View.GONE
+        tagsLayout.tagsLayout.visibility = if (editing) View.VISIBLE else View.GONE
         ingredientsListView.visibility = if (!editing) View.VISIBLE else View.GONE
         instructionsListView.visibility = if (!editing) View.VISIBLE else View.GONE
         ingredientsListViewLarge.visibility = if (editing) View.VISIBLE else View.GONE
@@ -291,7 +292,7 @@ class ViewRecipeActivity : RecipeActivity() {
         launch(Dispatchers.IO) {
             val name = recipeName.text.toString()
             val time = cookTime.text.run { if (!isNullOrEmpty()) toString().toInt() else 0 }
-            val tags = buildTagsList()
+            val tags = tagsLayout.buildTagsList()
             val ingredients = ingredientAdapter.getData()
             val instructions = instructionAdapter.getData()
             val dbInput = RecipeData(id,
@@ -307,12 +308,12 @@ class ViewRecipeActivity : RecipeActivity() {
             launch(Dispatchers.Main) {
                 titleTextView.text = name
                 cookTimeView.text = if (time == 0) "" else time.toString()
-                setTagViews(tags)
+                tagsLayout.setTagViews(tags)
             }
         }
     }
 
-    private fun ActivityViewRecipeBinding.buildTagsList(): MutableList<RecipeTag> {
+    private fun EditTagsBinding.buildTagsList(): MutableList<RecipeTag> {
         val res = when (cookTypeChips.checkedChipId) {
             R.id.chip_instant_pot -> mutableListOf(RecipeTag.INSTANT_POT)
             R.id.chip_stove -> mutableListOf(RecipeTag.STOVE)
@@ -336,13 +337,13 @@ class ViewRecipeActivity : RecipeActivity() {
         return res
     }
 
-    private fun ActivityViewRecipeBinding.setTagViews(tags: List<RecipeTag>) {
+    private fun EditTagsBinding.setTagViews(tags: List<RecipeTag>) {
         (cookTypeChips.children + dishTypeChips.children + tagsGroup.children).forEach {
             (it as Chip).apply { isChecked = getTagForChip(it) in tags }
         }
     }
 
-    private fun ActivityViewRecipeBinding.getTagForChip(chip: Chip): RecipeTag {
+    private fun EditTagsBinding.getTagForChip(chip: Chip): RecipeTag {
         return when (chip.id) {
             chipInstantPot.id -> RecipeTag.INSTANT_POT
             chipStove.id -> RecipeTag.STOVE

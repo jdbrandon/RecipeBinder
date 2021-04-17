@@ -75,4 +75,5 @@
     <string name="metadata">Metadata</string>
     <string name="edit_recipe_title">Recipe Editor</string>
     <string name="advance">Advance</string>
+    <string name="edit">Edit</string>
 </resources>

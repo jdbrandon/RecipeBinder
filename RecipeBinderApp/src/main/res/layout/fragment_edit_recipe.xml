@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/edit_recipe_title"
         android:textSize="@dimen/title_text_size"
+        android:paddingHorizontal="@dimen/margin_large"
         android:textStyle="bold"
         />
 

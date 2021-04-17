@@ -34,6 +34,7 @@ class RecipeMenuViewBinder @Inject constructor() {
     private lateinit var viewModel: RecipeMenuViewModel
     private lateinit var viewRoot: View
     private lateinit var lifecycle: LifecycleOwner
+    private lateinit var recipeList: List<RecipeData>
     private val scope: LifecycleCoroutineScope by lazy { lifecycle.lifecycleScope }
 
     private val binder: ContentRecipeMenuBinding by lazy {
@@ -54,7 +55,8 @@ class RecipeMenuViewBinder @Inject constructor() {
         binder.recipeRecyclerView.setHasFixedSize(true)
         viewModel.getRecipes().observe(lifecycle) {
             vc.unregisterContextMenu(binder.recipeRecyclerView)
-            binder.recipeRecyclerView.adapter = RecipeAdapter(it) { id ->
+            recipeList = it
+            binder.recipeRecyclerView.adapter = RecipeAdapter(recipeList) { id ->
                 NavigationUtil.viewRecipe(viewRoot.context, id)
             }
             vc.registerContextMenu(binder.recipeRecyclerView)
@@ -96,6 +98,12 @@ class RecipeMenuViewBinder @Inject constructor() {
                     dialog.cancel()
                 }.show()
         }
+    }
+
+    fun edit(position: Int): Boolean {
+        recipeList[position].id?.let { NavigationUtil.editRecipe(viewRoot.context, it) }
+            ?: error("Recipe id from db was null")
+        return true
     }
 
     fun delete(position: Int): Boolean {
