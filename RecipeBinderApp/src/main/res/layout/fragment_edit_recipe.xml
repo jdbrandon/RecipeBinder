@@ -15,6 +15,8 @@
         android:textStyle="bold"
         />
 
+    <!--  TODO: Save button goes here, maybe convert title to title bar  -->
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/navigation_tabs"
         android:layout_width="match_parent"

@@ -47,19 +47,6 @@
         app:layout_constraintTop_toBottomOf="@id/recipe_filter_layout"
         />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_recipe_button"
-        style="@style/RoundButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@string/add_recipe"
-        app:layout_constraintBottom_toBottomOf="@id/recipe_text"
-        app:layout_constraintStart_toEndOf="@id/recipe_text"
-        app:layout_constraintTop_toTopOf="@id/recipe_text"
-        app:srcCompat="@drawable/ic_add_white_24dp"
-        />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipe_recycler_view"
         android:layout_width="match_parent"
@@ -73,6 +60,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipe_text"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_recipe_button"
+        style="@style/RoundButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/add_recipe"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add_white_24dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
