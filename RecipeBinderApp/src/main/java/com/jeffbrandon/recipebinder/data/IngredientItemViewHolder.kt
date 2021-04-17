@@ -1,19 +1,18 @@
 package com.jeffbrandon.recipebinder.data
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.jeffbrandon.recipebinder.databinding.IngredientListItemBinding
 
-class IngredientItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class IngredientItemViewHolder(private val view: View) : BindableViewHolder<Ingredient>(view) {
 
     private val binder: IngredientListItemBinding by lazy { IngredientListItemBinding.bind(view) }
 
-    fun bind(data: Ingredient) {
+    override fun bind(item: Ingredient) {
         with(binder) {
-            val amount = data.amountString(view.context)
-            quantity.text = amount
-            ingredientName.text = data.name
-            ingredientView.contentDescription = "$amount ${data.name}"
+            val amountText = item.amountString(view.context)
+            amount.text = amountText
+            name.text = item.name
+            ingredientView.contentDescription = "$amount ${item.name}"
         }
     }
 }

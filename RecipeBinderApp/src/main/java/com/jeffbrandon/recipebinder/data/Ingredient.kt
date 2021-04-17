@@ -9,7 +9,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
-    fun amountString(context: Context): CharSequence {
+    fun amountString(context: Context, useLongUnits: Boolean = false): CharSequence {
         val num = StringBuilder()
         if (amountWhole() > 0) num.append(amountWhole())
         when (amountFraction()) {
@@ -39,7 +39,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.NONE -> Unit
             else -> {
                 if (num.isNotEmpty()) num.append(" ")
-                num.append(unit.getString(context))
+                num.append(unit.getString(context, useLongUnits))
             }
         }
         return num.toString()

@@ -17,8 +17,8 @@ class IngredientAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: inflater.inflate(layout, parent, false)
-        val quantityView = view.findViewById(R.id.quantity) as TextView?
-        val ingredientView = view.findViewById(R.id.ingredient_name) as TextView?
+        val quantityView = view.findViewById(R.id.amount) as TextView?
+        val ingredientView = view.findViewById(R.id.name) as TextView?
         dataSource[position].let { ingredient ->
             quantityView?.apply { text = ingredient.amountString(view.context) }
             ingredientView?.apply { text = ingredient.name }
