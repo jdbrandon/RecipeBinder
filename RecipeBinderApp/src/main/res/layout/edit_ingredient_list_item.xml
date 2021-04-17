@@ -6,19 +6,9 @@
     >
 
     <TextView
-        android:id="@+id/amount"
+        android:id="@+id/ingredient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/edit_ingredient_button"
-        android:textSize="@dimen/ingredient_list_text_size"
-        android:layout_alignParentStart="true"
-        />
-
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/amount"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@id/edit_ingredient_button"
         android:textSize="@dimen/ingredient_list_text_size"
@@ -28,9 +18,8 @@
         android:id="@+id/edit_ingredient_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/amount"
-        android:layout_alignBottom="@id/name"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:text="@string/edit"
         />
 

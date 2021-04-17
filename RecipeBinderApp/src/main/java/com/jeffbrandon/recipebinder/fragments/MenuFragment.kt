@@ -23,6 +23,16 @@ class MenuFragment : Fragment(R.layout.content_recipe_menu), RecipeMenuViewBinde
         viewBinder.bind(vm, view, this, this)
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewBinder.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewBinder.onStop()
+    }
+
     override fun onContextItemSelected(item: MenuItem): Boolean {
         Timber.i("${item.itemId} ${item.menuInfo}")
         val position = viewBinder.selectedPosition()

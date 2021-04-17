@@ -112,4 +112,8 @@ class RecipeMenuViewBinder @Inject constructor() {
     }
 
     fun selectedPosition(): Int? = (binder.recipeRecyclerView.adapter as RecipeAdapter).position
+
+    fun onStart() = binder.addRecipeButton.show()
+
+    fun onStop() = binder.addRecipeButton.hide()
 }

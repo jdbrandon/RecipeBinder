@@ -17,7 +17,8 @@ class EditIngredientItemViewHolder(
 
     override fun bind(item: Ingredient) = with(binder) {
         current = item
-        name.text = item.name
-        amount.text = item.amountString(view.context, true)
+        ingredient.text = view.context.getString(R.string.ingredient_format,
+                                                 item.amountString(view.context, true),
+                                                 item.name)
     }
 }
