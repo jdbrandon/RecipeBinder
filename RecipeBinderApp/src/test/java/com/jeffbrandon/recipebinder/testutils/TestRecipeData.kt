@@ -28,15 +28,15 @@ class TestRecipeData {
         const val INGREDIENT_NAME_1_3 = "cheese"
         const val AMOUNT_1_3 = 1f
         val TYPE_1_3 = UnitType.POUND
-        val INGREDIENT_3 = Ingredient(INGREDIENT_NAME_1_3, AMOUNT_1_3, TYPE_1_3)
+        val INGREDIENT_1_3 = Ingredient(INGREDIENT_NAME_1_3, AMOUNT_1_3, TYPE_1_3)
         val INGREDIENT_LIST_1 = listOf(
             INGREDIENT_1_1,
             INGREDIENT_1_2,
-            INGREDIENT_3,
+            INGREDIENT_1_3,
         )
-        const val INSTRUCTION_1_1 = "make"
-        const val INSTRUCTION_1_2 = "the"
-        const val INSTRUCTION_1_3 = "pasta"
+        val INSTRUCTION_1_1 = Instruction("make")
+        val INSTRUCTION_1_2 = Instruction("the")
+        val INSTRUCTION_1_3 = Instruction("pasta")
         val INSTRUCTION_LIST_1 = listOf(INSTRUCTION_1_1, INSTRUCTION_1_2, INSTRUCTION_1_3)
         const val ID_2 = 1L
         const val NAME_2 = "testName"
@@ -59,25 +59,21 @@ class TestRecipeData {
             INGREDIENT_2_2,
             INGREDIENT_2_3,
         )
-        const val INSTRUCTION_2_1 = "Now"
-        const val INSTRUCTION_2_2 = "we're"
-        const val INSTRUCTION_2_3 = "talking"
+        val INSTRUCTION_2_1 = Instruction("Now")
+        val INSTRUCTION_2_2 = Instruction("we're")
+        val INSTRUCTION_2_3 = Instruction("talking")
         val INSTRUCTION_LIST_2 = listOf(INSTRUCTION_2_1, INSTRUCTION_2_2, INSTRUCTION_2_3)
         val RECIPE_1 = RecipeData(id = ID_1,
                                   name = NAME_1,
                                   cookTime = COOK_TIME_1,
                                   tags = TAGS_LIST_1,
                                   ingredients = INGREDIENT_LIST_1,
-                                  instructions = INSTRUCTION_LIST_1.map {
-                                      Instruction(it)
-                                  })
+                                  instructions = INSTRUCTION_LIST_1)
         val RECIPE_2 = RecipeData(id = ID_2,
                                   name = NAME_2,
                                   cookTime = COOK_TIME_2,
                                   tags = TAGS_LIST_2,
                                   ingredients = INGREDIENT_LIST_2,
-                                  instructions = INSTRUCTION_LIST_2.map {
-                                      Instruction(it)
-                                  })
+                                  instructions = INSTRUCTION_LIST_2)
     }
 }
