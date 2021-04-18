@@ -2,6 +2,7 @@ package com.jeffbrandon.recipebinder.enums
 
 import android.content.Context
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.databinding.FragmentAddIngredientBinding
 
 enum class UnitType(private val resId: Int, private val abbreviationResId: Int) {
     GALLON(R.string.gallon, R.string.abbreviation_gallon),
@@ -22,5 +23,21 @@ enum class UnitType(private val resId: Int, private val abbreviationResId: Int) 
             NONE -> ""
             else -> context.getString(if (useLongUnitString) resId else abbreviationResId)
         }
+    }
+
+    companion object {
+        fun FragmentAddIngredientBinding.unitMap() = mapOf(
+            GALLON to gallonChip,
+            QUART to quartChip,
+            PINT to pintChip,
+            CUP to cupChip,
+            OUNCE to ounceChip,
+            TABLE_SPOON to tbspChip,
+            TEA_SPOON to tspChip,
+            POUND to poundChip,
+            LITER to literChip,
+            MILLILITER to milliliterChip,
+            GRAM to gramChip,
+        )
     }
 }

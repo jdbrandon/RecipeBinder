@@ -20,7 +20,6 @@ import com.jeffbrandon.recipebinder.databinding.ActivityViewRecipeBinding
 import com.jeffbrandon.recipebinder.databinding.EditTagsBinding
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
-import com.jeffbrandon.recipebinder.widgets.IngredientInputDialog
 import com.jeffbrandon.recipebinder.widgets.UpdateInstructionDialog
 import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,9 +32,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ViewRecipeActivity : RecipeActivity() {
     private var mode: Int = VIEW
-    @Inject lateinit var deferredIngredientDialog: Lazy<IngredientInputDialog>
-    private val ingredientDialog: IngredientInputDialog
-        get() = deferredIngredientDialog.get()
     @Inject lateinit var deferredInstructionDialog: Lazy<UpdateInstructionDialog>
     private val instructionDialog: UpdateInstructionDialog
         get() = deferredInstructionDialog.get()
@@ -72,7 +68,7 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun ActivityViewRecipeBinding.setupButtonListeners() {
         addIngredientButton.setOnClickListener {
-            ingredientDialog.add(ingredientAdapter)
+//            ingredientDialog.add(ingredientAdapter)
         }
         addInstructionButton.setOnClickListener { addInstructionClick() }
         if (mode.isEditing()) actionButton.animateWithCallback(editButtonAnimatedVector) { saveActionListener() }
@@ -273,7 +269,7 @@ class ViewRecipeActivity : RecipeActivity() {
 
     private fun updateItem(menuInfo: AdapterView.AdapterContextMenuInfo) {
         when (menuInfo.targetView.id) {
-            R.id.ingredient_view -> ingredientDialog.update(ingredientAdapter, menuInfo.position)
+            R.id.ingredient_view -> Unit // ingredientDialog.update(ingredientAdapter, menuInfo.position)
             R.id.instruction_view -> instructionDialog.show(this,
                                                             instructionAdapter,
                                                             menuInfo.position)

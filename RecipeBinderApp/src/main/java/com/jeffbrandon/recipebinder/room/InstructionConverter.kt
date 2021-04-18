@@ -1,8 +1,8 @@
 package com.jeffbrandon.recipebinder.room
 
 import androidx.room.TypeConverter
+import com.jeffbrandon.recipebinder.dagger.MoshiModule
 import com.jeffbrandon.recipebinder.data.Instruction
-import com.jeffbrandon.recipebinder.moshi.MoshiSingletons
 
 class InstructionConverter private constructor() {
 
@@ -12,7 +12,7 @@ class InstructionConverter private constructor() {
         fun toString(instructions: List<Instruction>): String {
             return when (instructions.size) {
                 0 -> ""
-                else -> MoshiSingletons.instructionConverter.toJson(instructions)
+                else -> MoshiModule.instructionConverter.toJson(instructions)
             }
         }
 
@@ -21,7 +21,8 @@ class InstructionConverter private constructor() {
         fun toListInstruction(json: String): List<Instruction> {
             json.run {
                 if (isEmpty()) return listOf()
-                return MoshiSingletons.instructionConverter.fromJson(this)!!
+                return MoshiModule.instructionConverter.fromJson(this)
+                    ?: error("failed to parse instructions")
             }
         }
     }

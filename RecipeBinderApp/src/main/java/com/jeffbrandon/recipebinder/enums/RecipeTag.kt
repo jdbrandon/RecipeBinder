@@ -23,18 +23,18 @@ enum class RecipeTag(private val resId: Int) {
 
     companion object {
         val values by lazy { values() }
-        fun EditTagsBinding.viewMap() = mapOf(INSTANT_POT to chipInstantPot,
-                                              STOVE to chipStove,
-                                              OVEN to chipOven,
-                                              SOUS_VIDE to chipSousVide,
-                                              FAST to chipFast,
-                                              EASY to chipEasy,
-                                              HEALTHY to chipHealthy,
-                                              VEGETARIAN to chipVegetarian,
-                                              VEGAN to chipVegan,
-                                              ENTREE to chipEntree,
-                                              SIDE to chipSide,
-                                              DESSERT to chipDessert,
-                                              SOUP to chipSoup)
+        fun EditTagsBinding.recipeMap() = mapOf(INSTANT_POT to chipInstantPot,
+                                                STOVE to chipStove,
+                                                OVEN to chipOven,
+                                                SOUS_VIDE to chipSousVide,
+                                                FAST to chipFast,
+                                                EASY to chipEasy,
+                                                HEALTHY to chipHealthy,
+                                                VEGETARIAN to chipVegetarian,
+                                                VEGAN to chipVegan,
+                                                ENTREE to chipEntree,
+                                                SIDE to chipSide,
+                                                DESSERT to chipDessert,
+                                                SOUP to chipSoup)
     }
 }

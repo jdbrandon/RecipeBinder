@@ -34,6 +34,10 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
                 if (isNotEmpty()) append(" ")
                 append(context.getString(R.string._3_quarters))
             }
+            FractionalMeasurement.ROUND_UP -> num.apply {
+                clear()
+                append(amountWhole() + 1)
+            }
         }
         when (unit) {
             UnitType.NONE -> Unit
@@ -47,37 +51,42 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
     fun amountWhole() = amount.toInt()
 
+    /**
+     * Ranges used to capture floating point and conversion rounding
+     */
     @SuppressWarnings("MagicNumber")
     fun amountFraction(): FractionalMeasurement = when (((amount - amountWhole()) * 100).toInt()) {
-        25 -> FractionalMeasurement.QUARTER
-        33 -> FractionalMeasurement.THIRD
-        50 -> FractionalMeasurement.HALF
-        66 -> FractionalMeasurement.THIRD_TWO
-        75 -> FractionalMeasurement.QUARTER_THREE
-        else -> FractionalMeasurement.ZERO
+        in 0..12 -> FractionalMeasurement.ZERO
+        in 13..29 -> FractionalMeasurement.QUARTER
+        in 30..41 -> FractionalMeasurement.THIRD
+        in 42..58 -> FractionalMeasurement.HALF
+        in 59..70 -> FractionalMeasurement.THIRD_TWO
+        in 71..82 -> FractionalMeasurement.QUARTER_THREE
+        in 82..100 -> FractionalMeasurement.ROUND_UP
+        else -> error("I don't know how math works for ingredient conversions")
     }
 
-    fun convertTo(type: UnitType): Float {
-        return when (unit) {
-            UnitType.GALLON -> gallonTo(type)
-            UnitType.QUART -> quartTo(type)
-            UnitType.PINT -> pintTo(type)
-            UnitType.CUP -> cupTo(type)
-            UnitType.OUNCE -> ounceTo(type)
-            UnitType.TABLE_SPOON -> tableSpoonTo(type)
-            UnitType.TEA_SPOON -> teaSpoonTo(type)
-            UnitType.POUND -> poundTo(type)
-            UnitType.LITER -> literTo(type)
-            UnitType.MILLILITER -> milliLiterTo(type)
-            UnitType.GRAM -> gramTo(type)
-            UnitType.NONE -> throw java.lang.IllegalArgumentException("Cannot convert to unit type $unit")
-        }
+    fun convertTo(type: UnitType): Ingredient = when (unit) {
+        UnitType.GALLON -> gallonTo(type)
+        UnitType.QUART -> quartTo(type)
+        UnitType.PINT -> pintTo(type)
+        UnitType.CUP -> cupTo(type)
+        UnitType.OUNCE -> ounceTo(type)
+        UnitType.TABLE_SPOON -> tableSpoonTo(type)
+        UnitType.TEA_SPOON -> teaSpoonTo(type)
+        UnitType.POUND -> poundTo(type)
+        UnitType.LITER -> literTo(type)
+        UnitType.MILLILITER -> milliLiterTo(type)
+        UnitType.GRAM -> gramTo(type)
+        UnitType.NONE -> amount
+    }.let {
+        this.copy(amount = it, unit = type)
     }
 
     @SuppressWarnings("MagicNumber")
     private fun gallonTo(type: UnitType): Float {
         return when (type) {
-            UnitType.GALLON -> amount
+            UnitType.GALLON, UnitType.NONE -> amount
             UnitType.QUART -> amount * 4
             UnitType.PINT -> amount * 8
             UnitType.CUP -> amount * 16
@@ -86,7 +95,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.TEA_SPOON -> amount * 768
             UnitType.LITER -> amount * 3.78541f
             UnitType.MILLILITER -> amount * 3785.41f
-            else -> throw IllegalArgumentException("Cannot convert gallon to $type")
+            UnitType.POUND, UnitType.GRAM -> throw IllegalArgumentException("Cannot convert gallon to $type")
         }
     }
 
@@ -94,7 +103,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     private fun quartTo(type: UnitType): Float {
         return when (type) {
             UnitType.GALLON -> amount / 4
-            UnitType.QUART -> amount
+            UnitType.QUART, UnitType.NONE -> amount
             UnitType.PINT -> amount * 2
             UnitType.CUP -> amount * 4
             UnitType.OUNCE -> amount * 32
@@ -102,7 +111,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.TEA_SPOON -> amount * 192
             UnitType.LITER -> amount * .946353f
             UnitType.MILLILITER -> amount * 946.353f
-            else -> throw IllegalArgumentException("Cannot convert quart to $type")
+            UnitType.POUND, UnitType.GRAM -> throw IllegalArgumentException("Cannot convert quart to $type")
         }
     }
 
@@ -111,14 +120,14 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         return when (type) {
             UnitType.GALLON -> amount / 8
             UnitType.QUART -> amount / 2
-            UnitType.PINT -> amount
+            UnitType.PINT, UnitType.NONE -> amount
             UnitType.CUP -> amount * 2
             UnitType.OUNCE -> amount * 16
             UnitType.TABLE_SPOON -> amount * 32
             UnitType.TEA_SPOON -> amount * 96
             UnitType.LITER -> amount * 0.473176f
             UnitType.MILLILITER -> amount * 473.176f
-            else -> throw IllegalArgumentException("Cannot convert pint to $type")
+            UnitType.POUND, UnitType.GRAM -> throw IllegalArgumentException("Cannot convert pint to $type")
         }
     }
 
@@ -128,13 +137,13 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.GALLON -> amount / 16
             UnitType.QUART -> amount / 4
             UnitType.PINT -> amount / 2
-            UnitType.CUP -> amount
+            UnitType.CUP, UnitType.NONE -> amount
             UnitType.OUNCE -> amount * 8
             UnitType.TABLE_SPOON -> amount * 16
             UnitType.TEA_SPOON -> amount * 48
             UnitType.LITER -> amount * 0.236588f
             UnitType.MILLILITER -> amount * 236.588f
-            else -> throw IllegalArgumentException("Cannot convert cup to $type")
+            UnitType.POUND, UnitType.GRAM -> throw IllegalArgumentException("Cannot convert cup to $type")
         }
     }
 
@@ -150,7 +159,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.LITER -> amount * 0.0295735f
             UnitType.MILLILITER -> amount * 29.5735f
             UnitType.GRAM -> amount * 28.3495f
-            else -> amount
+            UnitType.OUNCE, UnitType.NONE -> amount
         }
     }
 
@@ -162,11 +171,11 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.PINT -> amount / 32
             UnitType.CUP -> amount / 16
             UnitType.OUNCE -> amount / 2
-            UnitType.TABLE_SPOON -> amount
+            UnitType.TABLE_SPOON, UnitType.NONE -> amount
             UnitType.TEA_SPOON -> amount * 3
             UnitType.LITER -> amount * 0.0147868f
             UnitType.MILLILITER -> amount * 14.7868f
-            else -> throw IllegalArgumentException("Cannot convert table spoon to $type")
+            UnitType.POUND, UnitType.GRAM -> throw IllegalArgumentException("Cannot convert table spoon to $type")
         }
     }
 
@@ -179,10 +188,10 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.CUP -> amount / 48
             UnitType.OUNCE -> amount / 6
             UnitType.TABLE_SPOON -> amount / 3
-            UnitType.TEA_SPOON -> amount
+            UnitType.TEA_SPOON, UnitType.NONE -> amount
             UnitType.LITER -> amount * 0.00492892f
             UnitType.MILLILITER -> amount * 4.92892f
-            else -> throw IllegalArgumentException("Cannot convert tea spoon to $type")
+            UnitType.POUND, UnitType.GRAM -> throw IllegalArgumentException("Cannot convert tea spoon to $type")
         }
     }
 
@@ -190,7 +199,7 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     private fun poundTo(type: UnitType): Float {
         return when (type) {
             UnitType.GRAM -> amount * 453.592f
-            UnitType.POUND -> amount
+            UnitType.POUND, UnitType.NONE -> amount
             UnitType.OUNCE -> amount * 16
             else -> throw IllegalArgumentException("Cannot convert pound to $type")
         }
@@ -206,9 +215,9 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.OUNCE -> amount * 33.814f
             UnitType.TABLE_SPOON -> amount * 67.628f
             UnitType.TEA_SPOON -> amount * 202.884f
-            UnitType.LITER -> amount
+            UnitType.LITER, UnitType.NONE -> amount
             UnitType.MILLILITER -> amount * 1000
-            else -> throw IllegalArgumentException("Cannot convert liter to $type")
+            UnitType.POUND, UnitType.GRAM -> throw IllegalArgumentException("Cannot convert liter to $type")
         }
     }
 
@@ -224,15 +233,15 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
             UnitType.TEA_SPOON,
             -> literTo(type) / 1000.0f
             UnitType.LITER -> amount / 1000.0f
-            UnitType.MILLILITER -> amount
-            else -> throw IllegalArgumentException("Cannot convert milliliter to $type")
+            UnitType.MILLILITER, UnitType.NONE -> amount
+            UnitType.POUND, UnitType.GRAM -> throw IllegalArgumentException("Cannot convert milliliter to $type")
         }
     }
 
     @SuppressWarnings("MagicNumber")
     private fun gramTo(type: UnitType): Float {
         return when (type) {
-            UnitType.GRAM -> amount
+            UnitType.GRAM, UnitType.NONE -> amount
             UnitType.POUND -> amount * 0.00220462f
             UnitType.OUNCE -> amount * 0.035274f
             else -> throw IllegalArgumentException("Cannot convert gram to $type")

@@ -4,10 +4,15 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.jeffbrandon.recipebinder.data.Ingredient
+import com.jeffbrandon.recipebinder.data.Instruction
+import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,11 +22,52 @@ class EditRecipeViewModel @Inject constructor(
     @ApplicationContext context: Context,
 ) : RecipeViewModel(dataSource, state, context) {
 
-    private val editPageIndex = MutableLiveData(0)
+    private var editIngredient: Edit<Ingredient>? = null
+    private var editInstruction: Edit<Instruction>? = null
 
-    val pageIndexLiveData: LiveData<Int> = editPageIndex
+    private val editIngredientData = MutableLiveData<Ingredient?>()
+    private val editInstructionData = MutableLiveData<Instruction?>()
 
-    fun advanceEditPager() {
-        editPageIndex.value = (editPageIndex.value ?: -1) + 1
+    val editIngredientLiveData: LiveData<Ingredient?> = editIngredientData
+    val editInstructionLiveData: LiveData<Instruction?> = editInstructionData
+
+    fun setEditIngredient(data: Ingredient) {
+        editIngredient = Edit(getIngredientIndex(data) ?: error("Invalid index"), data)
+        editIngredientData.value = data
     }
+
+    fun setEditInstruction(data: Instruction) {
+        editInstruction = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
+        editInstructionData.value = data
+    }
+
+    fun saveIngredient(data: Ingredient) {
+        editIngredient?.let {
+            if (data != it.data) {
+                viewModelScope.launch { updateIngredient(it.index, data) }
+            }
+        } ?: viewModelScope.launch { appendIngredient(data) }
+        editIngredient = null
+        editIngredientData.value = null
+    }
+
+    fun saveInstruction(data: Instruction) {
+        editInstruction?.let {
+            if (data != it.data) {
+                viewModelScope.launch { updateInstruction(it.index, data) }
+            }
+        } ?: viewModelScope.launch { appendInstruction(data) }
+        editInstruction = null
+        editInstructionData.value = null
+    }
+
+    fun convertIngredientUnits(unitType: UnitType) {
+        editIngredient?.let {
+            val newIngredient = it.copy(data = it.data.convertTo(unitType))
+            editIngredient = newIngredient
+            editIngredientData.value = newIngredient.data
+        }
+    }
+
+    private data class Edit<T>(val index: Int, val data: T)
 }

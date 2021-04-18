@@ -14,7 +14,7 @@
     <string name="instructions">Instructions</string>
     <string name="gram">Gram</string>
     <string name="pound">Pound</string>
-    <string name="milliliter">milliliter</string>
+    <string name="milliliter">Milliliter</string>
     <string name="liter">Liter</string>
     <string name="gallon">Gallon</string>
     <string name="quart">Quart</string>
@@ -67,7 +67,7 @@
     <string name="course">Course</string>
     <string name="other_information">Other information</string>
     <string name="recipe_list">recipe list</string>
-    <string name="add_ingredient_button">add ingredient button</string>
+    <string name="save_ingredient">save ingredient</string>
     <string name="add_instruction_button">add instruction button</string>
     <string name="edit_save_mode_toggle_button">edit save mode toggle button</string>
     <string name="name_transition">nameTransitionId</string>
@@ -78,4 +78,7 @@
     <string name="edit">Edit</string>
     <string name="ingredient_format"><xliff:g id="amount">%s</xliff:g> <xliff:g
         id="name">%s</xliff:g></string>
+    <string name="convert">Convert</string>
+    <string name="convert_unit_format">Convert <xliff:g id="unit">%s</xliff:g> to</string>
+    <string name="convert_unit_type">convert unit type button</string>
 </resources>

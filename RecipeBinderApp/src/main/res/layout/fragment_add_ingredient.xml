@@ -9,6 +9,14 @@
     android:orientation="vertical"
     >
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ingredient"
+        android:textSize="@dimen/title_text_size"
+        android:textStyle="bold"
+        />
+
     <LinearLayout
         android:id="@+id/input_linear_layout"
         android:layout_width="match_parent"
@@ -185,5 +193,33 @@
 
         </com.google.android.material.chip.ChipGroup>
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/convert_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_margin="@dimen/margin_fab"
+            android:contentDescription="@string/convert_unit_type"
+            android:text="@string/convert"
+            app:icon="@drawable/ic_scale_balance"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/save_ingredient_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_margin="@dimen/margin_fab"
+            android:contentDescription="@string/save_ingredient"
+            app:srcCompat="@drawable/save_to_edit"
+            />
+    </FrameLayout>
 
 </LinearLayout>
