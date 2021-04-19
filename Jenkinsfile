@@ -11,6 +11,7 @@ pipeline {
         stage('Checkout'){
             steps {
                 checkout scm
+                sh './gradlew clean'
             }
         }
         stage('Compile') {
@@ -26,8 +27,8 @@ pipeline {
                 sh 'rm -rf ./RecipeBinderApp/build/test-results/*'
                 sh 'rm -rf ./RecipeBinderApp/build/reports/*'
                 // Compile and run the unit tests for the app and its dependencies
-                sh './gradlew testDebugUnitTest --stacktrace'
-                sh './gradlew testReleaseUnitTest --stacktrace'
+                sh './gradlew testDebugUnitTest'
+                sh './gradlew testReleaseUnitTest'
 
                 // Analyse the test results and update the build result as appropriate
                 junit '**/TEST-*.xml'
