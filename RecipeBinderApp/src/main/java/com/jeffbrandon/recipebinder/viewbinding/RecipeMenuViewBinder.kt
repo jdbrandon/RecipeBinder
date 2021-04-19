@@ -87,7 +87,7 @@ class RecipeMenuViewBinder @Inject constructor() {
                     } else {
                         // add basic recipe to db
                         val recipeData =
-                            RecipeData().copy(name = name.capitalize(Locale.getDefault()))
+                            RecipeData().copy(name = name.trim().capitalize(Locale.getDefault()))
                         scope.launch {
                             val id = viewModel.insert(recipeData)
                             NavigationUtil.editRecipe(viewRoot.context, id)
