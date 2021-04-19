@@ -59,7 +59,6 @@ class EditRecipeViewModelTest {
     @After
     fun tearDown() {
         underTest.getRecipe().removeObserver(testObserver)
-        coroutineRule.cleanupTestCoroutines()
     }
 
     @Test
@@ -70,7 +69,6 @@ class EditRecipeViewModelTest {
         val ingredient = underTest.editIngredientLiveData.getOrAwaitValue()
 
         assertEquals("Got correct ingredient", TestRecipeData.INGREDIENT_1_2, ingredient)
-        coroutineRule.advanceUntilIdle()
     }
 
     @Test
@@ -81,7 +79,6 @@ class EditRecipeViewModelTest {
         val instruction = underTest.editInstructionLiveData.getOrAwaitValue()
 
         assertEquals("Got correct instruction", TestRecipeData.INSTRUCTION_1_2, instruction!!)
-        coroutineRule.advanceUntilIdle()
     }
 
     @Test
@@ -89,7 +86,6 @@ class EditRecipeViewModelTest {
         underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
 
         verify(dataSource).updateRecipe(any())
-        coroutineRule.advanceUntilIdle()
     }
 
     @Test
@@ -97,7 +93,6 @@ class EditRecipeViewModelTest {
         underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
 
         verify(dataSource).updateRecipe(any())
-        coroutineRule.advanceUntilIdle()
     }
 
     @Test
@@ -109,6 +104,5 @@ class EditRecipeViewModelTest {
 
         assertEquals("type", UnitType.GRAM, newIngredient!!.unit)
         assertTrue("conversion", newIngredient.amount > 453 && newIngredient.amount < 454)
-        coroutineRule.advanceUntilIdle()
     }
 }

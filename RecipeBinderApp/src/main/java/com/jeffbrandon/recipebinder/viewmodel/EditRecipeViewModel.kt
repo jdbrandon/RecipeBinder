@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.enums.UnitType
@@ -12,7 +11,6 @@ import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,9 +42,9 @@ class EditRecipeViewModel @Inject constructor(
     fun saveIngredient(data: Ingredient) {
         editIngredient?.let {
             if (data != it.data) {
-                viewModelScope.launch { updateIngredient(it.index, data) }
+                 updateIngredient(it.index, data)
             }
-        } ?: viewModelScope.launch { appendIngredient(data) }
+        } ?:  appendIngredient(data)
         editIngredient = null
         editIngredientData.value = null
     }
@@ -54,9 +52,9 @@ class EditRecipeViewModel @Inject constructor(
     fun saveInstruction(data: Instruction) {
         editInstruction?.let {
             if (data != it.data) {
-                viewModelScope.launch { updateInstruction(it.index, data) }
+                updateInstruction(it.index, data)
             }
-        } ?: viewModelScope.launch { appendInstruction(data) }
+        } ?:  appendInstruction(data)
         editInstruction = null
         editInstructionData.value = null
     }
