@@ -59,7 +59,6 @@ class EditRecipeViewModelTest {
     @After
     fun tearDown() {
         underTest.getRecipe().removeObserver(testObserver)
-        coroutineRule.advanceUntilIdle()
     }
 
     @Test
