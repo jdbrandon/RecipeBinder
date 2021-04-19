@@ -54,7 +54,6 @@ class EditRecipeViewModelTest {
                                         SavedStateHandle(mapOf(KEY_EXTRA_ID to EXTRA_VAL)),
                                         context)
         underTest.getRecipe().observeForever(testObserver)
-        coroutineRule.advanceUntilIdle()
     }
 
     @After
