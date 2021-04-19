@@ -15,7 +15,6 @@ import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
@@ -98,7 +97,7 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun convertIngredientUnits() = runBlocking {
+    fun convertIngredientUnits() = coroutineRule.runBlockingTest {
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
         underTest.convertIngredientUnits(UnitType.GRAM)
 
