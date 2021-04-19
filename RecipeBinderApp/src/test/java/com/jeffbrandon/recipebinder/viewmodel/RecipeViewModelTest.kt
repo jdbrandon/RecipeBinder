@@ -52,5 +52,6 @@ class RecipeViewModelTest {
         val recipe = underTest.getRecipe().getOrAwaitValue()
         assertEquals("live data is set", TestRecipeData.RECIPE_1, recipe)
         verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
+        advanceUntilIdle()
     }
 }
