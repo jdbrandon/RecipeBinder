@@ -3,10 +3,8 @@ package com.jeffbrandon.recipebinder.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewbinding.EditRecipeViewBinder
-import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

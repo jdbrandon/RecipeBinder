@@ -211,6 +211,18 @@
             app:icon="@drawable/ic_scale_balance"
             />
 
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/margin_fab"
+            android:contentDescription="@string/delete"
+            android:text="@string/delete"
+            android:visibility="gone"
+            app:icon="@drawable/ic_delete_24"
+            />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/save_ingredient_button"
             android:layout_width="wrap_content"

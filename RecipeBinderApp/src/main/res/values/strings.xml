@@ -82,4 +82,8 @@
     <string name="convert">Convert</string>
     <string name="convert_unit_format">Convert <xliff:g id="unit">%s</xliff:g> to</string>
     <string name="convert_unit_type">convert unit type button</string>
+    <string name="save">save</string>
+    <string name="abandon_warning_text">You have unsaved changes</string>
+    <string name="abandon">abandon</string>
+    <string name="delete_this_confirmation_message">Delete this ingredient?</string>
 </resources>

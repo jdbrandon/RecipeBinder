@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.databinding.FragmentAddIngredientBinding
@@ -45,6 +46,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
         with(binder) {
             setupAddIngredientViews()
             setupConvertButton(viewRoot.context, vm)
+            setupDeleteButton(viewRoot, vm, fm)
             setupSaveButton(viewRoot.context) {
                 saveIngredient(vm)
                 fm.popBackStack()
@@ -56,6 +58,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
                 with(binder) {
                     ingredientInput.setText(ingredient.name)
                     quantityInput.setText(ingredient.amountWhole().toString())
+                    deleteButton.visibility = View.VISIBLE
 
                     val fractionTagMap = fractionViewMap()
                     fractionTagMap[ingredient.amountFraction()]?.apply {
@@ -68,7 +71,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
                         callOnClick()
                     }
                 }
-            }
+            } ?: run { binder.deleteButton.visibility = View.GONE }
         }
     }
 
@@ -78,6 +81,20 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
     ) {
         convertButton.setOnClickListener {
             ConvertDialog(context, getSelectedUnit(), vm)
+        }
+    }
+
+    private fun FragmentAddIngredientBinding.setupDeleteButton(
+        view: View,
+        vm: EditRecipeViewModel,
+        fm: FragmentManager,
+    ) {
+        deleteButton.setOnClickListener {
+            Snackbar.make(view, R.string.delete_this_confirmation_message, Snackbar.LENGTH_LONG)
+                .setAction(android.R.string.ok) {
+                    vm.deleteEditIngredient()
+                    fm.popBackStack()
+                }.show()
         }
     }
 

@@ -11,12 +11,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class EditRecipeMetadataFragment : Fragment(R.layout.fragment_edit_recipe_metadata) {
+class EditRecipeMetadataFragment : EditFragment(R.layout.fragment_edit_recipe_metadata) {
     @Inject lateinit var binder: EditRecipeMetadataViewBinder
     private val viewModel: EditRecipeViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binder.bind(viewModel, requireView(), viewLifecycleOwner)
+    }
+
+    override fun save() {
+        binder.save()
     }
 }

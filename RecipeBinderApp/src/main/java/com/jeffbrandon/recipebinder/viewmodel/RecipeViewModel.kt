@@ -8,6 +8,7 @@ import androidx.lifecycle.liveData
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
+import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import dagger.Lazy
@@ -26,11 +27,21 @@ open class RecipeViewModel @Inject constructor(
     private val id: Long = state[context.getString(R.string.extra_recipe_id)]
         ?: error("Did you forget to provide recipeId in the intent extras or fragment args bundle")
     private val db by lazy { dataSource.get() }
+    private var old: RecipeData? = null
+    private var shouldSave = false
     private val recipe = liveData {
         emitSource(fetchRecipe(id))
     }
 
     fun getRecipe(): LiveData<RecipeData> = recipe
+
+    fun shouldWarnAboutUnsavedData() = old != recipe.value
+
+    protected suspend fun restoreOldRecipeData() = withContext(Dispatchers.IO) {
+        old?.let {
+            db.updateRecipe(it)
+        }
+    }
 
     protected fun getIngredientIndex(data: Ingredient): Int? =
         recipe.value?.ingredients?.indexOf(data)
@@ -66,6 +77,30 @@ open class RecipeViewModel @Inject constructor(
             updateRecipeInstructions(newInstructionList)
         }
 
+    protected suspend fun updateRecipeMetadata(
+        recipeName: String,
+        cookTime: Int,
+        tags: MutableList<RecipeTag>,
+    ) = withContext(Dispatchers.IO) {
+        val newRecipe = recipe.value?.copy(name = recipeName, cookTime = cookTime, tags = tags)
+            ?: error("failed to update metadata")
+        db.updateRecipe(newRecipe)
+    }
+
+    protected suspend fun deleteIngredient(index: Int) = withContext(Dispatchers.IO) {
+        val newIngredientList =
+            recipe.value?.ingredients?.toMutableList()?.apply { removeAt(index) }
+                ?: error("failed to delete ingredient")
+        updateRecipeIngredients(newIngredientList)
+    }
+
+    protected suspend fun deleteInstruction(index: Int) = withContext(Dispatchers.IO) {
+        val newInstructionList =
+            recipe.value?.instructions?.toMutableList()?.apply { removeAt(index) }
+                ?: error("failed to delete ingredient")
+        updateRecipeInstructions(newInstructionList)
+    }
+
     private fun updateRecipeIngredients(newIngredientList: List<Ingredient>) {
         val newRecipe = recipe.value?.copy(ingredients = newIngredientList)
             ?: error("failed to update ingredients")
@@ -79,6 +114,10 @@ open class RecipeViewModel @Inject constructor(
     }
 
     private suspend fun fetchRecipe(id: Long) = withContext(Dispatchers.IO) {
-        db.fetchRecipe(id)
+        db.fetchRecipe(id).also {
+            if (old == null) {
+                old = it.value
+            }
+        }
     }
 }
