@@ -17,7 +17,7 @@ class RecipeActivity : RecipeAppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recipe)
+        setContentView(R.layout.activity_fragment_host)
         val mode = intent.getSerializableExtra(getString(R.string.extra_view_mode)) as? RecipeMode
         binder.bind(viewModel, findViewById(R.id.fragment_container), supportFragmentManager, mode)
     }

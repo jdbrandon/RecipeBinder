@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class RecipeMenuActivity : RecipeAppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recipe)
+        setContentView(R.layout.activity_fragment_host)
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, MenuFragment::class.java, null).commit()
     }

@@ -13,7 +13,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MenuFragment : Fragment(R.layout.content_recipe_menu), RecipeMenuViewBinder.ViewContract {
+class MenuFragment : Fragment(R.layout.fragment_recipe_menu), RecipeMenuViewBinder.ViewContract {
 
     @Inject lateinit var viewBinder: RecipeMenuViewBinder
 

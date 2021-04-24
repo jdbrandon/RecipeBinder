@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
-import com.jeffbrandon.recipebinder.databinding.ContentRecipeMenuBinding
+import com.jeffbrandon.recipebinder.databinding.FragmentRecipeMenuBinding
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
@@ -36,9 +36,9 @@ class RecipeMenuViewBinder @Inject constructor() {
     private lateinit var recipeList: List<RecipeData>
     private val scope: LifecycleCoroutineScope by lazy { lifecycle.lifecycleScope }
 
-    private val binder: ContentRecipeMenuBinding by lazy {
-        ContentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot,
-                                                                 R.id.recipe_content_root))
+    private val binder: FragmentRecipeMenuBinding by lazy {
+        FragmentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot,
+                                                                  R.id.recipe_content_root))
     }
 
     fun bind(
