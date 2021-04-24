@@ -86,7 +86,7 @@ class RecipeMenuViewBinder @Inject constructor() {
                             NavigationUtil.editRecipe(viewRoot.context, id)
                         }
                     }
-                }.setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                }.setNegativeButton(android.R.string.cancel) { _, _ ->
                     Timber.i("canceling recipe creation")
                 }.show()
         }
