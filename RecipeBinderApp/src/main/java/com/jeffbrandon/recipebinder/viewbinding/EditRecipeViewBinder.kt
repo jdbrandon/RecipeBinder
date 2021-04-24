@@ -18,12 +18,15 @@ class EditRecipeViewBinder @Inject constructor() {
         private val tabNameResourceIdList = listOf(R.string.metadata, R.string.ingredients)
     }
 
+    private lateinit var viewModel: EditRecipeViewModel
     private lateinit var binder: FragmentEditRecipeBinding
 
     fun bind(
+        vm: EditRecipeViewModel,
         activity: FragmentActivity,
         view: View,
     ) {
+        viewModel = vm
         binder = FragmentEditRecipeBinding.bind(view)
         with(binder) {
             fragmentPager.adapter = EditFragmentPagerAdapter(activity)
@@ -36,5 +39,13 @@ class EditRecipeViewBinder @Inject constructor() {
                     .replace(R.id.fragment_container, ViewRecipeFragment::class.java, null).commit()
             }
         }
+    }
+
+    fun onResume() {
+        viewModel.beginEditing()
+    }
+
+    fun onPause() {
+        viewModel.stopEditing()
     }
 }

@@ -12,7 +12,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class RecipeActivityBinder @Inject constructor() {
-    private var warned = false
     private lateinit var viewModel: EditRecipeViewModel
     private lateinit var viewRoot: View
     private lateinit var fragmentManager: FragmentManager
@@ -25,18 +24,13 @@ class RecipeActivityBinder @Inject constructor() {
     }
 
     fun onBackPressed(backPressedCallback: () -> Unit) {
-        if (fragmentManager.primaryNavigationFragment is EditRecipeFragment && viewModel.shouldWarnAboutUnsavedData()) {
-            if (!warned) {
-                Snackbar.make(viewRoot, R.string.abandon_warning_text, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.abandon) {
-                        viewModel.abandon()
-                        backPressedCallback()
-                    }.show()
-                warned = true
-                return
-            } else {
-                viewModel.abandon()
-            }
+        Timber.w("Current Fragment: ${fragmentManager.primaryNavigationFragment}")
+        if (viewModel.shouldWarnAboutUnsavedData()) {
+            Snackbar.make(viewRoot, R.string.abandon_warning_text, Snackbar.LENGTH_LONG)
+                .setAction(R.string.abandon) {
+                    backPressedCallback()
+                }.show()
+            return
         }
         backPressedCallback()
     }

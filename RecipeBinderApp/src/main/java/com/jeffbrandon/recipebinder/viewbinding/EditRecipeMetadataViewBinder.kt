@@ -30,18 +30,14 @@ class EditRecipeMetadataViewBinder @Inject constructor() {
         }
     }
 
-    fun save() {
-        with(binder.meta) {
-            val recipeName = name.text.toString()
-            val cookTime = cookTime.text.toString().toInt()
-            val tags = mutableListOf<RecipeTag>()
-            with(binder.tags) {
-                recipeMap().entries.forEach { entry ->
-                    if (entry.value.isChecked) tags.add(entry.key)
-                }
-            }
-            Timber.i("saving $recipeName, $cookTime, $tags")
-            viewModel.saveMetadata(recipeName, cookTime, tags)
+    fun save() = with(binder.meta) {
+        val recipeName = name.text.toString()
+        val cookTime = cookTime.text.toString().toInt()
+        val tags = mutableListOf<RecipeTag>()
+        binder.tags.recipeMap().entries.forEach { entry ->
+            if (entry.value.isChecked) tags.add(entry.key)
         }
+        Timber.i("saving $recipeName, $cookTime, $tags")
+        viewModel.saveMetadata(recipeName, cookTime, tags)
     }
 }

@@ -2,15 +2,11 @@ package com.jeffbrandon.recipebinder.activities
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.RecipeMode
-import com.jeffbrandon.recipebinder.fragments.EditRecipeFragment
-import com.jeffbrandon.recipebinder.fragments.ViewRecipeFragment
 import com.jeffbrandon.recipebinder.viewbinding.RecipeActivityBinder
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint

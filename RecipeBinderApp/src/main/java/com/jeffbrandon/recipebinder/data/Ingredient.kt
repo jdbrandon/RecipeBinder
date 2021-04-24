@@ -6,6 +6,7 @@ import com.jeffbrandon.recipebinder.enums.FractionalMeasurement
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.squareup.moshi.JsonClass
 
+@SuppressWarnings("TooManyFunctions")
 @JsonClass(generateAdapter = true)
 data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 

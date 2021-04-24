@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@SuppressWarnings("TooManyFunctions")
 @HiltViewModel
 open class RecipeViewModel @Inject constructor(
     dataSource: Lazy<RecipeDataSource>,
@@ -27,21 +28,11 @@ open class RecipeViewModel @Inject constructor(
     private val id: Long = state[context.getString(R.string.extra_recipe_id)]
         ?: error("Did you forget to provide recipeId in the intent extras or fragment args bundle")
     private val db by lazy { dataSource.get() }
-    private var old: RecipeData? = null
-    private var shouldSave = false
     private val recipe = liveData {
         emitSource(fetchRecipe(id))
     }
 
     fun getRecipe(): LiveData<RecipeData> = recipe
-
-    fun shouldWarnAboutUnsavedData() = old != recipe.value
-
-    protected suspend fun restoreOldRecipeData() = withContext(Dispatchers.IO) {
-        old?.let {
-            db.updateRecipe(it)
-        }
-    }
 
     protected fun getIngredientIndex(data: Ingredient): Int? =
         recipe.value?.ingredients?.indexOf(data)
@@ -114,10 +105,6 @@ open class RecipeViewModel @Inject constructor(
     }
 
     private suspend fun fetchRecipe(id: Long) = withContext(Dispatchers.IO) {
-        db.fetchRecipe(id).also {
-            if (old == null) {
-                old = it.value
-            }
-        }
+        db.fetchRecipe(id)
     }
 }

@@ -16,6 +16,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@SuppressWarnings("TooManyFunctions")
 @HiltViewModel
 class EditRecipeViewModel @Inject constructor(
     dataSource: Lazy<RecipeDataSource>,
@@ -25,17 +26,14 @@ class EditRecipeViewModel @Inject constructor(
 
     private var editIngredient: Edit<Ingredient>? = null
     private var editInstruction: Edit<Instruction>? = null
-    private var warnedAboutAbandon = false
 
     private val editIngredientData = MutableLiveData<Ingredient?>()
     private val editInstructionData = MutableLiveData<Instruction?>()
 
     val editIngredientLiveData: LiveData<Ingredient?> = editIngredientData
     val editInstructionLiveData: LiveData<Instruction?> = editInstructionData
-
-    fun abandon() {
-        viewModelScope.launch { restoreOldRecipeData() }
-    }
+    private var shouldWarn = true
+    private var editing = false
 
     fun setEditIngredient(data: Ingredient) {
         editIngredient = Edit(getIngredientIndex(data) ?: error("Invalid index"), data)
@@ -87,7 +85,7 @@ class EditRecipeViewModel @Inject constructor(
 
     fun deleteEditIngredient() {
         viewModelScope.launch {
-            editIngredient?.let{
+            editIngredient?.let {
                 deleteIngredient(it.index)
             }
         }
@@ -95,10 +93,20 @@ class EditRecipeViewModel @Inject constructor(
 
     fun deleteEditInstruction() {
         viewModelScope.launch {
-            editInstruction?.let{
+            editInstruction?.let {
                 deleteInstruction(it.index)
             }
         }
+    }
+
+    fun shouldWarnAboutUnsavedData(): Boolean = editing && shouldWarn.also { shouldWarn = false }
+
+    fun beginEditing() {
+        editing = true
+    }
+
+    fun stopEditing() {
+        editing = false
     }
 
     private data class Edit<T>(val index: Int, val data: T)
