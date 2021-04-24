@@ -25,9 +25,6 @@ import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 class RecipeMenuViewModelTest {
-    private companion object {
-        private const val INSERT_ID = 42L
-    }
 
     @get:Rule val instantExecutorRule = InstantTaskExecutorRule()
 

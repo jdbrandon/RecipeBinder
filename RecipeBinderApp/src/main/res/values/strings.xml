@@ -29,8 +29,6 @@
     <string name="_1_quarter">&#188;</string>
     <string name="quantity">quantity</string>
     <string name="delete">Delete</string>
-    <string name="move_down">Move Down</string>
-    <string name="move_up">Move Up</string>
     <string name="minutes">minutes</string>
     <string name="instant_pot">Instant Pot</string>
     <string name="stove_top">Stove Top</string>
@@ -43,7 +41,6 @@
     <string name="vegan">Vegan</string>
     <string name="recipe_filter">Recipe filter</string>
     <string name="add_recipe">Add Recipe</string>
-    <string name="toast_save">Recipe data saved</string>
     <string name="abbreviation_cup">c</string>
     <string name="abbreviation_ounce">oz</string>
     <string name="abbreviation_tablespoon">Tbsp</string>
@@ -61,7 +58,6 @@
     <string name="dessert">Dessert</string>
     <string name="new_instruction">New instruction</string>
     <string name="update_instruction">Update instruction</string>
-    <string name="update">Update</string>
     <string name="cook_type">Cook type</string>
     <string name="course">Course</string>
     <string name="other_information">Other information</string>
