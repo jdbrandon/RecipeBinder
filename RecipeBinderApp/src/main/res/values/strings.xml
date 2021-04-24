@@ -80,4 +80,7 @@
     <string name="abandon">abandon</string>
     <string name="delete_this_confirmation_message">Delete this ingredient?</string>
     <string name="hourglass">hourglass</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="copy_import_text">Copy importable text</string>
+    <string name="qr_code">qr code</string>
 </resources>

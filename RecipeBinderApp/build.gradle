@@ -49,6 +49,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
     implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "com.jakewharton.timber:timber:4.7.1"
+    implementation "com.google.zxing:core:3.4.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
