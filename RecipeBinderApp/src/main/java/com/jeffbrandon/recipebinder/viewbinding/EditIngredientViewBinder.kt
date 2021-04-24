@@ -1,11 +1,9 @@
 package com.jeffbrandon.recipebinder.viewbinding
 
 import android.content.Context
-import android.graphics.drawable.Animatable
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
@@ -90,12 +88,14 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
                 Snackbar.make(viewRoot,
                               R.string.delete_this_confirmation_message,
                               Snackbar.LENGTH_LONG).setAction(android.R.string.ok) {
-                        viewModel.deleteEditIngredient()
-                        fm.popBackStack()
-                    }.show()
+                    viewModel.deleteEditIngredient()
+                    fm.popBackStack()
+                }.show()
             }
 
-            setupSaveButton(viewRoot.context, fm)
+            saveIngredientButton.setOnClickListener {
+                saveAndPop(fm)
+            }
         }
         vm.editIngredientLiveData.observe(lifecycle) { ingredient ->
             // Ingredient is null when adding an ingredient
@@ -129,22 +129,6 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
 
     fun continueEditing() {
         viewModel.beginEditing()
-    }
-
-    private fun FragmentAddIngredientBinding.setupSaveButton(
-        context: Context,
-        fm: FragmentManager,
-    ) = AnimatedVectorDrawableCompat.create(context, R.drawable.save_to_edit)?.apply {
-        val animation = this
-        saveIngredientButton.apply {
-            setImageDrawable(animation)
-            setOnClickListener {
-                (drawable as Animatable).start()
-                saveAndPop(fm)
-            }
-        }
-    } ?: saveIngredientButton.setOnClickListener {
-        saveAndPop(fm)
     }
 
     private fun FragmentAddIngredientBinding.saveAndPop(fm: FragmentManager) {

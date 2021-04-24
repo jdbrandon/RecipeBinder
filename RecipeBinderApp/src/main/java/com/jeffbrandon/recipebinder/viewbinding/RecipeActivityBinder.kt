@@ -14,12 +14,10 @@ import javax.inject.Inject
 class RecipeActivityBinder @Inject constructor() {
     private lateinit var viewModel: EditRecipeViewModel
     private lateinit var viewRoot: View
-    private lateinit var fragmentManager: FragmentManager
 
     fun bind(vm: EditRecipeViewModel, view: View, fm: FragmentManager, mode: RecipeMode? = null) {
         viewModel = vm
         viewRoot = view
-        fragmentManager = fm
         initFragment(fm, mode)
     }
 
@@ -40,6 +38,6 @@ class RecipeActivityBinder @Inject constructor() {
             RecipeMode.EDIT -> EditRecipeFragment::class.java.also { Timber.i("got edit fragment") }
             else -> ViewRecipeFragment::class.java.also { Timber.w("unable to get RecipeMode, falling back to VIEW") }
         }
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment, null).commit()
+        fragmentManager.beginTransaction().add(R.id.fragment_container, fragment, null).commit()
     }
 }
