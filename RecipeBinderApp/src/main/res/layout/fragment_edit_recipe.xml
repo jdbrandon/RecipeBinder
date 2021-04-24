@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/margin_large"
+            android:text="@string/edit_recipe_title"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
+            />
+
+        <Button
+            android:id="@+id/save_recipe_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/save"
+            app:icon="@drawable/check_to_cross"
+            app:iconSize="@dimen/save_check_size"
+            />
+
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        style="@style/TabLayoutStyle"
+        android:id="@+id/navigation_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/fragment_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+</LinearLayout>

@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/instruction_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="true"
     android:longClickable="true"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
     <com.google.android.material.checkbox.MaterialCheckBox
+        style="@style/checkboxStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/checkboxStyle"
-        android:focusable="false" />
+        android:focusable="false"
+        />
 
     <TextView
         android:id="@+id/instruction_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:singleLine="false"
         android:textSize="@dimen/ingredient_list_text_size"
-        android:singleLine="false" />
+        />
 
 </LinearLayout>

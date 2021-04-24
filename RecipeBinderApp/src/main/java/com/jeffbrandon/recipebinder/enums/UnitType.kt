@@ -1,52 +1,43 @@
 package com.jeffbrandon.recipebinder.enums
 
-enum class UnitType {
-    GALLON,
-    QUART,
-    PINT,
-    CUP,
-    OUNCE,
-    TABLE_SPOON,
-    TEA_SPOON,
-    POUND,
-    LITER,
-    MILLILITER,
-    GRAM,
-    NONE;
+import android.content.Context
+import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.databinding.FragmentAddIngredientBinding
 
-    override fun toString(): String {
-        return when(this) {
-            GALLON -> "gal"
-            QUART -> "qt"
-            PINT -> "pt"
-            CUP -> "c"
-            OUNCE -> "oz"
-            TABLE_SPOON -> "tbp"
-            TEA_SPOON -> "tsp"
-            POUND -> "lb"
-            LITER -> "l"
-            MILLILITER -> "ml"
-            GRAM -> "g"
+enum class UnitType(private val resId: Int, private val abbreviationResId: Int) {
+    GALLON(R.string.gallon, R.string.abbreviation_gallon),
+    QUART(R.string.quart, R.string.abbreviation_quart),
+    PINT(R.string.pint, R.string.abbreviation_pint),
+    CUP(R.string.cup, R.string.abbreviation_cup),
+    OUNCE(R.string.ounce, R.string.abbreviation_ounce),
+    TABLE_SPOON(R.string.table_spoon, R.string.abbreviation_tablespoon),
+    TEA_SPOON(R.string.tea_spoon, R.string.abbreviation_teaspoon),
+    POUND(R.string.pound, R.string.abbreviation_pound),
+    LITER(R.string.liter, R.string.abbreviation_liter),
+    MILLILITER(R.string.milliliter, R.string.abbreviation_milliliter),
+    GRAM(R.string.gram, R.string.abbreviation_gram),
+    NONE(-1, -1);
+
+    fun getString(context: Context, useLongUnitString: Boolean = false): String {
+        return when (this) {
             NONE -> ""
+            else -> context.getString(if (useLongUnitString) resId else abbreviationResId)
         }
     }
 
     companion object {
-        fun fromString(s: String): UnitType {
-            return when(s) {
-                "gal" -> GALLON
-                "qt" -> QUART
-                "pt" -> PINT
-                "c" -> CUP
-                "oz" -> OUNCE
-                "tbp" -> TABLE_SPOON
-                "tsp" -> TEA_SPOON
-                "lb" -> POUND
-                "l" -> LITER
-                "ml" -> MILLILITER
-                "g" -> GRAM
-                else -> NONE
-            }
-        }
+        fun FragmentAddIngredientBinding.unitMap() = mapOf(
+            GALLON to gallonChip,
+            QUART to quartChip,
+            PINT to pintChip,
+            CUP to cupChip,
+            OUNCE to ounceChip,
+            TABLE_SPOON to tbspChip,
+            TEA_SPOON to tspChip,
+            POUND to poundChip,
+            LITER to literChip,
+            MILLILITER to milliliterChip,
+            GRAM to gramChip,
+        )
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#8c8c8c</color>
-    <color name="colorPrimaryVariant">#9e9e9e</color>
-    <color name="colorPrimaryDark">#555555</color>
-    <color name="colorOnPrimary">#101010</color>
-    <color name="colorSecondary">#eceff1</color>
-    <color name="colorSecondaryVariant">#aaaaaa</color>
-    <color name="colorOnSecondary">#485867</color>
+    <color name="colorPrimary">#ff8c8c8c</color>
+    <color name="colorPrimaryVariant">#ff9e9e9e</color>
+    <color name="colorPrimaryDark">#ff555555</color>
+    <color name="colorOnPrimary">#ff101010</color>
+    <color name="colorSecondary">#ffeceff1</color>
+    <color name="colorSecondaryVariant">#ffaaaaaa</color>
+    <color name="colorOnSecondary">#ff485867</color>
     <color name="checked_text">@color/colorSecondary</color>
     <color name="checked_background">@color/colorOnSecondary</color>
     <color name="unchecked_text">@color/colorOnPrimary</color>

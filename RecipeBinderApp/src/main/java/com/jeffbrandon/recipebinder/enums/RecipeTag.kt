@@ -1,48 +1,40 @@
 package com.jeffbrandon.recipebinder.enums
 
 import android.content.Context
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
+import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.databinding.EditTagsBinding
 
-enum class RecipeTag {
-    INSTANT_POT,
-    STOVE,
-    OVEN,
-    SOUS_VIDE,
-    FAST,
-    EASY,
-    HEALTHY,
-    VEGETARIAN,
-    VEGAN,
-    ENTREE,
-    SIDE,
-    DESSERT,
-    SOUP;
+enum class RecipeTag(private val resId: Int) {
+    INSTANT_POT(R.string.instant_pot),
+    STOVE(R.string.stove_top),
+    OVEN(R.string.oven),
+    SOUS_VIDE(R.string.sous_vide),
+    FAST(R.string.fast),
+    EASY(R.string.easy),
+    HEALTHY(R.string.healthy),
+    VEGETARIAN(R.string.vegetarian),
+    VEGAN(R.string.vegan),
+    ENTREE(R.string.entree),
+    SIDE(R.string.side),
+    DESSERT(R.string.dessert),
+    SOUP(R.string.dessert);
 
-    override fun toString(): String {
-        return when(this) {
-            INSTANT_POT -> "Instant Pot"
-            STOVE -> "Stove Top"
-            OVEN -> "Oven"
-            SOUS_VIDE -> "Sous Vide"
-            FAST -> "Fast"
-            EASY -> "Easy"
-            HEALTHY -> "Healthy"
-            VEGETARIAN -> "Vegetarian"
-            VEGAN -> "Vegan"
-            ENTREE -> "Entree"
-            SIDE -> "Side"
-            DESSERT -> "Dessert"
-            SOUP -> "Soup"
-        }
-    }
+    fun getString(context: Context) = context.getString(resId)
 
-    fun toChipView(context: Context): Chip {
-        return Chip(context).apply {
-            text = this@RecipeTag.toString()
-            layoutParams =
-                ChipGroup.LayoutParams(ChipGroup.LayoutParams.WRAP_CONTENT, ChipGroup.LayoutParams.WRAP_CONTENT)
-            isChecked = true
-        }
+    companion object {
+        val values by lazy { values() }
+        fun EditTagsBinding.recipeMap() = mapOf(INSTANT_POT to chipInstantPot,
+                                                STOVE to chipStove,
+                                                OVEN to chipOven,
+                                                SOUS_VIDE to chipSousVide,
+                                                FAST to chipFast,
+                                                EASY to chipEasy,
+                                                HEALTHY to chipHealthy,
+                                                VEGETARIAN to chipVegetarian,
+                                                VEGAN to chipVegan,
+                                                ENTREE to chipEntree,
+                                                SIDE to chipSide,
+                                                DESSERT to chipDessert,
+                                                SOUP to chipSoup)
     }
 }

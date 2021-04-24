@@ -1,5 +1,6 @@
 package com.jeffbrandon.recipebinder.room
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.jeffbrandon.recipebinder.data.Ingredient
@@ -8,13 +9,12 @@ import com.jeffbrandon.recipebinder.enums.RecipeTag
 
 @Entity
 data class RecipeData(
-    @PrimaryKey(autoGenerate = true)
-    var id: Long?,
-    var name: String,
-    var cookTime: Int,
-    var tags: MutableList<RecipeTag>,
-    var ingredientsJson: List<Ingredient>,
-    var instructionsJson: List<Instruction>
+    @PrimaryKey(autoGenerate = true) val id: Long?,
+    val name: String,
+    val cookTime: Int,
+    val tags: List<RecipeTag>,
+    @ColumnInfo(name = "ingredientsJson") val ingredients: List<Ingredient>,
+    @ColumnInfo(name = "instructionsJson") val instructions: List<Instruction>,
 ) {
     constructor() : this(null, "", 0, mutableListOf(), listOf(), listOf())
 }

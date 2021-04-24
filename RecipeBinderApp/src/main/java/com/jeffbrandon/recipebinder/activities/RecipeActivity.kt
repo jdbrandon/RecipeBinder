@@ -1,62 +1,30 @@
 package com.jeffbrandon.recipebinder.activities
 
-import android.content.Intent
 import android.os.Bundle
-import com.jeffbrandon.recipebinder.data.AppendableAdapter
-import com.jeffbrandon.recipebinder.data.Ingredient
-import com.jeffbrandon.recipebinder.data.IngredientAdapter
-import com.jeffbrandon.recipebinder.data.Instruction
-import com.jeffbrandon.recipebinder.data.InstructionAdapter
-import com.jeffbrandon.recipebinder.room.RecipeData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import androidx.activity.viewModels
+import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.enums.RecipeMode
+import com.jeffbrandon.recipebinder.viewbinding.RecipeActivityBinder
+import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-abstract class RecipeActivity : RecipeAppActivity() {
-    companion object {
-        const val BAD_ID: Long = -1
-    }
+@AndroidEntryPoint
+class RecipeActivity : RecipeAppActivity() {
 
-    protected var id: Long = BAD_ID
-
-    /**
-     * The current [RecipeData]
-     */
-    protected lateinit var currentRecipe: RecipeData
-
-    abstract val ingredientAdapter: AppendableAdapter<Ingredient>
-    abstract val instructionAdapter: AppendableAdapter<Instruction>
+    @Inject lateinit var binder: RecipeActivityBinder
+    private val viewModel: EditRecipeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        launchDeferredTasks()
+        setContentView(R.layout.activity_fragment_host)
+        val mode = intent.getSerializableExtra(getString(R.string.extra_view_mode)) as? RecipeMode
+        binder.bind(viewModel, findViewById(R.id.fragment_container), supportFragmentManager, mode)
     }
 
-    override fun onResume() {
-        super.onResume()
-        populateViews(intent)
-    }
-
-    open fun launchDeferredTasks() {
-        launch(Dispatchers.Default) {
-            Timber.d("Default deferred task")
+    override fun onBackPressed() {
+        binder.onBackPressed {
+            super.onBackPressed()
         }
     }
-
-    protected fun populateIngredients(ingredients: List<Ingredient>?): IngredientAdapter {
-        if(ingredients.isNullOrEmpty())
-            return IngredientAdapter(this, mutableListOf())
-        return IngredientAdapter(this, ingredients.toMutableList())
-    }
-
-    protected fun populateInstructions(instructions: List<Instruction>?): InstructionAdapter {
-        if(instructions.isNullOrEmpty())
-            return InstructionAdapter(this, mutableListOf())
-        return InstructionAdapter(this, instructions.toMutableList())
-    }
-
-    /**
-     * Called in [onResume], populates views with fresh data
-     */
-    abstract fun populateViews(intent: Intent?)
 }

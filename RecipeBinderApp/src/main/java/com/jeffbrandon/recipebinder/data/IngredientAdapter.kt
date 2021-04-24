@@ -1,25 +1,15 @@
 package com.jeffbrandon.recipebinder.data
 
-import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import com.jeffbrandon.recipebinder.R
 
-class IngredientAdapter(context: Context,
-                        ingredients: MutableList<Ingredient>,
-                        private val layout: Int = R.layout.ingredient_list_item) :
-    AppendableAdapter<Ingredient>(context, ingredients) {
+class IngredientAdapter(ingredients: List<Ingredient>) :
+    ListRecyclerViewAdapter<IngredientItemViewHolder, Ingredient>(ingredients) {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: inflater.inflate(layout, parent, false)
-        view.id = R.id.ingredient_view
-        val quantityView = view.findViewById(R.id.quantity) as TextView?
-        val ingredientView = view.findViewById(R.id.ingredient_name) as TextView?
-        dataSource[position].let { ingredient ->
-            quantityView?.apply { text = ingredient.amountString() }
-            ingredientView?.apply { text = ingredient.name }
-        }
-        return view
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientItemViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.ingredient_list_item, parent, false)
+        return IngredientItemViewHolder(view)
     }
 }

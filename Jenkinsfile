@@ -3,10 +3,6 @@ pipeline {
         // Run on a build agent where we have the Android SDK installed
         label 'android'
     }
-    options {
-        // Stop the build early in case of compile or test failures
-        skipStagesAfterUnstable()
-    }
     stages {
         stage('Checkout'){
             steps {
@@ -47,7 +43,15 @@ pipeline {
                 // Run Lint and analyse the results
                 sh './gradlew lintDebug'
                 sh './gradlew lintRelease'
-                androidLint()
+                sh './gradlew detekt'
+                recordIssues(
+                  enabledForFailure: true,
+                  aggregatingResults: true,
+                  tools: [
+                    androidLintParser(pattern: '**/*lint-results*.xml'),
+                    detekt(pattern: '**/detekt.xml'),
+                  ]
+                )
             }
         }
     }

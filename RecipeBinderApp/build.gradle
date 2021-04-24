@@ -1,14 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
-    compileSdkVersion 29
+    buildToolsVersion = '30.0.3'
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.jeffbrandon.recipebinder"
-        minSdkVersion 17
-        targetSdkVersion 29
+        minSdkVersion 21
+        targetSdkVersion 30
         vectorDrawables.useSupportLibrary = true
         def major = 0
         def minor = 0
@@ -16,45 +18,72 @@ android {
         versionCode major << 16 | minor << 8 | patch
         versionName "$major.$minor.$patch"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
     }
-
     lintOptions {
         abortOnError = false
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+        useIR = true
+    }
+    buildFeatures.viewBinding = true
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
-    implementation "com.squareup.moshi:moshi-kotlin:1.8.0"
+    implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "com.jakewharton.timber:timber:4.7.1"
-    implementation 'androidx.room:room-runtime:2.1.0'
-    kapt 'androidx.room:room-compiler:2.1.0'
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0alpha02'
-    implementation 'androidx.core:core-ktx:1.2.0-alpha03'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha09'
+    implementation 'androidx.appcompat:appcompat:1.3.0-rc01'
+    implementation 'androidx.core:core-ktx:1.6.0-alpha02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
+    implementation 'com.google.android.material:material:1.4.0-alpha02'
+    implementation "androidx.savedstate:savedstate-ktx:1.1.0"
+
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    implementation "androidx.activity:activity-ktx:1.2.2"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
+    testImplementation "androidx.arch.core:core-testing:$arch_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_version"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:3.1.0"
+    androidTestImplementation "androidx.test:runner:$test_version"
+    androidTestImplementation "androidx.test:rules:$test_version"
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0-alpha05'
+
+    detekt("io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version")
+    detekt("io.gitlab.arturbosch.detekt:detekt-cli:$detekt_version")
 }
+
+kapt.correctErrorTypes true
