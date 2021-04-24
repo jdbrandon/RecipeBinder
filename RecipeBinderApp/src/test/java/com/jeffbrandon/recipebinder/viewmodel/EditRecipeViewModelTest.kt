@@ -18,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
@@ -63,7 +62,6 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    @Ignore("runBlockingTest fails with unfinished coroutines in ci")
     fun setEditIngredient() = coroutineRule.runBlockingTest {
         val index = 1
 
@@ -74,7 +72,6 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    @Ignore("runBlockingTest fails with unfinished coroutines in ci")
     fun setEditInstruction() = coroutineRule.runBlockingTest {
         val index = 1
 
@@ -85,7 +82,6 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    @Ignore("runBlockingTest fails with unfinished coroutines in ci")
     fun saveIngredient() = coroutineRule.runBlockingTest {
         underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
 
@@ -93,7 +89,6 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    @Ignore("runBlockingTest fails with unfinished coroutines in ci")
     fun saveInstruction() = coroutineRule.runBlockingTest {
         underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
 
@@ -101,7 +96,6 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    @Ignore("runBlockingTest fails with unfinished coroutines in ci")
     fun convertIngredientUnits() = coroutineRule.runBlockingTest {
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
         underTest.convertIngredientUnits(UnitType.GRAM)
