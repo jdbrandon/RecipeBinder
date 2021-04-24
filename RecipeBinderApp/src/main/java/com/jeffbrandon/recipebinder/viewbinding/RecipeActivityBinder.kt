@@ -24,7 +24,6 @@ class RecipeActivityBinder @Inject constructor() {
     }
 
     fun onBackPressed(backPressedCallback: () -> Unit) {
-        Timber.w("Current Fragment: ${fragmentManager.primaryNavigationFragment}")
         if (viewModel.shouldWarnAboutUnsavedData()) {
             Snackbar.make(viewRoot, R.string.abandon_warning_text, Snackbar.LENGTH_LONG)
                 .setAction(R.string.abandon) {

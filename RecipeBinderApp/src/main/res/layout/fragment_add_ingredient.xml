@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_small"
     android:layout_marginBottom="@dimen/margin_small"
+    android:background="@color/colorSecondary"
     android:orientation="vertical"
     >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
         android:text="@string/ingredient"
         android:textSize="@dimen/title_text_size"
         android:textStyle="bold"
@@ -67,6 +69,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
+        android:orientation="horizontal"
         >
 
         <com.google.android.material.chip.ChipGroup
@@ -116,6 +119,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
+        android:orientation="horizontal"
         >
 
         <com.google.android.material.chip.ChipGroup
@@ -219,7 +223,6 @@
             android:layout_margin="@dimen/margin_fab"
             android:contentDescription="@string/delete"
             android:text="@string/delete"
-            android:visibility="gone"
             app:icon="@drawable/ic_delete_24"
             />
 

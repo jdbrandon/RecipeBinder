@@ -14,6 +14,8 @@ import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.util.Locale
 import javax.inject.Inject
 
 @SuppressWarnings("TooManyFunctions")
@@ -32,47 +34,61 @@ class EditRecipeViewModel @Inject constructor(
 
     val editIngredientLiveData: LiveData<Ingredient?> = editIngredientData
     val editInstructionLiveData: LiveData<Instruction?> = editInstructionData
-    private var shouldWarn = true
+    private var shouldWarn = false
     private var editing = false
 
     fun setEditIngredient(data: Ingredient) {
+        Timber.i("Editing $data")
         editIngredient = Edit(getIngredientIndex(data) ?: error("Invalid index"), data)
         editIngredientData.value = data
     }
 
     fun setEditInstruction(data: Instruction) {
+        Timber.i("Editing $data")
         editInstruction = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
         editInstructionData.value = data
     }
 
     fun saveMetadata(recipeName: String, cookTime: Int, tags: MutableList<RecipeTag>) {
         viewModelScope.launch {
-            updateRecipeMetadata(recipeName, cookTime, tags)
+            updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), cookTime, tags)
         }
     }
 
     fun saveIngredient(data: Ingredient) {
-        viewModelScope.launch {
-            editIngredient?.let {
-                if (data != it.data) {
-                    updateIngredient(it.index, data)
-                }
-            } ?: appendIngredient(data)
-        }
+        Timber.i("Saving ingredient")
+        val sanitized = data.copy(name = data.name.trim())
+        val oldValue = editIngredient
         editIngredient = null
         editIngredientData.value = null
+        if (sanitized.name.isEmpty()) {
+            return
+        }
+        viewModelScope.launch {
+            oldValue?.let {
+                if (data != it.data) {
+                    updateIngredient(it.index, sanitized)
+                }
+            } ?: appendIngredient(sanitized)
+        }
     }
 
     fun saveInstruction(data: Instruction) {
-        viewModelScope.launch {
-            editInstruction?.let {
-                if (data != it.data) {
-                    updateInstruction(it.index, data)
-                }
-            } ?: appendInstruction(data)
-        }
+        Timber.i("Saving Instruction")
+        val sanitized = data.copy(text = data.text.trim())
+        val oldValue = editInstruction
         editInstruction = null
         editInstructionData.value = null
+        if (sanitized.text.isEmpty()) {
+            return
+        }
+        viewModelScope.launch {
+            oldValue?.let {
+                if (data != it.data) {
+                    updateInstruction(it.index, sanitized)
+                }
+            } ?: appendInstruction(sanitized)
+        }
     }
 
     fun convertIngredientUnits(unitType: UnitType) {
@@ -99,10 +115,15 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
-    fun shouldWarnAboutUnsavedData(): Boolean = editing && shouldWarn.also { shouldWarn = false }
+    fun shouldWarnAboutUnsavedData(): Boolean {
+        val result = editing && shouldWarn
+        shouldWarn = false
+        return result
+    }
 
     fun beginEditing() {
         editing = true
+        shouldWarn = true
     }
 
     fun stopEditing() {

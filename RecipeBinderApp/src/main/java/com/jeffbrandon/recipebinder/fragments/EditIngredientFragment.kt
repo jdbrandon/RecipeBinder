@@ -20,4 +20,17 @@ class EditIngredientFragment : Fragment(R.layout.fragment_add_ingredient) {
         super.onViewCreated(view, savedInstanceState)
         binder.bind(viewModel, view, parentFragmentManager, viewLifecycleOwner)
     }
+
+    override fun onResume() {
+        super.onResume()
+        binder.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // When we pop this off the back stack it doesn't trigger onResume so this is a workaround
+        // to make sure we still warn about back presses in EditRecipeFragment, which should be the
+        // only entry point to this fragment
+        binder.continueEditing()
+    }
 }

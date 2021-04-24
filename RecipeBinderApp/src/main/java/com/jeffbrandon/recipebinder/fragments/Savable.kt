@@ -1,5 +1,5 @@
 package com.jeffbrandon.recipebinder.fragments
 
-interface Saveable {
+interface Savable {
     fun save()
 }

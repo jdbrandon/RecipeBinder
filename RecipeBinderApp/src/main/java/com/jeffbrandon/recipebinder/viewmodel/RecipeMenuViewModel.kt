@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,12 +34,13 @@ class RecipeMenuViewModel @Inject constructor(
     }
 
     /**
-     * Inserts a recipe into the database and returns the deferred id of the new data item on success
-     * @param recipeData to insert
-     * @return deferred unique id of the new database item
+     * Inserts a recipe into the database and returns the id of the new data item on success
+     * @param name of the new recipe to insert
+     * @return unique id of the new item
      */
-    suspend fun insert(recipeData: RecipeData): Long = withContext(Dispatchers.IO) {
-        data.insertRecipe(recipeData).also { loadRecipes() }
+    suspend fun insert(name: String): Long = withContext(Dispatchers.IO) {
+        val recipeData = RecipeData().copy(name = name.trim().capitalize(Locale.getDefault()))
+        insertInternal(recipeData)
     }
 
     fun filter(text: String?) {
@@ -52,5 +54,9 @@ class RecipeMenuViewModel @Inject constructor(
                 filter?.let { data.fetchAllRecipes(it) } ?: data.fetchAllRecipes()
             }
         }
+    }
+
+    private suspend fun insertInternal(recipeData: RecipeData): Long = withContext(Dispatchers.IO) {
+        data.insertRecipe(recipeData).also { loadRecipes() }
     }
 }

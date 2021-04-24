@@ -72,13 +72,12 @@ class RecipeMenuViewModelTest {
 
     @Test
     fun `test insert`() = coroutineRule.runBlockingTest {
-        val insertRecipe = RecipeData().copy(id = INSERT_ID)
-        whenever(dataSource.insertRecipe(eq(insertRecipe))).thenReturn(INSERT_ID)
+        val name = "TestName"
+        val insertRecipe = RecipeData().copy(name = name)
 
         underTest.getRecipes().observeForTest {
             runBlocking {
-                val id = underTest.insert(insertRecipe)
-                assertEquals("inserted id is correct", INSERT_ID, id)
+                underTest.insert(name)
                 verify(dataSource).insertRecipe(eq(insertRecipe))
             }
         }

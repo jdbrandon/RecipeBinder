@@ -31,6 +31,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/cook_time_hint"
         android:paddingBottom="@dimen/margin_medium"
+        app:startIconContentDescription="@string/hourglass"
+        app:startIconDrawable="@drawable/ic_hourglass_empty_black_24dp"
         app:suffixText="@string/minutes"
         >
 

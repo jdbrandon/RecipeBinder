@@ -7,16 +7,12 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeBinding
 import com.jeffbrandon.recipebinder.fragments.EditFragmentPagerAdapter
 import com.jeffbrandon.recipebinder.fragments.FragmentPagerAdapter
-import com.jeffbrandon.recipebinder.fragments.Saveable
+import com.jeffbrandon.recipebinder.fragments.Savable
 import com.jeffbrandon.recipebinder.fragments.ViewRecipeFragment
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import javax.inject.Inject
 
 class EditRecipeViewBinder @Inject constructor() {
-
-    private companion object {
-        private val tabNameResourceIdList = listOf(R.string.metadata, R.string.ingredients)
-    }
 
     private lateinit var viewModel: EditRecipeViewModel
     private lateinit var binder: FragmentEditRecipeBinding
@@ -30,13 +26,23 @@ class EditRecipeViewBinder @Inject constructor() {
         binder = FragmentEditRecipeBinding.bind(view)
         with(binder) {
             fragmentPager.adapter = EditFragmentPagerAdapter(activity)
+
             TabLayoutMediator(navigationTabs, fragmentPager) { tab, pos ->
-                tab.text = view.context.getString(tabNameResourceIdList[pos])
+                tab.text =
+                    view.context.getString(EditFragmentPagerAdapter.tabNameResourceIdList[pos])
             }.attach()
+
             saveRecipeButton.setOnClickListener {
-                ((fragmentPager.adapter as FragmentPagerAdapter).fragments[0].value as? Saveable)?.save()
-                activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, ViewRecipeFragment::class.java, null).commit()
+                ((fragmentPager.adapter as FragmentPagerAdapter).fragments[0].value as? Savable)?.save()
+                with(activity.supportFragmentManager) {
+                    when (backStackEntryCount) {
+                        // Handles case where we began editing from menu fragment
+                        0 -> beginTransaction().replace(R.id.fragment_container,
+                                                        ViewRecipeFragment::class.java,
+                                                        null).commit()
+                        else -> popBackStack()
+                    }
+                }
             }
         }
     }

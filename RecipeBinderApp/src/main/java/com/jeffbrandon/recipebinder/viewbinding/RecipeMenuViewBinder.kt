@@ -2,13 +2,13 @@ package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
 import com.jeffbrandon.recipebinder.databinding.ContentRecipeMenuBinding
@@ -20,7 +20,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.Locale
 import javax.inject.Inject
 
 @Module
@@ -69,7 +68,6 @@ class RecipeMenuViewBinder @Inject constructor() {
 
     private fun setupNewRecipeButton() {
         binder.addRecipeButton.setOnClickListener {
-            // Open a Dialog to create a recipe
             val newRecipeDialogContent =
                 View.inflate(viewRoot.context, R.layout.dialog_create_recipe, null)
             val input = ViewCompat.requireViewById<EditText>(newRecipeDialogContent,
@@ -79,23 +77,17 @@ class RecipeMenuViewBinder @Inject constructor() {
                     val name = input.text.toString()
                     Timber.i("Creating a new recipe: $name")
                     if (name.isEmpty()) {
-                        Timber.d("Recipe needs a name")
-                        // make a toast
-                        Toast.makeText(viewRoot.context,
-                                       R.string.toast_recipe_name,
-                                       Toast.LENGTH_SHORT).show()
+                        Snackbar.make(viewRoot, R.string.toast_recipe_name, Snackbar.LENGTH_SHORT)
+                            .show()
                     } else {
                         // add basic recipe to db
-                        val recipeData =
-                            RecipeData().copy(name = name.trim().capitalize(Locale.getDefault()))
                         scope.launch {
-                            val id = viewModel.insert(recipeData)
+                            val id = viewModel.insert(name)
                             NavigationUtil.editRecipe(viewRoot.context, id)
                         }
                     }
                 }.setNegativeButton(android.R.string.cancel) { dialog, _ ->
                     Timber.i("canceling recipe creation")
-                    dialog.cancel()
                 }.show()
         }
     }

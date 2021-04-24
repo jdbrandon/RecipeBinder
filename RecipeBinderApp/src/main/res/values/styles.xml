@@ -13,6 +13,7 @@
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/colorSecondary</item>
         <!-- enable window content transitions -->
         <item name="android:windowActivityTransitions">true</item>
         <!-- specify enter and exit transitions -->
@@ -48,27 +49,13 @@
         <item name="borderWidth">2dp</item>
     </style>
 
-    <style name="ConstrainedListView" parent="Widget.AppCompat.ListView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_marginStart">@dimen/view_recipe_content_margin_start</item>
-        <item name="android:layout_marginEnd">@dimen/view_recipe_content_margin_end</item>
-        <item name="android:clickable">false</item>
-    </style>
-
-    <style name="LargeConstrainedListView" parent="ConstrainedListView">
-        <item name="layout_constraintHeight_max">400dp</item>
-        <item name="layout_constraintHeight_min">100dp</item>
-    </style>
-
-    <style name="SmallConstrainedListView" parent="ConstrainedListView">
-        <item name="layout_constraintHeight_max">150dp</item>
-        <item name="layout_constraintHeight_min">80dp</item>
-    </style>
-
     <style name="checkboxStyle" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
         <item name="android:minWidth">1dp</item>
         <item name="android:minHeight">1dp</item>
+    </style>
+
+    <style name="TabLayoutStyle" parent="Widget.MaterialComponents.TabLayout.PrimarySurface">
+        <item name="android:background">@color/colorSecondary</item>
     </style>
 
 </resources>

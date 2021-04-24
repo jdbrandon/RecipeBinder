@@ -9,7 +9,7 @@ import com.jeffbrandon.recipebinder.fragments.MenuFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RecipeMenuActivity : NewRecipeAppActivity() {
+class RecipeMenuActivity : RecipeAppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)

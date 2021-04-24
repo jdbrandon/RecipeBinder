@@ -7,7 +7,7 @@
     >
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ingredients_recycler_view"
+        android:id="@+id/items"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/margin_large"
@@ -15,12 +15,12 @@
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_ingredient_fab"
+        android:id="@+id/add_item_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_margin="@dimen/margin_fab"
-        android:contentDescription="@string/add_ingredient_button"
+        android:contentDescription="@string/add_ingredient"
         app:srcCompat="@drawable/ic_add_white_24dp"
         />
 </FrameLayout>

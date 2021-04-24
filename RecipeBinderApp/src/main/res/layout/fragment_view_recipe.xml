@@ -23,14 +23,26 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <ImageView
+        android:id="@+id/time_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/hourglass"
+        android:src="@drawable/ic_hourglass_empty_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/cook_time_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name_text"
+        app:tint="?attr/colorPrimaryDark"
+        />
+
     <TextView
         android:id="@+id/cook_time_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_xlarge"
         android:paddingHorizontal="@dimen/margin_small"
-        android:paddingBottom="@dimen/margin_xlarge"
         android:textSize="@dimen/item_text_size"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/time_icon"
         app:layout_constraintTop_toBottomOf="@id/name_text"
         />
 
@@ -41,10 +53,10 @@
         android:paddingHorizontal="@dimen/margin_small"
         android:text="@string/minutes"
         android:textSize="@dimen/item_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/cook_time_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/cook_time_view"
-        app:layout_constraintTop_toTopOf="@id/cook_time_view"
         />
 
     <androidx.viewpager2.widget.ViewPager2
@@ -53,8 +65,21 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cook_time_view"
+        app:layout_constraintVertical_bias="1.0"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_fab"
+        android:contentDescription="@string/edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/edit_to_save"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

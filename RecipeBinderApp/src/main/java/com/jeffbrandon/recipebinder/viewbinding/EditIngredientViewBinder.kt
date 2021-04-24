@@ -68,6 +68,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
                                                                   context.getString(R.string.abbreviation_pound)),
                                                              Pair(context.getString(R.string.gram),
                                                                   context.getString(R.string.abbreviation_gram)))
+    private lateinit var viewModel: EditRecipeViewModel
     private lateinit var binder: FragmentAddIngredientBinding
 
     fun bind(
@@ -76,23 +77,36 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
         fm: FragmentManager,
         lifecycle: LifecycleOwner,
     ) {
+        viewModel = vm
         binder = FragmentAddIngredientBinding.bind(viewRoot)
         with(binder) {
             setupAddIngredientViews()
-            setupConvertButton(viewRoot.context, vm)
-            setupDeleteButton(viewRoot, vm, fm)
-            setupSaveButton(viewRoot.context) {
-                saveIngredient(vm)
-                fm.popBackStack()
+
+            convertButton.setOnClickListener {
+                ConvertDialog(viewRoot.context, getSelectedUnit(), viewModel)
             }
+
+            deleteButton.setOnClickListener {
+                Snackbar.make(viewRoot,
+                              R.string.delete_this_confirmation_message,
+                              Snackbar.LENGTH_LONG).setAction(android.R.string.ok) {
+                        viewModel.deleteEditIngredient()
+                        fm.popBackStack()
+                    }.show()
+            }
+
+            setupSaveButton(viewRoot.context, fm)
         }
         vm.editIngredientLiveData.observe(lifecycle) { ingredient ->
             // Ingredient is null when adding an ingredient
-            ingredient?.let {
+            if (ingredient == null) {
+                Timber.i("Ingredient was null, hiding delete button")
+                binder.deleteButton.hide()
+            } else {
                 with(binder) {
                     ingredientInput.setText(ingredient.name)
                     quantityInput.setText(ingredient.amountWhole().toString())
-                    deleteButton.visibility = View.VISIBLE
+                    deleteButton.show()
 
                     val fractionTagMap = fractionViewMap()
                     fractionTagMap[ingredient.amountFraction()]?.apply {
@@ -105,49 +119,40 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
                         callOnClick()
                     }
                 }
-            } ?: run { binder.deleteButton.visibility = View.GONE }
+            }
         }
     }
 
-    private fun FragmentAddIngredientBinding.setupConvertButton(
-        context: Context,
-        vm: EditRecipeViewModel,
-    ) {
-        convertButton.setOnClickListener {
-            ConvertDialog(context, getSelectedUnit(), vm)
-        }
+    fun onResume() {
+        viewModel.beginEditing()
     }
 
-    private fun FragmentAddIngredientBinding.setupDeleteButton(
-        view: View,
-        vm: EditRecipeViewModel,
-        fm: FragmentManager,
-    ) {
-        deleteButton.setOnClickListener {
-            Snackbar.make(view, R.string.delete_this_confirmation_message, Snackbar.LENGTH_LONG)
-                .setAction(android.R.string.ok) {
-                    vm.deleteEditIngredient()
-                    fm.popBackStack()
-                }.show()
-        }
+    fun continueEditing() {
+        viewModel.beginEditing()
     }
 
     private fun FragmentAddIngredientBinding.setupSaveButton(
         context: Context,
-        callback: () -> Unit,
-    ) = AnimatedVectorDrawableCompat.create(context, R.drawable.save_to_edit)?.let {
+        fm: FragmentManager,
+    ) = AnimatedVectorDrawableCompat.create(context, R.drawable.save_to_edit)?.apply {
+        val animation = this
         saveIngredientButton.apply {
-            setImageDrawable(it)
+            setImageDrawable(animation)
             setOnClickListener {
                 (drawable as Animatable).start()
-                callback()
+                saveAndPop(fm)
             }
         }
     } ?: saveIngredientButton.setOnClickListener {
-        callback()
+        saveAndPop(fm)
     }
 
-    private fun FragmentAddIngredientBinding.saveIngredient(vm: EditRecipeViewModel) {
+    private fun FragmentAddIngredientBinding.saveAndPop(fm: FragmentManager) {
+        saveIngredient()
+        fm.popBackStack()
+    }
+
+    private fun FragmentAddIngredientBinding.saveIngredient() {
         val whole = this.quantityInput.text
         val fraction = when (fractionChipGroup.checkedChipId) {
             R.id.chip_input_quarter -> FractionalMeasurement.QUARTER
@@ -165,7 +170,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
         val unit = getSelectedUnit()
         val newIngredient = Ingredient(ingredientInput.text.toString(), amount, unit)
         Timber.d(newIngredient.toString())
-        vm.saveIngredient(newIngredient)
+        viewModel.saveIngredient(newIngredient)
     }
 
     private fun FragmentAddIngredientBinding.getSelectedUnit() = when (unitChips.checkedChipId) {
@@ -211,7 +216,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
     }
 
     private fun computeAmount(whole: CharSequence?, fraction: FractionalMeasurement): Float {
-        val n = if (whole.isNullOrEmpty()) 0f else whole.toString().toFloat()
+        val n = if (whole.isNullOrBlank()) 0f else whole.toString().toFloat()
         return n + fraction.toFloat()
     }
 

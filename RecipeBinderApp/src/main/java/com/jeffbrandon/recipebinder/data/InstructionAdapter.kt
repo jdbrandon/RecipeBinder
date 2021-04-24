@@ -1,26 +1,15 @@
 package com.jeffbrandon.recipebinder.data
 
-import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import com.jeffbrandon.recipebinder.R
 
-/**
- * @deprecated
- */
-class InstructionAdapter(
-    context: Context,
-    instructions: MutableList<Instruction>,
-    private val layout: Int = R.layout.instruction_list_item,
-) : AppendableAdapter<Instruction>(context, instructions) {
+class InstructionAdapter(instructions: List<Instruction>) :
+    ListRecyclerViewAdapter<InstructionViewHolder, Instruction>(instructions) {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: inflater.inflate(layout, parent, false)
-        val textView = view.findViewById<TextView>(R.id.instruction_text)
-        dataSource[position].let { instruction ->
-            textView?.apply { text = instruction.text }
-        }
-        return view
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InstructionViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.instruction_list_item, parent, false)
+        return InstructionViewHolder(view)
     }
 }

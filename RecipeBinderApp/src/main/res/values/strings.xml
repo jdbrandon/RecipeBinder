@@ -10,7 +10,6 @@
     <string name="extra_view_mode" translatable="false">viewMode</string>
     <string name="ingredient">Ingredient</string>
     <string name="ingredients">Ingredients</string>
-    <string name="instruction">instruction</string>
     <string name="instructions">Instructions</string>
     <string name="gram">Gram</string>
     <string name="pound">Pound</string>
@@ -56,11 +55,11 @@
     <string name="abbreviation_milliliter">ml</string>
     <string name="abbreviation_pound">lb</string>
     <string name="abbreviation_gram">g</string>
-    <string name="tags">Tags</string>
     <string name="entree">Entree</string>
     <string name="side">Side</string>
     <string name="soup">Soup</string>
     <string name="dessert">Dessert</string>
+    <string name="new_instruction">New instruction</string>
     <string name="update_instruction">Update instruction</string>
     <string name="update">Update</string>
     <string name="cook_type">Cook type</string>
@@ -68,22 +67,21 @@
     <string name="other_information">Other information</string>
     <string name="recipe_list">recipe list</string>
     <string name="save_ingredient">save ingredient</string>
-    <string name="add_ingredient_button">add ingredient button</string>
-    <string name="add_instruction_button">add instruction button</string>
-    <string name="edit_save_mode_toggle_button">edit save mode toggle button</string>
+    <string name="add_ingredient">add ingredient</string>
+    <string name="add_instruction">Add instruction</string>
     <string name="name_transition">nameTransitionId</string>
     <string name="cook_time_hint">Cook Time</string>
     <string name="metadata">Metadata</string>
     <string name="edit_recipe_title">Recipe Editor</string>
-    <string name="advance">Advance</string>
     <string name="edit">Edit</string>
     <string name="ingredient_format"><xliff:g id="amount">%s</xliff:g> <xliff:g
         id="name">%s</xliff:g></string>
     <string name="convert">Convert</string>
     <string name="convert_unit_format">Convert <xliff:g id="unit">%s</xliff:g> to</string>
-    <string name="convert_unit_type">convert unit type button</string>
+    <string name="convert_unit_type">convert unit type</string>
     <string name="save">save</string>
     <string name="abandon_warning_text">You have unsaved changes</string>
     <string name="abandon">abandon</string>
     <string name="delete_this_confirmation_message">Delete this ingredient?</string>
+    <string name="hourglass">hourglass</string>
 </resources>

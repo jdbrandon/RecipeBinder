@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class EditRecipeIngredientsFragment : Fragment(R.layout.fragment_edit_recipe_ingredients) {
+class EditRecipeIngredientsFragment : Fragment(R.layout.fragment_edit_recipe_items) {
 
     @Inject lateinit var binder: EditRecipeIngredientsBinder
     private val viewModel: EditRecipeViewModel by activityViewModels()

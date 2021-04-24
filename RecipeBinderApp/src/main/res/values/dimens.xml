@@ -13,10 +13,7 @@
     <dimen name="ingredient_dialog_input_width">150dp</dimen>
 
     <dimen name="margin_fab">@dimen/margin_large</dimen>
-    <dimen name="view_recipe_title_margin_start">@dimen/margin_xlarge</dimen>
-    <dimen name="view_recipe_title_margin_end">@dimen/margin_xlarge</dimen>
-    <dimen name="view_recipe_content_margin_start">@dimen/margin_xxlarge</dimen>
-    <dimen name="view_recipe_content_margin_end">@dimen/margin_xlarge</dimen>
     <dimen name="ingredient_list_text_size">@dimen/item_text_size</dimen>
+    <dimen name="instruction_list_text_size">26sp</dimen>
     <dimen name="save_check_size">44dp</dimen>
 </resources>

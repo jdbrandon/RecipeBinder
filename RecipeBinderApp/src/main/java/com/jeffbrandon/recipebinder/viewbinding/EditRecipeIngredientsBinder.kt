@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.EditIngredientAdapter
-import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeIngredientsBinding
+import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeItemsBinding
 import com.jeffbrandon.recipebinder.fragments.EditIngredientFragment
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import javax.inject.Inject
@@ -18,14 +18,14 @@ class EditRecipeIngredientsBinder @Inject constructor() {
         fm: FragmentManager,
         lifecycle: LifecycleOwner,
     ) {
-        val binding = FragmentEditRecipeIngredientsBinding.bind(viewRoot)
+        val binding = FragmentEditRecipeItemsBinding.bind(viewRoot)
         vm.getRecipe().observe(lifecycle) {
             with(binding) {
-                ingredientsRecyclerView.adapter = EditIngredientAdapter(it.ingredients) {
+                items.adapter = EditIngredientAdapter(it.ingredients) {
                     vm.setEditIngredient(it)
                     openEditIngredientFragment(fm)
                 }
-                addIngredientFab.setOnClickListener {
+                addItemFab.setOnClickListener {
                     openEditIngredientFragment(fm)
                 }
             }
@@ -33,8 +33,7 @@ class EditRecipeIngredientsBinder @Inject constructor() {
     }
 
     private fun openEditIngredientFragment(fm: FragmentManager) {
-        fm.beginTransaction()
-            .replace(R.id.fragment_container, EditIngredientFragment::class.java, null)
+        fm.beginTransaction().add(R.id.fragment_container, EditIngredientFragment::class.java, null)
             .addToBackStack(null).commit()
     }
 }

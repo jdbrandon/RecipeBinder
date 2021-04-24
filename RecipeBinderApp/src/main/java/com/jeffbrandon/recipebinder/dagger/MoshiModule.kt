@@ -33,7 +33,7 @@ class MoshiModule {
 
     @Provides
     @Singleton
-    fun providesMoshi() = instance
+    fun providesMoshi(): Moshi = instance
 
     @Provides
     @Singleton
