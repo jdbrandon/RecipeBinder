@@ -84,4 +84,8 @@
     <string name="copy_import_text">Copy importable text</string>
     <string name="qr_code">qr code</string>
     <string name="app_scheme" translatable="false">recipebinder</string>
+    <string name="recipe_string_format"><xliff:g id="name">%s\t</xliff:g><xliff:g
+        id="time">%d</xliff:g>minutes<xliff:g id="ingredients">\n%s\n</xliff:g><xliff:g
+        id="instructions">%s\n</xliff:g></string>
+    <string name="list_join_format">,\n\t</string>
 </resources>

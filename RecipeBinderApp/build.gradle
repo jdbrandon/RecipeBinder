@@ -30,6 +30,9 @@ android {
             dimension "version"
             applicationIdSuffix ".alpha"
         }
+        standard {
+            dimension "version"
+        }
     }
     lintOptions {
         abortOnError = false

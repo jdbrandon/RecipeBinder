@@ -12,8 +12,8 @@ pipeline {
         stage('Compile') {
             steps {
                 // Compile the app and its dependencies
-                sh './gradlew compileDebugSources'
-                sh './gradlew compileReleaseSources'
+                sh './gradlew compileStandardDebugSources'
+                sh './gradlew compileStandardReleaseSources'
             }
         }
         stage('Unit test') {
@@ -22,8 +22,8 @@ pipeline {
                 sh 'rm -rf ./RecipeBinderApp/build/test-results/*'
                 sh 'rm -rf ./RecipeBinderApp/build/reports/*'
                 // Compile and run the unit tests for the app and its dependencies
-                sh './gradlew testDebugUnitTest'
-                sh './gradlew testReleaseUnitTest'
+                sh './gradlew testStandardDebugUnitTest'
+                sh './gradlew testStandardReleaseUnitTest'
 
                 // Analyse the test results and update the build result as appropriate
                 junit '**/TEST-*.xml'
@@ -32,7 +32,7 @@ pipeline {
         stage('Build APK') {
             steps {
                 // Finish building and packaging the APK
-                sh './gradlew assemble'
+                sh './gradlew assembleStandard'
 
                 // Archive the APKs so that they can be downloaded from Jenkins
                 archiveArtifacts '**/*.apk'
@@ -41,8 +41,8 @@ pipeline {
         stage('Static analysis') {
             steps {
                 // Run Lint and analyse the results
-                sh './gradlew lintDebug'
-                sh './gradlew lintRelease'
+                sh './gradlew lintStandardDebug'
+                sh './gradlew lintStandardRelease'
                 sh './gradlew detekt'
                 recordIssues(
                   enabledForFailure: true,
