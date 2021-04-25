@@ -70,8 +70,8 @@
     <string name="metadata">Metadata</string>
     <string name="edit_recipe_title">Recipe Editor</string>
     <string name="edit">Edit</string>
-    <string name="ingredient_format"><xliff:g id="amount">%s</xliff:g> <xliff:g
-        id="name">%s</xliff:g></string>
+    <string name="ingredient_format"><xliff:g id="amount">%1$s</xliff:g> <xliff:g
+        id="name">%2$s</xliff:g></string>
     <string name="convert">Convert</string>
     <string name="convert_unit_format">Convert <xliff:g id="unit">%s</xliff:g> to</string>
     <string name="convert_unit_type">convert unit type</string>
@@ -84,9 +84,10 @@
     <string name="copy_import_text">Copy importable text</string>
     <string name="qr_code">qr code</string>
     <string name="app_scheme" translatable="false">recipebinder</string>
-    <string name="recipe_string_format"><xliff:g id="name">%s</xliff:g>, <xliff:g
-        id="time">%d</xliff:g> minutes:<xliff:g id="ingredients">\n%s\n</xliff:g><xliff:g
-        id="instructions">%s\n</xliff:g></string>
+    <string name="recipe_string_format"><xliff:g id="name">%1$s</xliff:g>, <xliff:g
+        id="time">%2$d</xliff:g> minutes:<xliff:g id="ingredients">\n%3$s\n</xliff:g><xliff:g
+        id="instructions">%4$s\n</xliff:g></string>
     <string name="list_join_format">,\n\t</string>
     <string name="title_join_format">:\n\t</string>
+    <string name="copied_toast">Copied to clipboard</string>
 </resources>

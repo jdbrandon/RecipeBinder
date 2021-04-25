@@ -11,6 +11,7 @@ import android.view.View
 import androidx.core.graphics.set
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.jeffbrandon.recipebinder.R
@@ -51,12 +52,12 @@ class ShareFragmentViewBinder @Inject constructor(
                 val uriString = encode(recipe)
                 launch {
                     binder.copyUriButton.setOnClickListener {
-                        addToClipboard(recipe.name, Uri.parse(uriString))
+                        addToClipboard(recipe.name, Uri.parse(uriString), viewRoot)
                     }
                 }
                 launch {
                     binder.copyRawButton.setOnClickListener {
-                        addToClipboard(recipe.name, getClipString(recipe))
+                        addToClipboard(recipe.name, getClipString(recipe), viewRoot)
                     }
                 }
                 val bitmap = uriString.asQRCode()
@@ -116,13 +117,18 @@ class ShareFragmentViewBinder @Inject constructor(
         return bm
     }
 
-    private fun addToClipboard(label: String, content: Uri) {
+    private fun addToClipboard(label: String, content: Uri, view: View) {
         val clip = ClipData.newRawUri(label, content)
-        clipManager.setPrimaryClip(clip)
+        setAndAnnounce(clip, view)
     }
 
-    private fun addToClipboard(label: String, content: String) {
+    private fun addToClipboard(label: String, content: String, view: View) {
         val clip = ClipData.newPlainText(label, content)
+        setAndAnnounce(clip, view)
+    }
+
+    private fun setAndAnnounce(clip: ClipData, view: View) {
         clipManager.setPrimaryClip(clip)
+        Snackbar.make(view, R.string.copied_toast, Snackbar.LENGTH_SHORT).show()
     }
 }
