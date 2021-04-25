@@ -39,7 +39,10 @@ class ShareFragmentViewBinder @Inject constructor(
     private val clipManager: ClipboardManager by lazy { context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
     private val qrSize by lazy { context.resources.getDimension(R.dimen.qr_size).roundToInt() }
     private val uriScheme by lazy { context.getString(R.string.app_scheme) }
+    private val titleJoin by lazy { context.getString(R.string.title_join_format) }
     private val joinFmt by lazy { context.getString(R.string.list_join_format) }
+    private val instructionString by lazy { context.getString(R.string.instructions) }
+    private val ingredientString by lazy { context.getString(R.string.ingredients) }
 
     fun bind(vm: RecipeViewModel, viewRoot: View, lifecycleOwner: LifecycleOwner) {
         binder = FragmentShareRecipeBinding.bind(viewRoot)
@@ -75,11 +78,15 @@ class ShareFragmentViewBinder @Inject constructor(
     }
 
     private fun instructionsString(instructions: List<Instruction>): String {
-        return instructions.joinToString(joinFmt) { ins -> ins.text }
+        val list = instructions.joinToString(joinFmt) { ins -> ins.text }
+        return "$instructionString$titleJoin${list}"
     }
 
     private fun ingredientsString(ingredients: List<Ingredient>): String {
-        return ingredients.joinToString(joinFmt) { ing -> ing.amountString(context) }
+        val list = ingredients.joinToString(joinFmt) { ing ->
+            context.getString(R.string.ingredient_format, ing.amountString(context), ing.name)
+        }
+        return "$ingredientString$titleJoin${list}"
     }
 
     private suspend fun encode(recipe: RecipeData): String = withContext(Dispatchers.Default) {
