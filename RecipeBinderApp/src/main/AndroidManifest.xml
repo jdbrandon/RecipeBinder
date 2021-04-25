@@ -29,7 +29,17 @@
         <activity
             android:name=".activities.RecipeActivity"
             android:label="Recipes"
-            />
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="@string/app_scheme" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -24,6 +24,13 @@ android {
             }
         }
     }
+    flavorDimensions "version"
+    productFlavors {
+        alpha {
+            dimension "version"
+            applicationIdSuffix ".alpha"
+        }
+    }
     lintOptions {
         abortOnError = false
     }

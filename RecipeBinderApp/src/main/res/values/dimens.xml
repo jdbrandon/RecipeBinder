@@ -17,4 +17,5 @@
     <dimen name="ingredient_list_text_size">@dimen/item_text_size</dimen>
     <dimen name="instruction_list_text_size">26sp</dimen>
     <dimen name="save_check_size">44dp</dimen>
+    <dimen name="qr_size">300dp</dimen>
 </resources>
