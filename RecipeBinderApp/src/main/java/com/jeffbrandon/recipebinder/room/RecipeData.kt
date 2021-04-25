@@ -6,8 +6,10 @@ import androidx.room.PrimaryKey
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.enums.RecipeTag
+import com.squareup.moshi.JsonClass
 
 @Entity
+@JsonClass(generateAdapter = true)
 data class RecipeData(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     val name: String,

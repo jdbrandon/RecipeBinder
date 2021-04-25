@@ -2,6 +2,7 @@ package com.jeffbrandon.recipebinder.dagger
 
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
+import com.jeffbrandon.recipebinder.room.RecipeData
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -42,4 +43,9 @@ class MoshiModule {
     @Provides
     @Singleton
     fun provideInstructionListJsonAdapter() = instructionConverter
+
+    @Provides
+    @Singleton
+    fun provideRecipeDataJsonAdapter(moshi: Moshi): JsonAdapter<RecipeData> =
+        moshi.adapter(RecipeData::class.java)
 }
