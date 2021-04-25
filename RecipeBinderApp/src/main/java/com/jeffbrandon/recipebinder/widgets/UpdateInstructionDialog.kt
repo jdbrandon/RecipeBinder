@@ -1,9 +1,9 @@
 package com.jeffbrandon.recipebinder.widgets
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.View
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Instruction

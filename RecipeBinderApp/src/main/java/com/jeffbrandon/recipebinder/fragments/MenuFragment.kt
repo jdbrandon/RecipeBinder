@@ -15,30 +15,29 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MenuFragment : Fragment(R.layout.fragment_recipe_menu), RecipeMenuViewBinder.ViewContract {
 
-    @Inject lateinit var viewBinder: RecipeMenuViewBinder
+    @Inject lateinit var binder: RecipeMenuViewBinder
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val vm: RecipeMenuViewModel by activityViewModels()
-        viewBinder.bind(vm, view, this, this)
+        binder.bind(vm, view, this, this)
     }
 
     override fun onStart() {
         super.onStart()
-        viewBinder.onStart()
+        binder.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        viewBinder.onStop()
+        binder.onStop()
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        Timber.i("${item.itemId} ${item.menuInfo}")
-        val position = viewBinder.selectedPosition()
+        val position = binder.selectedPosition()
         return when (item.itemId) {
-            R.id.recipe_menu_delete -> position?.let { viewBinder.delete(it) } ?: true
-            R.id.recipe_menu_edit -> position?.let { viewBinder.edit(it) } ?: true
+            R.id.recipe_menu_delete -> position?.let { binder.delete(it) } ?: true
+            R.id.recipe_menu_edit -> position?.let { binder.edit(it) } ?: true
             else -> super.onContextItemSelected(item)
         }
     }

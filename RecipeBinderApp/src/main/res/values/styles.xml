@@ -1,9 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
         <item name="android:windowSoftInputMode">adjustPan</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
@@ -23,6 +21,11 @@
         </item>
         <item name="android:windowSharedElementExitTransition">@transition/change_image_transform
         </item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="CheckableChip" parent="@style/Widget.MaterialComponents.Chip.Choice">
