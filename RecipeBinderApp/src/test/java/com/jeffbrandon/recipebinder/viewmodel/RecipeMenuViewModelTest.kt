@@ -1,13 +1,15 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
 import com.jeffbrandon.recipebinder.testutils.MainCoroutineRule
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
 import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import com.jeffbrandon.recipebinder.testutils.observeForTest
-import dagger.Lazy
+import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -32,21 +34,23 @@ class RecipeMenuViewModelTest {
 
     private val recipeList = TestRecipeData.buildTestData()
 
-    @Mock private lateinit var lazySource: Lazy<RecipeMenuDataSource>
     @Mock private lateinit var dataSource: RecipeMenuDataSource
+    @Mock private lateinit var context: Context
+    @Mock private lateinit var importer: RecipeBlobImporter
     private lateinit var underTest: RecipeMenuViewModel
 
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        whenever(lazySource.get()).thenReturn(dataSource)
         whenever(dataSource.fetchAllRecipes(any())).thenReturn(recipeList)
-        underTest = RecipeMenuViewModel(lazySource).also { it.filter(null) }
+        underTest = RecipeMenuViewModel(context, { dataSource }, { importer })
+        underTest.filter(null)
     }
 
     @Test
     fun `test get`() = coroutineRule.runBlockingTest {
         // Simple test to make sure mocking is set up correctly
+
         val result = underTest.getRecipes().getOrAwaitValue()
         assertEquals("contents are correct", recipeList, result)
     }
@@ -78,5 +82,32 @@ class RecipeMenuViewModelTest {
                 verify(dataSource).insertRecipe(eq(insertRecipe))
             }
         }
+    }
+
+    @Test
+    fun `test blob import`() = coroutineRule.runBlockingTest {
+        whenever(context.getString(R.string.import_success)).thenReturn("%s")
+        whenever(importer.import(any())).thenReturn(TestRecipeData.RECIPE_2)
+
+        underTest.import("")
+
+        val message = underTest.toastObservable().getOrAwaitValue()
+
+        verify(importer).import(any())
+        assertEquals(message, TestRecipeData.RECIPE_2.name)
+    }
+
+    @Test
+    fun `test blob import failure`() = coroutineRule.runBlockingTest {
+        val errorMsg = "error"
+        whenever(context.getString(R.string.error_import_failed)).thenReturn(errorMsg)
+        whenever(importer.import(any())).thenReturn(null)
+
+        underTest.import("")
+
+        val message = underTest.toastObservable().getOrAwaitValue()
+
+        verify(importer).import(any())
+        assertEquals(message, errorMsg)
     }
 }

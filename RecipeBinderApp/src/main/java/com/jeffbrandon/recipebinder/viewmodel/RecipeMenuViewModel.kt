@@ -29,7 +29,7 @@ class RecipeMenuViewModel @Inject constructor(
     private val data by lazy { dataSource.get() }
     private val importer by lazy { lazyImportUtil.get() }
     private val recipes by lazy { MutableLiveData<List<RecipeData>>() }.also { loadRecipes() }
-    private val toastMessage = MutableLiveData<String?>(null)
+    private val toastMessage = MutableLiveData<String?>()
     private val errorMessageContent by lazy { context.getString(R.string.error_import_failed) }
     private val importSuccessFmt by lazy { context.getString(R.string.import_success) }
     private var filter: String? = null
@@ -61,18 +61,6 @@ class RecipeMenuViewModel @Inject constructor(
         loadRecipes()
     }
 
-    private fun loadRecipes() {
-        viewModelScope.launch(Dispatchers.Main) {
-            recipes.value = withContext(Dispatchers.IO) {
-                filter?.let { data.fetchAllRecipes(it) } ?: data.fetchAllRecipes()
-            }
-        }
-    }
-
-    private suspend fun insertInternal(recipeData: RecipeData): Long = withContext(Dispatchers.IO) {
-        data.insertRecipe(recipeData).also { loadRecipes() }
-    }
-
     fun import(blobString: String) {
         viewModelScope.launch {
             val importedRecipe = importer.import(blobString)
@@ -84,6 +72,18 @@ class RecipeMenuViewModel @Inject constructor(
             }
             resetMessage()
         }
+    }
+
+    private fun loadRecipes() {
+        viewModelScope.launch(Dispatchers.Main) {
+            recipes.value = withContext(Dispatchers.IO) {
+                filter?.let { data.fetchAllRecipes(it) } ?: data.fetchAllRecipes()
+            }
+        }
+    }
+
+    private suspend fun insertInternal(recipeData: RecipeData): Long = withContext(Dispatchers.IO) {
+        data.insertRecipe(recipeData).also { loadRecipes() }
     }
 
     private suspend fun resetMessage() = withContext(Dispatchers.Default) {
