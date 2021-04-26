@@ -5,8 +5,8 @@ apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
-    buildToolsVersion = '30.0.3'
-    compileSdkVersion 30
+    buildToolsVersion = '31-rc3'
+    compileSdkVersion "android-S"
     defaultConfig {
         applicationId "com.jeffbrandon.recipebinder"
         minSdkVersion 21
