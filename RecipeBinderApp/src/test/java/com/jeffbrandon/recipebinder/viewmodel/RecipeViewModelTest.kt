@@ -2,8 +2,8 @@ package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.liveData
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import com.jeffbrandon.recipebinder.testutils.MainCoroutineRule
@@ -41,7 +41,7 @@ class RecipeViewModelTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         whenever(context.getString(R.string.extra_recipe_id)).thenReturn(KEY_EXTRA_ID)
-        whenever(dataSource.fetchRecipe(eq(EXTRA_VAL))).thenReturn(MutableLiveData(TestRecipeData.RECIPE_1))
+        whenever(dataSource.fetchRecipe(eq(EXTRA_VAL))).thenReturn(liveData { emit(TestRecipeData.RECIPE_1) })
         underTest = RecipeViewModel({ dataSource }, SavedStateHandle(mapOf(KEY_EXTRA_ID to EXTRA_VAL)), context)
     }
 
