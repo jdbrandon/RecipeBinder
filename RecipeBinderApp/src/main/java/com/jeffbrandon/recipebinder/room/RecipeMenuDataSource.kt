@@ -11,7 +11,7 @@ interface RecipeMenuDataSource {
     fun insertRecipe(recipe: RecipeData): Long
 
     @Delete(entity = RecipeData::class)
-    fun deleteRecipe(id: Long): Int
+    fun deleteRecipe(id: Long?): Int
 
     @Query("SELECT * FROM RecipeData WHERE name like :filter")
     fun fetchAllRecipes(filter: String = "%"): LiveData<List<RecipeData>>
