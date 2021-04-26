@@ -16,10 +16,9 @@ import com.jeffbrandon.recipebinder.testutils.observeForTest
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
@@ -62,7 +61,7 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun setEditIngredient() = runBlockingTest {
+    fun setEditIngredient() = runBlocking {
         val index = 1
 
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[index])
@@ -72,7 +71,7 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun setEditInstruction() = runBlockingTest {
+    fun setEditInstruction() = runBlocking {
         val index = 1
 
         underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[index])
@@ -82,21 +81,21 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun saveIngredient() = runBlockingTest {
+    fun saveIngredient(): Unit = runBlocking {
         underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
 
         verify(dataSource).updateRecipe(any())
     }
 
     @Test
-    fun saveInstruction() = runBlockingTest {
+    fun saveInstruction(): Unit = runBlocking {
         underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
 
         verify(dataSource).updateRecipe(any())
     }
 
     @Test
-    fun convertIngredientUnits() = runBlockingTest {
+    fun convertIngredientUnits() = runBlocking {
         underTest.editIngredientLiveData.observeForTest {
             underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
             underTest.convertIngredientUnits(UnitType.GRAM)
