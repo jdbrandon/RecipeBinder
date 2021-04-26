@@ -11,6 +11,7 @@ import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -61,5 +62,6 @@ class RecipeViewModelTest {
         val recipe = underTest.getRecipe().getOrAwaitValue()
         assertEquals("live data is set", TestRecipeData.RECIPE_1, recipe)
         verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
+        joinAll()
     }
 }
