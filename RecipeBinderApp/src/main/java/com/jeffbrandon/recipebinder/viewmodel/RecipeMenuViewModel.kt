@@ -86,6 +86,7 @@ class RecipeMenuViewModel @Inject constructor(
         data.insertRecipe(recipeData).also { loadRecipes() }
     }
 
+    @SuppressWarnings("MagicNumber")
     private suspend fun resetMessage() = withContext(Dispatchers.Default) {
         delay(5000)
         withContext(Dispatchers.Main) {

@@ -13,7 +13,6 @@ import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -44,23 +43,25 @@ class RecipeMenuViewModelTest {
         MockitoAnnotations.openMocks(this)
         whenever(dataSource.fetchAllRecipes(any())).thenReturn(recipeList)
         underTest = RecipeMenuViewModel(context, { dataSource }, { importer })
-        underTest.filter(null)
     }
 
     @Test
-    fun `test get`() = coroutineRule.runBlockingTest {
+    fun `test get`() = runBlocking {
         // Simple test to make sure mocking is set up correctly
+        underTest.filter(null)
 
         val result = underTest.getRecipes().getOrAwaitValue()
         assertEquals("contents are correct", recipeList, result)
     }
 
     @Test
-    fun `test delete`() = coroutineRule.runBlockingTest {
+    fun `test delete`() = runBlocking {
         whenever(dataSource.deleteRecipe(any())).then {
             recipeList.remove(TestRecipeData.RECIPE_1)
             TestRecipeData.ID_1.toInt()
         }
+
+        underTest.filter(null)
 
         underTest.getRecipes().observeForTest {
             underTest.delete(recipeList.indexOf(TestRecipeData.RECIPE_1))
@@ -72,7 +73,7 @@ class RecipeMenuViewModelTest {
     }
 
     @Test
-    fun `test insert`() = coroutineRule.runBlockingTest {
+    fun `test insert`() = runBlocking {
         val name = "TestName"
         val insertRecipe = RecipeData().copy(name = name)
 
@@ -85,7 +86,7 @@ class RecipeMenuViewModelTest {
     }
 
     @Test
-    fun `test blob import`() = coroutineRule.runBlockingTest {
+    fun `test blob import`() = runBlocking {
         whenever(context.getString(R.string.import_success)).thenReturn("%s")
         whenever(importer.import(any())).thenReturn(TestRecipeData.RECIPE_2)
 
@@ -98,7 +99,7 @@ class RecipeMenuViewModelTest {
     }
 
     @Test
-    fun `test blob import failure`() = coroutineRule.runBlockingTest {
+    fun `test blob import failure`() = runBlocking {
         val errorMsg = "error"
         whenever(context.getString(R.string.error_import_failed)).thenReturn(errorMsg)
         whenever(importer.import(any())).thenReturn(null)

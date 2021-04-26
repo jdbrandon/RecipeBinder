@@ -18,5 +18,5 @@ data class RecipeData(
     @ColumnInfo(name = "ingredientsJson") val ingredients: List<Ingredient>,
     @ColumnInfo(name = "instructionsJson") val instructions: List<Instruction>,
 ) {
-    constructor() : this(null, "", 0, mutableListOf(), listOf(), listOf())
+    constructor() : this(null, "", 0, listOf(), listOf(), listOf())
 }
