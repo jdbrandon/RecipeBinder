@@ -11,7 +11,7 @@ import com.jeffbrandon.recipebinder.testutils.TestRecipeData
 import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,10 +46,9 @@ class RecipeViewModelTest {
     }
 
     @Test
-    fun `test get`() = coroutineRule.runBlockingTest {
+    fun `test get`(): Unit = runBlocking {
         val recipe = underTest.getRecipe().getOrAwaitValue()
         assertEquals("live data is set", TestRecipeData.RECIPE_1, recipe)
         verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
-        advanceUntilIdle()
     }
 }
