@@ -48,9 +48,9 @@ class RecipeMenuViewModelTest {
 
     @Test
     fun `test delete`(): Unit = runBlocking {
-        underTest.delete(TestRecipeData.RECIPE_1.id!!)
+        underTest.delete(TestRecipeData.RECIPE_1.recipeId!!)
 
-        verify(dataSource).deleteRecipe(eq(TestRecipeData.RECIPE_1.id!!))
+        verify(dataSource).deleteRecipe(eq(TestRecipeData.RECIPE_1.recipeId!!))
     }
 
     @Test

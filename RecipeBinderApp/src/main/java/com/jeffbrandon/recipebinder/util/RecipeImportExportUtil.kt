@@ -39,7 +39,7 @@ class RecipeImportExportUtil @Inject constructor(
     private val errorTooBig by lazy { context.getString(R.string.error_recipe_too_large) }
 
     override suspend fun encode(recipe: RecipeData): String = withContext(Dispatchers.Default) {
-        val clearIdRecipe = recipe.copy(id = null)
+        val clearIdRecipe = recipe.copy(recipeId = null)
         val buffer = ByteArray(BUFFER_SIZE)
         try {
             with(compressor) {
@@ -77,7 +77,7 @@ class RecipeImportExportUtil @Inject constructor(
             @Suppress("BlockingMethodInNonBlockingContext", "TooGenericExceptionCaught") try {
                 val bytes = base64.decode(b64, Base64.URL_SAFE)
                 val maybeJson = compressor.inflate(bytes)
-                return@withContext json.fromJson(maybeJson)?.copy(id = null)
+                return@withContext json.fromJson(maybeJson)?.copy(recipeId = null)
             } catch (e: IllegalArgumentException) {
                 Timber.w(e, "Bad arguments, was your base64 well formed?")
             } catch (e: IllegalStateException) {

@@ -11,7 +11,7 @@ import com.squareup.moshi.JsonClass
 @Entity
 @JsonClass(generateAdapter = true)
 data class RecipeData(
-    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name="id") val recipeId: Long?,
     val name: String,
     val cookTime: Int,
     val tags: List<RecipeTag>,

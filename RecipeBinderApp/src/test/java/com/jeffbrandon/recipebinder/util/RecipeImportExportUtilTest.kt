@@ -114,7 +114,7 @@ class RecipeImportExportUtilTest {
         val data = underTest.import("dummyBlob")
 
         // must ensure id is null
-        assertEquals(TestRecipeData.RECIPE_1.copy(id = null), data)
+        assertEquals(TestRecipeData.RECIPE_1.copy(recipeId = null), data)
     }
 
     @Test

@@ -10,7 +10,7 @@ class RecipeViewHolder(view: View, callback: (Long) -> Unit) : CallbackViewHolde
     private var nameView: TextView = view.findViewById(R.id.recipe_name)
 
     override fun bind(item: RecipeData) {
-        current = item.id ?: -1
+        current = item.recipeId ?: -1
         nameView.text = item.name
     }
 }
