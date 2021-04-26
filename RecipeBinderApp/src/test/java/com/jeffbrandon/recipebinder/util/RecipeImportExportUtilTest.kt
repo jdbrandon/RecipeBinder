@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
-import com.jeffbrandon.recipebinder.testutils.MainCoroutineRule
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -37,8 +36,6 @@ class RecipeImportExportUtilTest {
     }
 
     @get:Rule val instantExecutorRule = InstantTaskExecutorRule()
-
-    @get:Rule val coroutineRule = MainCoroutineRule()
 
     @Mock private lateinit var context: Context
     @Mock private lateinit var uriUtil: UriHelper

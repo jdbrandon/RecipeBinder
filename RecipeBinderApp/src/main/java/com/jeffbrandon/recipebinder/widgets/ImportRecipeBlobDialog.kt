@@ -4,9 +4,11 @@ import android.content.Context
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.textfield.TextInputEditText
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,9 +24,9 @@ class ImportRecipeBlobDialog @Inject constructor() {
     fun show(context: Context, vm: RecipeMenuViewModel) {
         viewModel = vm
         AlertDialog.Builder(context).setView(inflateView(context)).setPositiveButton(R.string.menu_import) { _, _ ->
-                viewModel.import(textBox.text.toString().trim())
-            }.setNeutralButton(android.R.string.cancel) { _, _ ->
-                textBox.text?.clear()
-            }.setCancelable(true).show()
+            with(viewModel) { viewModelScope.launch { import(textBox.text.toString().trim()) } }
+        }.setNeutralButton(android.R.string.cancel) { _, _ ->
+            textBox.text?.clear()
+        }.setCancelable(true).show()
     }
 }

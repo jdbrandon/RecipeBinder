@@ -5,9 +5,11 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,14 +29,14 @@ class UpdateInstructionDialog @Inject constructor() {
         val builder = AlertDialog.Builder(context)
             .setTitle(if (instruction != null) R.string.update_instruction else R.string.add_instruction).setView(view)
             .setPositiveButton(R.string.save) { _, _ ->
-                viewModel.saveInstruction(Instruction(textBox.text.toString()))
+                with(viewModel) { viewModelScope.launch { saveInstruction(Instruction(textBox.text.toString())) } }
                 textBox.text?.clear()
             }.setNeutralButton(android.R.string.cancel) { _, _ ->
                 textBox.text?.clear()
             }
         instruction?.let {
             builder.setNegativeButton(R.string.delete) { _, _ ->
-                viewModel.deleteEditInstruction()
+                with(viewModel) { viewModelScope.launch { deleteEditInstruction() } }
             }
         }
         builder.show()

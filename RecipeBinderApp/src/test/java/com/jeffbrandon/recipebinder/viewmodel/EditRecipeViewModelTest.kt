@@ -9,14 +9,19 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeDataSource
-import com.jeffbrandon.recipebinder.testutils.MainCoroutineRule
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
 import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import com.jeffbrandon.recipebinder.testutils.observeForTest
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -38,17 +43,20 @@ class EditRecipeViewModelTest {
 
     @get:Rule val instantExecutorRule = InstantTaskExecutorRule()
 
-    @get:Rule val coroutineRule = MainCoroutineRule()
-
     @Mock private lateinit var dataSource: RecipeDataSource
     @Mock private lateinit var context: Context
     private lateinit var underTest: EditRecipeViewModel
     private var currentRecipeData: RecipeData? = null
     private val testObserver = Observer<RecipeData> { t -> currentRecipeData = t }
 
+    private val dispatcher = TestCoroutineDispatcher()
+    private val testScope = TestCoroutineScope(dispatcher)
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        Dispatchers.setMain(dispatcher)
+
         whenever(context.getString(R.string.extra_recipe_id)).thenReturn(KEY_EXTRA_ID)
         whenever(dataSource.fetchRecipe(eq(EXTRA_VAL))).thenReturn(MutableLiveData(TestRecipeData.RECIPE_1))
         underTest = EditRecipeViewModel({ dataSource }, SavedStateHandle(mapOf(KEY_EXTRA_ID to EXTRA_VAL)), context)
@@ -57,6 +65,8 @@ class EditRecipeViewModelTest {
 
     @After
     fun tearDown() {
+        Dispatchers.resetMain()
+        dispatcher.cleanupTestCoroutines()
         underTest.getRecipe().removeObserver(testObserver)
     }
 
@@ -81,17 +91,19 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun saveIngredient(): Unit = runBlocking {
-        underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
-
-        verify(dataSource).updateRecipe(any())
+    fun saveIngredient() = runBlocking {
+        testScope.launch {
+            underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
+            verify(dataSource).updateRecipe(any())
+        }.join()
     }
 
     @Test
-    fun saveInstruction(): Unit = runBlocking {
-        underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
-
-        verify(dataSource).updateRecipe(any())
+    fun saveInstruction() = runBlocking {
+        testScope.launch {
+            underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
+            verify(dataSource).updateRecipe(any())
+        }.join()
     }
 
     @Test

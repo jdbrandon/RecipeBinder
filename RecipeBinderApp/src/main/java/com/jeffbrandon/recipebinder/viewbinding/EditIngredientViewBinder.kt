@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
@@ -16,6 +17,7 @@ import com.jeffbrandon.recipebinder.enums.UnitType.Companion.unitMap
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import com.jeffbrandon.recipebinder.widgets.ConvertDialog
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -77,7 +79,9 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
             deleteButton.setOnClickListener {
                 Snackbar.make(viewRoot, R.string.delete_this_confirmation_message, Snackbar.LENGTH_LONG)
                     .setAction(android.R.string.ok) {
-                        viewModel.deleteEditIngredient()
+                        with(viewModel) {
+                            viewModelScope.launch { deleteEditIngredient() }
+                        }
                         fm.popBackStack()
                     }.show()
             }
@@ -143,7 +147,9 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
         val unit = getSelectedUnit()
         val newIngredient = Ingredient(ingredientInput.text.toString(), amount, unit)
         Timber.d(newIngredient.toString())
-        viewModel.saveIngredient(newIngredient)
+        with(viewModel) {
+            viewModelScope.launch { saveIngredient(newIngredient) }
+        }
     }
 
     private fun FragmentAddIngredientBinding.getSelectedUnit() = when (unitChips.checkedChipId) {
