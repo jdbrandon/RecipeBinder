@@ -29,6 +29,7 @@ class RecipeMenuActivityViewBinder @Inject constructor(dialog: Lazy<ImportRecipe
         viewModel.toastObservable().observe(lifecycleOwner) { message ->
             if (message != null) {
                 Snackbar.make(viewRoot, message, Snackbar.LENGTH_SHORT).show()
+                viewModel.resetToastMessage()
             }
         }
 

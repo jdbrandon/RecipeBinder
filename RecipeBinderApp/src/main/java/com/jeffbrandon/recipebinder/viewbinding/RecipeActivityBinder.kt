@@ -24,8 +24,8 @@ class RecipeActivityBinder @Inject constructor() {
     fun onBackPressed(backPressedCallback: () -> Unit) {
         if (viewModel.shouldWarnAboutUnsavedData()) {
             Snackbar.make(viewRoot, R.string.abandon_warning_text, Snackbar.LENGTH_LONG).setAction(R.string.abandon) {
-                    backPressedCallback()
-                }.show()
+                backPressedCallback()
+            }.show()
             return
         }
         backPressedCallback()

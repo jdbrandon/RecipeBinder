@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
@@ -14,8 +13,6 @@ import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import javax.inject.Inject
@@ -41,6 +38,10 @@ class RecipeMenuViewModel @Inject constructor(
 
     fun toastObservable(): LiveData<String?> = toastMessage
 
+    fun resetToastMessage() {
+        toastMessage.value = null
+    }
+
     suspend fun delete(id: Long) = withContext(Dispatchers.IO) {
         data.deleteRecipe(id)
     }
@@ -59,28 +60,17 @@ class RecipeMenuViewModel @Inject constructor(
         searchFilter.value = text?.let { "%$text%" }
     }
 
-    fun import(blobString: String) {
-        viewModelScope.launch {
-            val importedRecipe = importer.import(blobString)
-            if (importedRecipe == null) {
-                toastMessage.value = errorMessageContent
-            } else {
-                insertInternal(importedRecipe)
-                toastMessage.value = String.format(importSuccessFmt, importedRecipe.name)
-            }
-            resetMessage()
+    suspend fun import(blobString: String) {
+        val importedRecipe = importer.import(blobString)
+        if (importedRecipe == null) {
+            toastMessage.value = errorMessageContent
+        } else {
+            insertInternal(importedRecipe)
+            toastMessage.value = String.format(importSuccessFmt, importedRecipe.name)
         }
     }
 
     private suspend fun insertInternal(recipeData: RecipeData): Long = withContext(Dispatchers.IO) {
         data.insertRecipe(recipeData)
-    }
-
-    @SuppressWarnings("MagicNumber")
-    private suspend fun resetMessage() = withContext(Dispatchers.Default) {
-        delay(5000)
-        withContext(Dispatchers.Main) {
-            toastMessage.value = null
-        }
     }
 }
