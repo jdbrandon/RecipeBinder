@@ -38,8 +38,7 @@ class RecipeMenuViewBinder @Inject constructor() {
     private val scope: LifecycleCoroutineScope by lazy { lifecycle.lifecycleScope }
 
     private val binder: FragmentRecipeMenuBinding by lazy {
-        FragmentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot,
-                                                                  R.id.recipe_content_root))
+        FragmentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot, R.id.recipe_content_root))
     }
 
     fun bind(
@@ -69,17 +68,14 @@ class RecipeMenuViewBinder @Inject constructor() {
 
     private fun setupNewRecipeButton() {
         binder.addRecipeButton.setOnClickListener {
-            val newRecipeDialogContent =
-                View.inflate(viewRoot.context, R.layout.dialog_create_recipe, null)
-            val input = ViewCompat.requireViewById<EditText>(newRecipeDialogContent,
-                                                             R.id.input_new_recipe_name)
+            val newRecipeDialogContent = View.inflate(viewRoot.context, R.layout.dialog_create_recipe, null)
+            val input = ViewCompat.requireViewById<EditText>(newRecipeDialogContent, R.id.input_new_recipe_name)
             AlertDialog.Builder(viewRoot.context).setTitle(R.string.dialog_new_recipe_title)
                 .setView(newRecipeDialogContent).setPositiveButton(R.string.create) { _, _ ->
                     val name = input.text.toString()
                     Timber.i("Creating a new recipe: $name")
                     if (name.isEmpty()) {
-                        Snackbar.make(viewRoot, R.string.toast_recipe_name, Snackbar.LENGTH_SHORT)
-                            .show()
+                        Snackbar.make(viewRoot, R.string.toast_recipe_name, Snackbar.LENGTH_SHORT).show()
                     } else {
                         // add basic recipe to db
                         scope.launch {

@@ -34,39 +34,33 @@ open class RecipeViewModel @Inject constructor(
 
     fun getRecipe(): LiveData<RecipeData> = recipe
 
-    protected fun getIngredientIndex(data: Ingredient): Int? =
-        recipe.value?.ingredients?.indexOf(data)
+    protected fun getIngredientIndex(data: Ingredient): Int? = recipe.value?.ingredients?.indexOf(data)
 
-    protected fun getInstructionIndex(data: Instruction): Int? =
-        recipe.value?.instructions?.indexOf(data)
+    protected fun getInstructionIndex(data: Instruction): Int? = recipe.value?.instructions?.indexOf(data)
 
     protected suspend fun appendIngredient(data: Ingredient) = withContext(Dispatchers.IO) {
-        val newIngredientList = recipe.value?.ingredients?.toMutableList()?.apply { add(data) }
-            ?: error("failed to add ingredient")
+        val newIngredientList =
+            recipe.value?.ingredients?.toMutableList()?.apply { add(data) } ?: error("failed to add ingredient")
         updateRecipeIngredients(newIngredientList)
     }
 
     protected suspend fun appendInstruction(data: Instruction) = withContext(Dispatchers.IO) {
-        val newInstructionList = recipe.value?.instructions?.toMutableList()?.apply { add(data) }
-            ?: error("failed to add ingredient")
+        val newInstructionList =
+            recipe.value?.instructions?.toMutableList()?.apply { add(data) } ?: error("failed to add ingredient")
         updateRecipeInstructions(newInstructionList)
     }
 
-    protected suspend fun updateIngredient(index: Int, data: Ingredient) =
-        withContext(Dispatchers.IO) {
-            val newIngredientList =
-                recipe.value?.ingredients?.toMutableList()?.apply { set(index, data) }
-                    ?: error("failed to update ingredient")
-            updateRecipeIngredients(newIngredientList)
-        }
+    protected suspend fun updateIngredient(index: Int, data: Ingredient) = withContext(Dispatchers.IO) {
+        val newIngredientList = recipe.value?.ingredients?.toMutableList()?.apply { set(index, data) }
+            ?: error("failed to update ingredient")
+        updateRecipeIngredients(newIngredientList)
+    }
 
-    protected suspend fun updateInstruction(index: Int, data: Instruction) =
-        withContext(Dispatchers.IO) {
-            val newInstructionList =
-                recipe.value?.instructions?.toMutableList()?.apply { set(index, data) }
-                    ?: error("failed to update instruction")
-            updateRecipeInstructions(newInstructionList)
-        }
+    protected suspend fun updateInstruction(index: Int, data: Instruction) = withContext(Dispatchers.IO) {
+        val newInstructionList = recipe.value?.instructions?.toMutableList()?.apply { set(index, data) }
+            ?: error("failed to update instruction")
+        updateRecipeInstructions(newInstructionList)
+    }
 
     protected suspend fun updateRecipeMetadata(
         recipeName: String,
@@ -79,28 +73,24 @@ open class RecipeViewModel @Inject constructor(
     }
 
     protected suspend fun deleteIngredient(index: Int) = withContext(Dispatchers.IO) {
-        val newIngredientList =
-            recipe.value?.ingredients?.toMutableList()?.apply { removeAt(index) }
-                ?: error("failed to delete ingredient")
+        val newIngredientList = recipe.value?.ingredients?.toMutableList()?.apply { removeAt(index) }
+            ?: error("failed to delete ingredient")
         updateRecipeIngredients(newIngredientList)
     }
 
     protected suspend fun deleteInstruction(index: Int) = withContext(Dispatchers.IO) {
-        val newInstructionList =
-            recipe.value?.instructions?.toMutableList()?.apply { removeAt(index) }
-                ?: error("failed to delete ingredient")
+        val newInstructionList = recipe.value?.instructions?.toMutableList()?.apply { removeAt(index) }
+            ?: error("failed to delete ingredient")
         updateRecipeInstructions(newInstructionList)
     }
 
     private fun updateRecipeIngredients(newIngredientList: List<Ingredient>) {
-        val newRecipe = recipe.value?.copy(ingredients = newIngredientList)
-            ?: error("failed to update ingredients")
+        val newRecipe = recipe.value?.copy(ingredients = newIngredientList) ?: error("failed to update ingredients")
         db.updateRecipe(newRecipe)
     }
 
     private fun updateRecipeInstructions(newInstructionList: List<Instruction>) {
-        val newRecipe = recipe.value?.copy(instructions = newInstructionList)
-            ?: error("failed update instructions")
+        val newRecipe = recipe.value?.copy(instructions = newInstructionList) ?: error("failed update instructions")
         db.updateRecipe(newRecipe)
     }
 

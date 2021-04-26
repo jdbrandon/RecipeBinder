@@ -15,10 +15,9 @@ import javax.inject.Singleton
 class UpdateInstructionDialog @Inject constructor() {
     private lateinit var context: Context
     private lateinit var viewModel: EditRecipeViewModel
-    private fun inflateView() =
-        View.inflate(context, R.layout.dialog_update_instruction, null).also {
-            textBox = ViewCompat.requireViewById(it, R.id.update_instruction_text)
-        }
+    private fun inflateView() = View.inflate(context, R.layout.dialog_update_instruction, null).also {
+        textBox = ViewCompat.requireViewById(it, R.id.update_instruction_text)
+    }
 
     private lateinit var textBox: EditText
 
@@ -26,8 +25,8 @@ class UpdateInstructionDialog @Inject constructor() {
         val view = inflateView()
         textBox.setText(instruction?.text ?: "")
         val builder = AlertDialog.Builder(context)
-            .setTitle(if (instruction != null) R.string.update_instruction else R.string.add_instruction)
-            .setView(view).setPositiveButton(R.string.save) { _, _ ->
+            .setTitle(if (instruction != null) R.string.update_instruction else R.string.add_instruction).setView(view)
+            .setPositiveButton(R.string.save) { _, _ ->
                 viewModel.saveInstruction(Instruction(textBox.text.toString()))
                 textBox.text?.clear()
             }.setNeutralButton(android.R.string.cancel) { _, _ ->

@@ -7,8 +7,7 @@ import com.jeffbrandon.recipebinder.R
 
 class EditInstructionItemViewHolder(private val view: View, callback: (Instruction) -> Unit) :
     CallbackViewHolder<Instruction, Instruction>(view,
-                                                 ViewCompat.requireViewById(view,
-                                                                            R.id.edit_instruction_button),
+                                                 ViewCompat.requireViewById(view, R.id.edit_instruction_button),
                                                  callback) {
     override lateinit var current: Instruction
 

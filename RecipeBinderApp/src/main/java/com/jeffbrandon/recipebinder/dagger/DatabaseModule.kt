@@ -18,7 +18,6 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun providesDao(@ApplicationContext context: Context): RecipeDao =
-        Room.databaseBuilder(context.applicationContext,
-                             RecipeDatabase::class.java,
-                             "recipesBinderRecipes").build().recipeDao()
+        Room.databaseBuilder(context.applicationContext, RecipeDatabase::class.java, "recipesBinderRecipes").build()
+            .recipeDao()
 }

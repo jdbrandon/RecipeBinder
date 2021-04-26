@@ -46,16 +46,14 @@ class ConvertDialog(context: Context, startUnit: UnitType, vm: EditRecipeViewMod
             vm.convertIngredientUnits(convertibleUnitTypes[index])
         }
 
-        val adapter = ArrayAdapter(context,
-                                   android.R.layout.select_dialog_singlechoice,
-                                   convertibleUnitTypes.map { unit ->
-                                       unit.getString(context, true)
-                                   })
+        val adapter =
+            ArrayAdapter(context, android.R.layout.select_dialog_singlechoice, convertibleUnitTypes.map { unit ->
+                unit.getString(context, true)
+            })
 
         val startName = startUnit.getString(context, true)
 
-        AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.convert_unit_format, startName))
+        AlertDialog.Builder(context).setTitle(context.getString(R.string.convert_unit_format, startName))
             .setAdapter(adapter, listener).setCancelable(true).show()
     }
 }

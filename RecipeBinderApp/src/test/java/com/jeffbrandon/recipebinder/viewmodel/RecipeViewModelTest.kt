@@ -42,9 +42,7 @@ class RecipeViewModelTest {
         MockitoAnnotations.openMocks(this)
         whenever(context.getString(R.string.extra_recipe_id)).thenReturn(KEY_EXTRA_ID)
         whenever(dataSource.fetchRecipe(eq(EXTRA_VAL))).thenReturn(MutableLiveData(TestRecipeData.RECIPE_1))
-        underTest = RecipeViewModel({ dataSource },
-                                    SavedStateHandle(mapOf(KEY_EXTRA_ID to EXTRA_VAL)),
-                                    context)
+        underTest = RecipeViewModel({ dataSource }, SavedStateHandle(mapOf(KEY_EXTRA_ID to EXTRA_VAL)), context)
     }
 
     @Test

@@ -31,7 +31,9 @@ class ShareFragmentViewBinder @Inject constructor(
 ) {
 
     private lateinit var binder: FragmentShareRecipeBinding
-    private val clipManager: ClipboardManager by lazy { context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
+    private val clipManager: ClipboardManager by lazy {
+        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    }
     private val qrSize by lazy { context.resources.getDimension(R.dimen.qr_size).roundToInt() }
     private val recipeFmt by lazy { context.getString(R.string.recipe_string_format) }
     private val ingredientFmt by lazy { context.getString(R.string.ingredient_format) }
@@ -65,26 +67,20 @@ class ShareFragmentViewBinder @Inject constructor(
         with(recipe) {
             val formattedIngredients = ingredientsString(ingredients)
             val formattedInstructions = instructionsString(instructions)
-            return String.format(recipeFmt,
-                                 name,
-                                 cookTime,
-                                 formattedIngredients,
-                                 formattedInstructions)
+            return String.format(recipeFmt, name, cookTime, formattedIngredients, formattedInstructions)
         }
     }
 
-    @SuppressWarnings("StringTemplate")
     private fun instructionsString(instructions: List<Instruction>): String {
         val list = instructions.joinToString(joinFmt) { ins -> ins.text }
-        return "$instructionString$titleJoin${list}"
+        return "$instructionString$titleJoin$list"
     }
 
-    @SuppressWarnings("StringTemplate")
     private fun ingredientsString(ingredients: List<Ingredient>): String {
         val list = ingredients.joinToString(joinFmt) { ing ->
             String.format(ingredientFmt, ing.amountString(context), ing.name)
         }
-        return "$ingredientString$titleJoin${list}"
+        return "$ingredientString$titleJoin$list"
     }
 
     private fun String.asQRCode(): Bitmap {

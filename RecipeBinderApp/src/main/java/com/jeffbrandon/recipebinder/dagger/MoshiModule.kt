@@ -46,6 +46,5 @@ class MoshiModule {
 
     @Provides
     @Singleton
-    fun provideRecipeDataJsonAdapter(moshi: Moshi): JsonAdapter<RecipeData> =
-        moshi.adapter(RecipeData::class.java)
+    fun provideRecipeDataJsonAdapter(moshi: Moshi): JsonAdapter<RecipeData> = moshi.adapter(RecipeData::class.java)
 }

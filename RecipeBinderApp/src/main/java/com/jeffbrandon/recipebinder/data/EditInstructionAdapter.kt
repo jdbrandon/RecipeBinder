@@ -12,8 +12,7 @@ class EditInstructionAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): EditInstructionItemViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.edit_instruction_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.edit_instruction_list_item, parent, false)
         return EditInstructionItemViewHolder(view, callback)
     }
 }

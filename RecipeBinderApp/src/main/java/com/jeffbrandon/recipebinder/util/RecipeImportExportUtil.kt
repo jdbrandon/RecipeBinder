@@ -45,10 +45,8 @@ class RecipeImportExportUtil @Inject constructor(
             with(compressor) {
                 val json = json.toJson(clearIdRecipe)
                 val compressedSize = compressor.deflateInto(json, buffer)
-                val encodedRecipe =
-                    base64.encodeToString(buffer, 0, compressedSize, Base64.URL_SAFE)
-                uri.builder().scheme(uriScheme).path(recipeUriPath).encodedFragment(encodedRecipe)
-                    .build().toString()
+                val encodedRecipe = base64.encodeToString(buffer, 0, compressedSize, Base64.URL_SAFE)
+                uri.builder().scheme(uriScheme).path(recipeUriPath).encodedFragment(encodedRecipe).build().toString()
             }
         } catch (e: IllegalStateException) {
             Timber.w(e, "failed to encode ${recipe.name}")
@@ -76,7 +74,7 @@ class RecipeImportExportUtil @Inject constructor(
         // try to parse the fragment
         uri.encodedFragment?.let { b64 ->
             // Suppressing because we are using Dispatchers.IO
-            @Suppress("BlockingMethodInNonBlockingContext") try {
+            @Suppress("BlockingMethodInNonBlockingContext", "TooGenericExceptionCaught") try {
                 val bytes = base64.decode(b64, Base64.URL_SAFE)
                 val maybeJson = compressor.inflate(bytes)
                 return@withContext json.fromJson(maybeJson)?.copy(id = null)
@@ -97,14 +95,15 @@ class RecipeImportExportUtil @Inject constructor(
 
     private fun validate(uri: Uri): Boolean {
         Timber.i(uri.toString())
+        var failed = false
         if (uri.scheme != uriScheme) {
             Timber.w("scheme doesn't match app scheme")
-            return false
+            failed = true
         }
-        if (uri.path?.trim('/') != recipeUriPath) {
+        if (!failed && uri.path?.trim('/') != recipeUriPath) {
             Timber.w("path ${uri.path} doesn't match expected recipe path")
-            return false
+            failed = true
         }
-        return (uri.encodedFragment != null).also { if (!it) Timber.w("uri fragment was null") }
+        return !failed && (uri.encodedFragment != null).also { if (!it) Timber.w("uri fragment was null") }
     }
 }

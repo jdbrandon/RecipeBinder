@@ -14,16 +14,14 @@ import javax.inject.Singleton
 class ImportRecipeBlobDialog @Inject constructor() {
     private lateinit var viewModel: RecipeMenuViewModel
     private lateinit var textBox: TextInputEditText
-    private fun inflateView(context: Context) =
-        View.inflate(context, R.layout.dialog_import_blob, null).also {
-            textBox = ViewCompat.requireViewById(it, R.id.blob)
-            textBox.requestFocus()
-        }
+    private fun inflateView(context: Context) = View.inflate(context, R.layout.dialog_import_blob, null).also {
+        textBox = ViewCompat.requireViewById(it, R.id.blob)
+        textBox.requestFocus()
+    }
 
     fun show(context: Context, vm: RecipeMenuViewModel) {
         viewModel = vm
-        AlertDialog.Builder(context).setView(inflateView(context))
-            .setPositiveButton(R.string.menu_import) { _, _ ->
+        AlertDialog.Builder(context).setView(inflateView(context)).setPositiveButton(R.string.menu_import) { _, _ ->
                 viewModel.import(textBox.text.toString().trim())
             }.setNeutralButton(android.R.string.cancel) { _, _ ->
                 textBox.text?.clear()

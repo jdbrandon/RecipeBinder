@@ -85,8 +85,7 @@ class RecipeImportExportUtilTest {
 
         whenever(compression.inflate(any())).thenReturn(json.toJson(TestRecipeData.RECIPE_1))
 
-        underTest =
-            RecipeImportExportUtil(context, { json }, { base64 }, { uriUtil }, { compression })
+        underTest = RecipeImportExportUtil(context, { json }, { base64 }, { uriUtil }, { compression })
     }
 
     @Test

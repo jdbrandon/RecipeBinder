@@ -28,8 +28,7 @@ class EditRecipeViewBinder @Inject constructor() {
             fragmentPager.adapter = EditFragmentPagerAdapter(activity)
 
             TabLayoutMediator(navigationTabs, fragmentPager) { tab, pos ->
-                tab.text =
-                    view.context.getString(EditFragmentPagerAdapter.tabNameResourceIdList[pos])
+                tab.text = view.context.getString(EditFragmentPagerAdapter.tabNameResourceIdList[pos])
             }.attach()
 
             saveRecipeButton.setOnClickListener {
@@ -37,9 +36,8 @@ class EditRecipeViewBinder @Inject constructor() {
                 with(activity.supportFragmentManager) {
                     when (backStackEntryCount) {
                         // Handles case where we began editing from menu fragment
-                        0 -> beginTransaction().replace(R.id.fragment_container,
-                                                        ViewRecipeFragment::class.java,
-                                                        null).commit()
+                        0 -> beginTransaction().replace(R.id.fragment_container, ViewRecipeFragment::class.java, null)
+                            .commit()
                         else -> popBackStack()
                     }
                 }
