@@ -12,6 +12,7 @@ import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import com.jeffbrandon.recipebinder.testutils.MainCoroutineRule
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
 import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
+import com.jeffbrandon.recipebinder.testutils.observeForTest
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -94,13 +95,15 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun convertIngredientUnits() = runBlockingTest {
-        underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
-        underTest.convertIngredientUnits(UnitType.GRAM)
+    fun convertIngredientUnits() {
+        underTest.editIngredientLiveData.observeForTest {
+            underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
+            underTest.convertIngredientUnits(UnitType.GRAM)
 
-        val newIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
+            val newIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
 
-        assertEquals("type", UnitType.GRAM, newIngredient!!.unit)
-        assertTrue("conversion", newIngredient.amount > 453 && newIngredient.amount < 454)
+            assertEquals("type", UnitType.GRAM, newIngredient!!.unit)
+            assertTrue("conversion", newIngredient.amount > 453 && newIngredient.amount < 454)
+        }
     }
 }
