@@ -96,7 +96,6 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    @Ignore("fails in CI")
     fun convertIngredientUnits() = runBlockingTest {
         underTest.editIngredientLiveData.observeForTest {
             underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
