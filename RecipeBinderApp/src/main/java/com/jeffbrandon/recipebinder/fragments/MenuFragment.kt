@@ -9,7 +9,6 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewbinding.RecipeMenuViewBinder
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,16 +33,14 @@ class MenuFragment : Fragment(R.layout.fragment_recipe_menu), RecipeMenuViewBind
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        val position = binder.selectedPosition()
         return when (item.itemId) {
-            R.id.recipe_menu_delete -> position?.let { binder.delete(it) } ?: true
-            R.id.recipe_menu_edit -> position?.let { binder.edit(it) } ?: true
+            R.id.recipe_menu_delete -> binder.delete()
+            R.id.recipe_menu_edit -> binder.edit()
             else -> super.onContextItemSelected(item)
         }
     }
 
     override fun registerContextMenu(v: View) {
-        Timber.i("registering for context menu ${v.contentDescription}")
         registerForContextMenu(v)
     }
 

@@ -2,6 +2,7 @@ package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.liveData
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
@@ -13,10 +14,10 @@ import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
@@ -41,35 +42,15 @@ class RecipeMenuViewModelTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        whenever(dataSource.fetchAllRecipes(any())).thenReturn(recipeList)
+        whenever(dataSource.fetchAllRecipes(anyString())).thenReturn(liveData { recipeList })
         underTest = RecipeMenuViewModel(context, { dataSource }, { importer })
     }
 
     @Test
-    fun `test get`() = runBlocking {
-        // Simple test to make sure mocking is set up correctly
-        underTest.filter(null)
+    fun `test delete`(): Unit = runBlocking {
+        underTest.delete(TestRecipeData.RECIPE_1.id!!)
 
-        val result = underTest.getRecipes().getOrAwaitValue()
-        assertEquals("contents are correct", recipeList, result)
-    }
-
-    @Test
-    fun `test delete`() = runBlocking {
-        whenever(dataSource.deleteRecipe(any())).then {
-            recipeList.remove(TestRecipeData.RECIPE_1)
-            TestRecipeData.ID_1.toInt()
-        }
-
-        underTest.filter(null)
-
-        underTest.getRecipes().observeForTest {
-            underTest.delete(recipeList.indexOf(TestRecipeData.RECIPE_1))
-        }
-        val result = underTest.getRecipes().getOrAwaitValue()
-
-        verify(dataSource).deleteRecipe(eq(TestRecipeData.RECIPE_1))
-        assertThat("recipe was deleted", !result.contains(TestRecipeData.RECIPE_1))
+        verify(dataSource).deleteRecipe(eq(TestRecipeData.RECIPE_1.id!!))
     }
 
     @Test

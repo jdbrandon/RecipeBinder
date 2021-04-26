@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
@@ -28,22 +29,20 @@ class RecipeMenuViewModel @Inject constructor(
 
     private val data by lazy { dataSource.get() }
     private val importer by lazy { lazyImportUtil.get() }
-    private val recipes by lazy { MutableLiveData<List<RecipeData>>() }.also { loadRecipes() }
+    private val searchFilter = MutableLiveData<String?>(null)
+    private val recipes: LiveData<List<RecipeData>> = searchFilter.switchMap { filter ->
+        filter?.let { data.fetchAllRecipes(filter) } ?: data.fetchAllRecipes()
+    }
     private val toastMessage = MutableLiveData<String?>()
     private val errorMessageContent by lazy { context.getString(R.string.error_import_failed) }
     private val importSuccessFmt by lazy { context.getString(R.string.import_success) }
-    private var filter: String? = null
 
     fun getRecipes(): LiveData<List<RecipeData>> = recipes
 
     fun toastObservable(): LiveData<String?> = toastMessage
 
-    fun delete(idx: Int) {
-        recipes.value?.let { list ->
-            viewModelScope.launch(Dispatchers.IO) {
-                data.deleteRecipe(list[idx]).also { loadRecipes() }
-            }
-        } ?: error("null values")
+    suspend fun delete(id: Long) = withContext(Dispatchers.IO) {
+        data.deleteRecipe(id)
     }
 
     /**
@@ -57,8 +56,7 @@ class RecipeMenuViewModel @Inject constructor(
     }
 
     fun filter(text: String?) {
-        filter = text?.let { "%$text%" }
-        loadRecipes()
+        searchFilter.value = text?.let { "%$text%" }
     }
 
     fun import(blobString: String) {
@@ -74,16 +72,8 @@ class RecipeMenuViewModel @Inject constructor(
         }
     }
 
-    private fun loadRecipes() {
-        viewModelScope.launch(Dispatchers.Main) {
-            recipes.value = withContext(Dispatchers.IO) {
-                filter?.let { data.fetchAllRecipes(it) } ?: data.fetchAllRecipes()
-            }
-        }
-    }
-
     private suspend fun insertInternal(recipeData: RecipeData): Long = withContext(Dispatchers.IO) {
-        data.insertRecipe(recipeData).also { loadRecipes() }
+        data.insertRecipe(recipeData)
     }
 
     @SuppressWarnings("MagicNumber")

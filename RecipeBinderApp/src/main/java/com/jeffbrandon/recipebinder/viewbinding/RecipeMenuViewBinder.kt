@@ -8,6 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
@@ -92,18 +93,21 @@ class RecipeMenuViewBinder @Inject constructor() {
         }
     }
 
-    fun edit(position: Int): Boolean {
-        recipeList[position].id?.let { NavigationUtil.editRecipe(viewRoot.context, it) }
-            ?: error("Recipe id from db was null")
+    fun edit(): Boolean {
+        (binder.recipeRecyclerView.adapter as RecipeAdapter).recipeId?.let {
+            NavigationUtil.editRecipe(viewRoot.context, it)
+        } ?: error("Recipe id from db was null")
         return true
     }
 
-    fun delete(position: Int): Boolean {
-        viewModel.delete(position)
+    fun delete(): Boolean {
+        (binder.recipeRecyclerView.adapter as RecipeAdapter).recipeId?.let { id ->
+            with(viewModel) {
+                viewModelScope.launch { delete(id) }
+            }
+        }
         return true
     }
-
-    fun selectedPosition(): Int? = (binder.recipeRecyclerView.adapter as RecipeAdapter).position
 
     fun onStart() = binder.addRecipeButton.show()
 
