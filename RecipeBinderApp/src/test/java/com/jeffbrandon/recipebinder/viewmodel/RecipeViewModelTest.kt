@@ -46,7 +46,7 @@ class RecipeViewModelTest {
     }
 
     @Test
-    fun `test get`() = runBlockingTest {
+    fun `test get`() = coroutineRule.runBlockingTest {
         val recipe = underTest.getRecipe().getOrAwaitValue()
         assertEquals("live data is set", TestRecipeData.RECIPE_1, recipe)
         verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
