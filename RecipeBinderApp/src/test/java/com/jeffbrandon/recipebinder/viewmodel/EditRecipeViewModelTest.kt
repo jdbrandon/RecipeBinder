@@ -60,7 +60,7 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun setEditIngredient() = coroutineRule.runBlockingTest {
+    fun setEditIngredient() = runBlockingTest {
         val index = 1
 
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[index])
@@ -70,7 +70,7 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun setEditInstruction() = coroutineRule.runBlockingTest {
+    fun setEditInstruction() = runBlockingTest {
         val index = 1
 
         underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[index])
@@ -80,21 +80,21 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun saveIngredient() = coroutineRule.runBlockingTest {
+    fun saveIngredient() = runBlockingTest {
         underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
 
         verify(dataSource).updateRecipe(any())
     }
 
     @Test
-    fun saveInstruction() = coroutineRule.runBlockingTest {
+    fun saveInstruction() = runBlockingTest {
         underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
 
         verify(dataSource).updateRecipe(any())
     }
 
     @Test
-    fun convertIngredientUnits() = coroutineRule.runBlockingTest {
+    fun convertIngredientUnits() = runBlockingTest {
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
         underTest.convertIngredientUnits(UnitType.GRAM)
 
