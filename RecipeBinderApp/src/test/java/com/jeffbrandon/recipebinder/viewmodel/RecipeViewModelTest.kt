@@ -11,10 +11,10 @@ import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -41,6 +41,7 @@ class RecipeViewModelTest {
     private lateinit var underTest: RecipeViewModel
 
     private val dispatcher = TestCoroutineDispatcher()
+    private val scope = TestCoroutineScope(dispatcher)
 
     @Before
     fun setUp() {
@@ -58,10 +59,9 @@ class RecipeViewModelTest {
     }
 
     @Test
-    fun `test get`(): Unit = runBlocking {
+    fun `test get`() = scope.runBlockingTest {
         val recipe = underTest.getRecipe().getOrAwaitValue()
         assertEquals("live data is set", TestRecipeData.RECIPE_1, recipe)
         verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
-        joinAll()
     }
 }
