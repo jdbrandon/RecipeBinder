@@ -7,7 +7,7 @@ pipeline {
         stage('Checkout'){
             steps {
                 checkout scm
-                sh './gradlew clean'
+                sh './gradlew clean assemble'
             }
         }
         stage('Compile') {
