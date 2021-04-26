@@ -93,7 +93,6 @@
     <string name="list_join_format">,\n\t</string>
     <string name="title_join_format">:\n\t</string>
     <string name="copied_toast">Copied to clipboard</string>
-    <string name="paste">Paste</string>
     <string name="paste_example">&schema;://paste…</string>
     <string name="error_import_failed">Unable to import provided recipe paste</string>
     <string name="import_success">Recipe \"<xliff:g id="recipe_name">%s</xliff:g>\" imported successfully</string>

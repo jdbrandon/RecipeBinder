@@ -28,9 +28,9 @@
         </activity>
         <activity
             android:name=".activities.RecipeActivity"
+            android:exported="true"
             android:label="Recipes"
             android:theme="@style/AppTheme.NoActionBar"
-            android:exported="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
