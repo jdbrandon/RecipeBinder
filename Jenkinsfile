@@ -22,7 +22,8 @@ pipeline {
                 sh 'rm -rf ./RecipeBinderApp/build/test-results/*'
                 sh 'rm -rf ./RecipeBinderApp/build/reports/*'
                 // Compile and run the unit tests for the app and its dependencies
-                sh './gradlew test --continue'
+                sh './gradlew testStandardDebugUnitTest'
+                sh './gradlew testStandardReleaseUnitTest'
 
                 // Analyse the test results and update the build result as appropriate
                 junit '**/TEST-*.xml'
