@@ -6,10 +6,15 @@ import android.graphics.Point
 import android.view.DragEvent
 import android.view.View
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.databinding.EditIngredientListItemBinding
+import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class EditIngredientItemViewHolder(
+    private val viewModel: EditRecipeViewModel,
     private val view: View,
     callback: (Ingredient) -> Unit,
 ) : CallbackViewHolder<Ingredient, Ingredient>(view,
@@ -26,13 +31,18 @@ class EditIngredientItemViewHolder(
     }
 
     private val dragListener = View.OnDragListener { _, event ->
+        Timber.i("Drag event ${event.action}")
+        val dragIngredient = event.localState as Ingredient
         when (event.action) {
-            DragEvent.ACTION_DRAG_ENTERED,
-            DragEvent.ACTION_DRAG_LOCATION,
-            -> { // translate this view down
+            DragEvent.ACTION_DROP -> with(viewModel) {
+                viewModelScope.launch {
+                    // remove item and re-insert before
+                    setEditIngredient(dragIngredient)
+                    moveEditIngredientBefore(current)
+                }
             }
-            DragEvent.ACTION_DROP -> Unit // insert remove item and re-insert before
-            DragEvent.ACTION_DRAG_EXITED -> Unit // translate view back up
+            DragEvent.ACTION_DRAG_STARTED -> if (dragIngredient == current) view.visibility = View.GONE
+            DragEvent.ACTION_DRAG_ENDED -> if (dragIngredient == current) view.visibility = View.VISIBLE
         }
         true
     }
@@ -44,6 +54,9 @@ class EditIngredientItemViewHolder(
         dragTarget.setOnLongClickListener {
             val clipData = ClipData.newPlainText(view.context.getString(R.string.ingredient), "")
             ViewCompat.startDragAndDrop(view, clipData, dragShadowBuilder, current, 0)
+
+            // TODO: figure out what happens when list fills screen, maybe add margin to the recycler to account for that?
+
             true
         }
         view.setOnDragListener(dragListener)

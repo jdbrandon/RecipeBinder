@@ -91,6 +91,12 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
+    suspend fun moveEditIngredientBefore(target: Ingredient) {
+        getIngredientIndex(target)?.let { idx ->
+            editIngredient?.let { moveTo(idx, it.data) }
+        } ?: error("Failed to move ingredient")
+    }
+
     suspend fun deleteEditIngredient() {
         editIngredient?.let {
             deleteIngredient(it.index)

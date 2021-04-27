@@ -21,7 +21,7 @@ class EditRecipeIngredientsBinder @Inject constructor() {
         val binding = FragmentEditRecipeItemsBinding.bind(viewRoot)
         vm.getRecipe().observe(lifecycle) {
             with(binding) {
-                items.adapter = EditIngredientAdapter(it.ingredients) {
+                items.adapter = EditIngredientAdapter(vm, it.ingredients) {
                     vm.setEditIngredient(it)
                     openEditIngredientFragment(fm)
                 }
