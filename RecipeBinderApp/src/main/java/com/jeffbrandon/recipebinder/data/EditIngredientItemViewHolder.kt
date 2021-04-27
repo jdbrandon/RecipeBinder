@@ -1,7 +1,9 @@
 package com.jeffbrandon.recipebinder.data
 
+import android.animation.AnimatorInflater
 import android.content.ClipData
 import android.graphics.Point
+import android.view.DragEvent
 import android.view.View
 import androidx.core.view.ViewCompat
 import com.jeffbrandon.recipebinder.R
@@ -23,6 +25,18 @@ class EditIngredientItemViewHolder(
         }
     }
 
+    private val dragListener = View.OnDragListener { _, event ->
+        when (event.action) {
+            DragEvent.ACTION_DRAG_ENTERED,
+            DragEvent.ACTION_DRAG_LOCATION,
+            -> { // translate this view down
+            }
+            DragEvent.ACTION_DROP -> Unit // insert remove item and re-insert before
+            DragEvent.ACTION_DRAG_EXITED -> Unit // translate view back up
+        }
+        true
+    }
+
     override fun bind(item: Ingredient) = with(binder) {
         current = item
         ingredient.text =
@@ -32,5 +46,7 @@ class EditIngredientItemViewHolder(
             ViewCompat.startDragAndDrop(view, clipData, dragShadowBuilder, current, 0)
             true
         }
+        view.setOnDragListener(dragListener)
+        view.stateListAnimator = AnimatorInflater.loadStateListAnimator(view.context, R.animator.drag_over_animation)
     }
 }

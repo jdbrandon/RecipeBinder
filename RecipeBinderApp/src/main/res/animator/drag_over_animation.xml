@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_drag_hovered="true">
+        <set>
+            <objectAnimator
+                android:duration="@integer/material_motion_duration_short_2"
+                android:propertyName="translationY"
+                android:valueTo="@dimen/drag_animation_height"
+                android:valueType="floatType"
+                />
+        </set>
+    </item>
+    <item android:state_drag_hovered="false">
+        <set>
+            <objectAnimator
+                android:duration="@integer/material_motion_duration_medium_1"
+                android:propertyName="translationY"
+                android:valueTo="0dp"
+                android:valueType="floatType"
+                />
+        </set>
+    </item>
+</selector>

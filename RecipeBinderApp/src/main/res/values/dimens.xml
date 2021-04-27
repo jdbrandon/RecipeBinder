@@ -19,4 +19,5 @@
     <dimen name="save_check_size">44dp</dimen>
     <dimen name="qr_size">300dp</dimen>
     <dimen name="drag_target_width">40dp</dimen>
+    <dimen name="drag_animation_height">30dp</dimen>
 </resources>
