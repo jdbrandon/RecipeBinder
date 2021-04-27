@@ -4,6 +4,7 @@
     <dimen name="margin_large">16dp</dimen>
     <dimen name="margin_xlarge">20dp</dimen>
     <dimen name="margin_xxlarge">24dp</dimen>
+    <dimen name="margin_xxxlarge">64dp</dimen>
 
     <dimen name="item_text_size">32sp</dimen>
     <dimen name="title_text_size">48sp</dimen>
@@ -16,4 +17,5 @@
     <dimen name="ingredient_list_text_size">@dimen/item_text_size</dimen>
     <dimen name="instruction_list_text_size">26sp</dimen>
     <dimen name="save_check_size">44dp</dimen>
+    <dimen name="qr_size">300dp</dimen>
 </resources>

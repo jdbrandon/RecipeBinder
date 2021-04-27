@@ -5,8 +5,8 @@ apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
-    buildToolsVersion = '30.0.3'
-    compileSdkVersion 30
+    buildToolsVersion = '31-rc3'
+    compileSdkVersion "android-S"
     defaultConfig {
         applicationId "com.jeffbrandon.recipebinder"
         minSdkVersion 21
@@ -22,6 +22,16 @@ android {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
+        }
+    }
+    flavorDimensions "version"
+    productFlavors {
+        alpha {
+            dimension "version"
+            applicationIdSuffix ".alpha"
+        }
+        standard {
+            dimension "version"
         }
     }
     lintOptions {
@@ -49,6 +59,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
     implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "com.jakewharton.timber:timber:4.7.1"
+    implementation "com.google.zxing:core:3.4.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"

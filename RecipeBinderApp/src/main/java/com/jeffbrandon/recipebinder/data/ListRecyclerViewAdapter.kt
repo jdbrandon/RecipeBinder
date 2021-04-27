@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
  * @param E specifies the type of data that shall be bound
  * @param data the backing list for the Recycler. Elements of type [E]
  */
-abstract class ListRecyclerViewAdapter<T : BindableViewHolder<E>, E>(val data: List<E>) :
-    RecyclerView.Adapter<T>() {
+abstract class ListRecyclerViewAdapter<T : BindableViewHolder<E>, E>(val data: List<E>) : RecyclerView.Adapter<T>() {
     override fun onBindViewHolder(holder: T, position: Int) = holder.bind(data[position])
 
     override fun getItemCount(): Int = data.size

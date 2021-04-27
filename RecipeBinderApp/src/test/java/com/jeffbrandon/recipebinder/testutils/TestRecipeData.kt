@@ -63,13 +63,13 @@ class TestRecipeData {
         val INSTRUCTION_2_2 = Instruction("we're")
         val INSTRUCTION_2_3 = Instruction("talking")
         val INSTRUCTION_LIST_2 = listOf(INSTRUCTION_2_1, INSTRUCTION_2_2, INSTRUCTION_2_3)
-        val RECIPE_1 = RecipeData(id = ID_1,
+        val RECIPE_1 = RecipeData(recipeId = ID_1,
                                   name = NAME_1,
                                   cookTime = COOK_TIME_1,
                                   tags = TAGS_LIST_1,
                                   ingredients = INGREDIENT_LIST_1,
                                   instructions = INSTRUCTION_LIST_1)
-        val RECIPE_2 = RecipeData(id = ID_2,
+        val RECIPE_2 = RecipeData(recipeId = ID_2,
                                   name = NAME_2,
                                   cookTime = COOK_TIME_2,
                                   tags = TAGS_LIST_2,

@@ -8,6 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
@@ -37,8 +38,7 @@ class RecipeMenuViewBinder @Inject constructor() {
     private val scope: LifecycleCoroutineScope by lazy { lifecycle.lifecycleScope }
 
     private val binder: FragmentRecipeMenuBinding by lazy {
-        FragmentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot,
-                                                                  R.id.recipe_content_root))
+        FragmentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot, R.id.recipe_content_root))
     }
 
     fun bind(
@@ -68,17 +68,14 @@ class RecipeMenuViewBinder @Inject constructor() {
 
     private fun setupNewRecipeButton() {
         binder.addRecipeButton.setOnClickListener {
-            val newRecipeDialogContent =
-                View.inflate(viewRoot.context, R.layout.dialog_create_recipe, null)
-            val input = ViewCompat.requireViewById<EditText>(newRecipeDialogContent,
-                                                             R.id.input_new_recipe_name)
+            val newRecipeDialogContent = View.inflate(viewRoot.context, R.layout.dialog_create_recipe, null)
+            val input = ViewCompat.requireViewById<EditText>(newRecipeDialogContent, R.id.input_new_recipe_name)
             AlertDialog.Builder(viewRoot.context).setTitle(R.string.dialog_new_recipe_title)
                 .setView(newRecipeDialogContent).setPositiveButton(R.string.create) { _, _ ->
                     val name = input.text.toString()
                     Timber.i("Creating a new recipe: $name")
                     if (name.isEmpty()) {
-                        Snackbar.make(viewRoot, R.string.toast_recipe_name, Snackbar.LENGTH_SHORT)
-                            .show()
+                        Snackbar.make(viewRoot, R.string.toast_recipe_name, Snackbar.LENGTH_SHORT).show()
                     } else {
                         // add basic recipe to db
                         scope.launch {
@@ -92,18 +89,21 @@ class RecipeMenuViewBinder @Inject constructor() {
         }
     }
 
-    fun edit(position: Int): Boolean {
-        recipeList[position].id?.let { NavigationUtil.editRecipe(viewRoot.context, it) }
-            ?: error("Recipe id from db was null")
+    fun edit(): Boolean {
+        (binder.recipeRecyclerView.adapter as RecipeAdapter).recipeId?.let {
+            NavigationUtil.editRecipe(viewRoot.context, it)
+        } ?: error("Recipe id from db was null")
         return true
     }
 
-    fun delete(position: Int): Boolean {
-        viewModel.delete(position)
+    fun delete(): Boolean {
+        (binder.recipeRecyclerView.adapter as RecipeAdapter).recipeId?.let { id ->
+            with(viewModel) {
+                viewModelScope.launch { delete(id) }
+            }
+        }
         return true
     }
-
-    fun selectedPosition(): Int? = (binder.recipeRecyclerView.adapter as RecipeAdapter).position
 
     fun onStart() = binder.addRecipeButton.show()
 

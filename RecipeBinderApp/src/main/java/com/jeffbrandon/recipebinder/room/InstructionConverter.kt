@@ -21,8 +21,7 @@ class InstructionConverter private constructor() {
         fun toListInstruction(json: String): List<Instruction> {
             json.run {
                 if (isEmpty()) return listOf()
-                return MoshiModule.instructionConverter.fromJson(this)
-                    ?: error("failed to parse instructions")
+                return MoshiModule.instructionConverter.fromJson(this) ?: error("failed to parse instructions")
             }
         }
     }

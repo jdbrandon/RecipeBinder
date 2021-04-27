@@ -10,15 +10,14 @@ class RecipeAdapter(
     private val callback: (Long) -> Unit,
 ) : ListRecyclerViewAdapter<RecipeViewHolder, RecipeData>(recipeList) {
 
-    private var currentPosition: Int? = null
-    val position: Int? get() = currentPosition
+    private var currentId: Long? = null
+    val recipeId: Long? get() = currentId
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.recipe_menu_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recipe_menu_item, parent, false)
         return RecipeViewHolder(view, callback).also { viewHolder ->
             view.setOnLongClickListener {
-                currentPosition = viewHolder.bindingAdapterPosition
+                currentId = viewHolder.current
                 false
             }
         }

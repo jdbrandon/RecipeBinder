@@ -6,8 +6,7 @@ import com.jeffbrandon.recipebinder.R
 
 class EditFragmentPagerAdapter(activity: FragmentActivity) : FragmentPagerAdapter(activity) {
     companion object {
-        val tabNameResourceIdList =
-            listOf(R.string.metadata, R.string.ingredients, R.string.instructions)
+        val tabNameResourceIdList = listOf(R.string.metadata, R.string.ingredients, R.string.instructions)
     }
 
     override val fragments: List<Lazy<Fragment>> = listOf(lazy { EditRecipeMetadataFragment() },

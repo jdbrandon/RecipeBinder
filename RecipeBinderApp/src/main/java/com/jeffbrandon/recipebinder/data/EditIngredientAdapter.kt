@@ -13,8 +13,7 @@ class EditIngredientAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): EditIngredientItemViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.edit_ingredient_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.edit_ingredient_list_item, parent, false)
         return EditIngredientItemViewHolder(view, callback)
     }
 }

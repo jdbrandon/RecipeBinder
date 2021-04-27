@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.enums.RecipeTag
@@ -13,7 +12,6 @@ import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -49,13 +47,11 @@ class EditRecipeViewModel @Inject constructor(
         editInstructionData.value = data
     }
 
-    fun saveMetadata(recipeName: String, cookTime: Int, tags: MutableList<RecipeTag>) {
-        viewModelScope.launch {
-            updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), cookTime, tags)
-        }
+    suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: MutableList<RecipeTag>) {
+        updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), cookTime, tags)
     }
 
-    fun saveIngredient(data: Ingredient) {
+    suspend fun saveIngredient(data: Ingredient) {
         Timber.i("Saving ingredient")
         val sanitized = data.copy(name = data.name.trim())
         val oldValue = editIngredient
@@ -64,16 +60,14 @@ class EditRecipeViewModel @Inject constructor(
         if (sanitized.name.isEmpty()) {
             return
         }
-        viewModelScope.launch {
-            oldValue?.let {
-                if (data != it.data) {
-                    updateIngredient(it.index, sanitized)
-                }
-            } ?: appendIngredient(sanitized)
-        }
+        oldValue?.apply {
+            if (data != this.data) {
+                updateIngredient(index, sanitized)
+            }
+        } ?: appendIngredient(sanitized)
     }
 
-    fun saveInstruction(data: Instruction) {
+    suspend fun saveInstruction(data: Instruction) {
         Timber.i("Saving Instruction")
         val sanitized = data.copy(text = data.text.trim())
         val oldValue = editInstruction
@@ -82,13 +76,11 @@ class EditRecipeViewModel @Inject constructor(
         if (sanitized.text.isEmpty()) {
             return
         }
-        viewModelScope.launch {
-            oldValue?.let {
-                if (data != it.data) {
-                    updateInstruction(it.index, sanitized)
-                }
-            } ?: appendInstruction(sanitized)
-        }
+        oldValue?.apply {
+            if (data != this.data) {
+                updateInstruction(index, sanitized)
+            }
+        } ?: appendInstruction(sanitized)
     }
 
     fun convertIngredientUnits(unitType: UnitType) {
@@ -99,19 +91,15 @@ class EditRecipeViewModel @Inject constructor(
         }
     }
 
-    fun deleteEditIngredient() {
-        viewModelScope.launch {
-            editIngredient?.let {
-                deleteIngredient(it.index)
-            }
+    suspend fun deleteEditIngredient() {
+        editIngredient?.let {
+            deleteIngredient(it.index)
         }
     }
 
-    fun deleteEditInstruction() {
-        viewModelScope.launch {
-            editInstruction?.let {
-                deleteInstruction(it.index)
-            }
+    suspend fun deleteEditInstruction() {
+        editInstruction?.let {
+            deleteInstruction(it.index)
         }
     }
 

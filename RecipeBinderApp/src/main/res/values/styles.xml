@@ -1,9 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
         <item name="android:windowSoftInputMode">adjustPan</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
@@ -25,6 +23,11 @@
         </item>
     </style>
 
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="CheckableChip" parent="@style/Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
         <item name="android:textColor">@color/text_color_chip_state_list</item>
@@ -44,10 +47,6 @@
         <item name="android:layout_marginEnd">@dimen/margin_small</item>
     </style>
 
-    <style name="RoundButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
-        <item name="borderWidth">2dp</item>
-    </style>
-
     <style name="checkboxStyle" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
         <item name="android:minWidth">1dp</item>
         <item name="android:minHeight">1dp</item>
@@ -55,6 +54,12 @@
 
     <style name="TabLayoutStyle" parent="Widget.MaterialComponents.TabLayout.PrimarySurface">
         <item name="android:background">@color/colorSecondary</item>
+    </style>
+
+    <style name="FabStyle.Primary" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="borderWidth">2dp</item>
+        <item name="backgroundTint">@color/colorOnSecondary</item>
+        <item name="tint">@color/colorSecondary</item>
     </style>
 
 </resources>

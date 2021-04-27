@@ -21,8 +21,7 @@ class IngredientListConverter private constructor() {
         fun toListIngredient(json: String): List<Ingredient> {
             json.run {
                 if (isEmpty()) return listOf()
-                return MoshiModule.ingredientConverter.fromJson(this)
-                    ?: error("failed to parse ingredients")
+                return MoshiModule.ingredientConverter.fromJson(this) ?: error("failed to parse ingredients")
             }
         }
     }

@@ -2,10 +2,12 @@ package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeMetadataBinding
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.enums.RecipeTag.Companion.recipeMap
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -38,6 +40,8 @@ class EditRecipeMetadataViewBinder @Inject constructor() {
             if (entry.value.isChecked) tags.add(entry.key)
         }
         Timber.i("saving $recipeName, $cookTime, $tags")
-        viewModel.saveMetadata(recipeName, cookTime, tags)
+        with(viewModel) {
+            viewModelScope.launch { saveMetadata(recipeName, cookTime, tags) }
+        }
     }
 }

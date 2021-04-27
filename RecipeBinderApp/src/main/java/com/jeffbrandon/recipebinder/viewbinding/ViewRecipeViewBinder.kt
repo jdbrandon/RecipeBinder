@@ -33,8 +33,7 @@ class ViewRecipeViewBinder @Inject constructor() {
             listFragmentContainer.adapter = ViewFragmentPagerAdapter(activity)
             editButton.setOnClickListener {
                 activity.supportFragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, EditRecipeFragment::class.java, null)
-                    .addToBackStack(null).commit()
+                    .add(R.id.fragment_container, EditRecipeFragment::class.java, null).addToBackStack(null).commit()
             }
         }
     }

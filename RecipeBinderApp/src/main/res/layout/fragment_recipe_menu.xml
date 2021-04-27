@@ -64,16 +64,16 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_recipe_button"
-        style="@style/RoundButton"
+        style="@style/FabStyle.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:contentDescription="@string/add_recipe"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add_white_24dp"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_add_white_24dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

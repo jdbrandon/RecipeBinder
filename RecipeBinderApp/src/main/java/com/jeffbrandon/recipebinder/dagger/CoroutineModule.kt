@@ -21,9 +21,8 @@ class CoroutineModule {
     fun providesCoroutineContext(job: Job): CoroutineContext = job + Dispatchers.Main
 
     @Provides
-    fun providesCoroutineScope(job: Job, context: CoroutineContext): CoroutineScope =
-        object : CoroutineScope {
-            override val coroutineContext: CoroutineContext
-                get() = job + context
-        }
+    fun providesCoroutineScope(job: Job, context: CoroutineContext): CoroutineScope = object : CoroutineScope {
+        override val coroutineContext: CoroutineContext
+            get() = job + context
+    }
 }
