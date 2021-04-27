@@ -62,4 +62,10 @@
         <item name="tint">@color/colorSecondary</item>
     </style>
 
+    <style name="DragTarget" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="android:layout_width">@dimen/drag_target_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="icon">@drawable/drag_indicator_24</item>
+    </style>
+
 </resources>

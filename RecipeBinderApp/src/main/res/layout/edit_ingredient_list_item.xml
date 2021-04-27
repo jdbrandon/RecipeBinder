@@ -18,9 +18,15 @@
         android:id="@+id/edit_ingredient_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/drag_target"
         android:text="@string/edit"
+        />
+
+    <Button
+        android:id="@+id/drag_target"
+        style="@style/DragTarget"
+        android:layout_alignParentEnd="true"
         />
 
 </RelativeLayout>
