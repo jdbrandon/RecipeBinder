@@ -27,6 +27,7 @@
         android:id="@+id/drag_target"
         style="@style/DragTarget"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         />
 
 </RelativeLayout>

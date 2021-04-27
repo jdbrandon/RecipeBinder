@@ -6,7 +6,7 @@ apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
     buildToolsVersion = '31-rc3'
-    compileSdkVersion "android-S"
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.jeffbrandon.recipebinder"
         minSdkVersion 21
