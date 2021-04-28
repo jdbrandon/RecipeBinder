@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.map
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.enums.RecipeTag
@@ -24,27 +25,22 @@ class EditRecipeViewModel @Inject constructor(
     @ApplicationContext context: Context,
 ) : RecipeViewModel(dataSource, state, context) {
 
-    private var editIngredient: Edit<Ingredient>? = null
-    private var editInstruction: Edit<Instruction>? = null
+    private var editIngredient: MutableLiveData<Edit<Ingredient>> = MutableLiveData()
+    private var editInstruction: MutableLiveData<Edit<Instruction>> = MutableLiveData()
 
-    private val editIngredientData = MutableLiveData<Ingredient?>()
-    private val editInstructionData = MutableLiveData<Instruction?>()
-
-    val editIngredientLiveData: LiveData<Ingredient?> = editIngredientData
-    val editInstructionLiveData: LiveData<Instruction?> = editInstructionData
+    val editIngredientLiveData: LiveData<Ingredient> = editIngredient.map { it.data }
+    val editInstructionLiveData: LiveData<Instruction> = editInstruction.map { it.data }
     private var shouldWarn = false
     private var editing = false
 
     fun setEditIngredient(data: Ingredient) {
         Timber.i("Editing $data")
-        editIngredient = Edit(getIngredientIndex(data) ?: error("Invalid index"), data)
-        editIngredientData.value = data
+        editIngredient.value = Edit(getIngredientIndex(data) ?: error("Invalid index"), data)
     }
 
     fun setEditInstruction(data: Instruction) {
         Timber.i("Editing $data")
-        editInstruction = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
-        editInstructionData.value = data
+        editInstruction.value = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
     }
 
     suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: MutableList<RecipeTag>) {
@@ -54,9 +50,8 @@ class EditRecipeViewModel @Inject constructor(
     suspend fun saveIngredient(data: Ingredient) {
         Timber.i("Saving ingredient")
         val sanitized = data.copy(name = data.name.trim())
-        val oldValue = editIngredient
-        editIngredient = null
-        editIngredientData.value = null
+        val oldValue = editIngredient.value
+        editIngredient.value = null
         if (sanitized.name.isEmpty()) {
             return
         }
@@ -70,9 +65,8 @@ class EditRecipeViewModel @Inject constructor(
     suspend fun saveInstruction(data: Instruction) {
         Timber.i("Saving Instruction")
         val sanitized = data.copy(text = data.text.trim())
-        val oldValue = editInstruction
-        editInstruction = null
-        editInstructionData.value = null
+        val oldValue = editInstruction.value
+        editInstruction.value = null
         if (sanitized.text.isEmpty()) {
             return
         }
@@ -84,30 +78,38 @@ class EditRecipeViewModel @Inject constructor(
     }
 
     fun convertIngredientUnits(unitType: UnitType) {
-        editIngredient?.let {
+        editIngredient.value?.let {
             val newIngredient = it.copy(data = it.data.convertTo(unitType))
-            editIngredient = newIngredient
-            editIngredientData.value = newIngredient.data
+            editIngredient.value = newIngredient
         }
     }
 
     suspend fun moveEditIngredientBefore(target: Ingredient) {
         getIngredientIndex(target)?.let { idx ->
-            editIngredient?.let { moveTo(idx, it.data) }
-        } ?: error("Failed to move ingredient")
-        editIngredient = null
+            editIngredient.value?.let { moveTo(idx, it.data) }
+        } ?: Timber.w("Failed to move ingredient")
+        editIngredient.value = null
+    }
+
+    suspend fun moveEditInstructionBefore(target: Instruction) {
+        getInstructionIndex(target)?.let { idx ->
+            editInstruction.value?.let { moveTo(idx, it.data) }
+        } ?: Timber.w("Failed to move instruction")
+        editInstruction.value = null
     }
 
     suspend fun deleteEditIngredient() {
-        editIngredient?.let {
+        editIngredient.value?.let {
             deleteIngredient(it.index)
         }
+        editIngredient.value = null
     }
 
     suspend fun deleteEditInstruction() {
-        editInstruction?.let {
+        editInstruction.value?.let {
             deleteInstruction(it.index)
         }
+        editIngredient.value = null
     }
 
     fun shouldWarnAboutUnsavedData(): Boolean {

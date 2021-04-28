@@ -92,6 +92,14 @@ open class RecipeViewModel @Inject constructor(
         updateRecipeIngredients(newIngredients)
     }
 
+    protected suspend fun moveTo(i: Int, data: Instruction) = withContext(Dispatchers.Default) {
+        val newInstructions = recipe.value?.instructions?.toMutableList()?.apply {
+            remove(data)
+            add(i, data)
+        } ?: error("Failed to move instruction")
+        updateRecipeInstructions(newInstructions)
+    }
+
     private suspend fun updateRecipeIngredients(newIngredientList: List<Ingredient>) = withContext(Dispatchers.IO) {
         val newRecipe = recipe.value?.copy(ingredients = newIngredientList) ?: error("failed to update ingredients")
         db.updateRecipe(newRecipe)
