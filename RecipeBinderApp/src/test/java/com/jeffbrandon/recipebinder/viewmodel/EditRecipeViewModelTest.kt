@@ -175,7 +175,31 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun `test should warn about unsaved`() = runBlocking {
+    fun `test delete ingredient`(): Unit = runBlocking {
+        underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_2)
+
+        scope.launch {
+            underTest.deleteEditIngredient()
+
+            val target = TestRecipeData.RECIPE_1.copy(ingredients = TestRecipeData.INGREDIENT_LIST_1.drop(1))
+            verify(dataSource).updateRecipe(eq(target))
+        }
+    }
+
+    @Test
+    fun `test delete instruction`(): Unit = runBlocking {
+        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
+
+        scope.launch {
+            underTest.deleteEditInstruction()
+
+            val target = TestRecipeData.RECIPE_1.copy(instructions = TestRecipeData.INSTRUCTION_LIST_1.drop(2))
+            verify(dataSource).updateRecipe(eq(target))
+        }
+    }
+
+    @Test
+    fun `test should warn about unsaved, begin editing, stop editing `() = runBlocking {
         underTest.beginEditing()
         assertTrue(underTest.shouldWarnAboutUnsavedData())
         assertFalse(underTest.shouldWarnAboutUnsavedData())
