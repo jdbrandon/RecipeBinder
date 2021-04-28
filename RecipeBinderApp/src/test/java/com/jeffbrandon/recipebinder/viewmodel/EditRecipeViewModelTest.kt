@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeDataSource
@@ -121,9 +122,15 @@ class EditRecipeViewModelTest {
 
     @Test
     fun `test save metadata`(): Unit = runBlocking {
+        val name = "newName"
+        val time = 5
+        val tags = listOf(RecipeTag.DESSERT, RecipeTag.SIDE, RecipeTag.EASY)
         scope.launch {
-            underTest.saveMetadata("dummy", 0, listOf())
-            verify(dataSource).updateRecipe(any())
+
+            underTest.saveMetadata(name, time, tags)
+
+            val expected = TestRecipeData.RECIPE_1.copy(name = name, cookTime = time, tags = tags)
+            verify(dataSource).updateRecipe(eq(expected))
         }.join()
     }
 }
