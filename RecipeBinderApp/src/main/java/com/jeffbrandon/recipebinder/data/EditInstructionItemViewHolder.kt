@@ -14,8 +14,11 @@ import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class EditInstructionItemViewHolder(private val view: View, private val viewModel: EditRecipeViewModel, callback: (Instruction) -> Unit) :
-    CallbackViewHolder<Instruction, Instruction>(view,
+class EditInstructionItemViewHolder(
+    private val viewModel: EditRecipeViewModel,
+    private val view: View,
+    callback: (Instruction) -> Unit,
+) : CallbackViewHolder<Instruction, Instruction>(view,
                                                  ViewCompat.requireViewById(view, R.id.edit_instruction_button),
                                                  callback) {
     override lateinit var current: Instruction

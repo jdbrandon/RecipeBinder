@@ -6,8 +6,8 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 
 class EditInstructionAdapter(
-    instructions: List<Instruction>,
     private val viewModel: EditRecipeViewModel,
+    instructions: List<Instruction>,
     private val callback: (Instruction) -> Unit,
 ) : ListRecyclerViewAdapter<EditInstructionItemViewHolder, Instruction>(instructions) {
     override fun onCreateViewHolder(
@@ -15,6 +15,6 @@ class EditInstructionAdapter(
         viewType: Int,
     ): EditInstructionItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.edit_instruction_list_item, parent, false)
-        return EditInstructionItemViewHolder(view, viewModel, callback)
+        return EditInstructionItemViewHolder(viewModel, view, callback)
     }
 }

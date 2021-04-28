@@ -18,7 +18,7 @@ class EditRecipeInstructionsBinder @Inject constructor(private val dialog: Updat
         val binding = FragmentEditRecipeItemsBinding.bind(viewRoot)
         vm.getInstructions().observe(lifecycle) { instructions ->
             with(binding) {
-                items.adapter = EditInstructionAdapter(instructions, vm) {
+                items.adapter = EditInstructionAdapter(vm, instructions) {
                     vm.setEditInstruction(it)
                     dialog.show(viewRoot.context, vm, it)
                 }
