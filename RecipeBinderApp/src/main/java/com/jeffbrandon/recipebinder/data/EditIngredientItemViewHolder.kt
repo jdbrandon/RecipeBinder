@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.databinding.EditIngredientListItemBinding
+import com.jeffbrandon.recipebinder.util.DragShadowHelper
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,13 +23,7 @@ class EditIngredientItemViewHolder(
                                                callback) {
     override lateinit var current: Ingredient
     private val binder = EditIngredientListItemBinding.bind(view)
-    private val dragShadowBuilder = object : View.DragShadowBuilder(view) {
-        override fun onProvideShadowMetrics(outShadowSize: Point, outShadowTouchPoint: Point) {
-            outShadowSize.set(view.width, view.height)
-            outShadowTouchPoint.set(view.width - (view.resources.getDimension(R.dimen.drag_target_width).toInt() / 2),
-                                    view.height / 2)
-        }
-    }
+    private val dragShadowBuilder = DragShadowHelper(view)
 
     private val dragListener = View.OnDragListener { _, event ->
         Timber.i("Drag event ${event.action}")
@@ -36,7 +31,6 @@ class EditIngredientItemViewHolder(
         when (event.action) {
             DragEvent.ACTION_DROP -> with(viewModel) {
                 viewModelScope.launch {
-                    // remove item and re-insert before
                     setEditIngredient(dragIngredient)
                     moveEditIngredientBefore(current)
                 }
