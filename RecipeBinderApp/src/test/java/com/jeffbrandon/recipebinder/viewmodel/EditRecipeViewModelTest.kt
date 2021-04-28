@@ -180,9 +180,8 @@ class EditRecipeViewModelTest {
 
     @Test
     fun `test delete ingredient`(): Unit = runBlocking {
-        underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_2)
-
         scope.launch {
+            underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_2)
             underTest.deleteEditIngredient()
 
             val target = TestRecipeData.RECIPE_1.copy(ingredients = TestRecipeData.INGREDIENT_LIST_1.drop(1))
@@ -192,9 +191,8 @@ class EditRecipeViewModelTest {
 
     @Test
     fun `test delete instruction`(): Unit = runBlocking {
-        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
-
         scope.launch {
+            underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
             underTest.deleteEditInstruction()
 
             val target = TestRecipeData.RECIPE_1.copy(instructions = TestRecipeData.INSTRUCTION_LIST_1.drop(2))
