@@ -5,11 +5,10 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.FractionalMeasurement
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.squareup.moshi.JsonClass
-import java.io.Serializable
 
 @SuppressWarnings("TooManyFunctions")
 @JsonClass(generateAdapter = true)
-data class Ingredient(val name: String, val amount: Float, val unit: UnitType) : Serializable {
+data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
 
     fun amountString(context: Context, useLongUnits: Boolean = false): CharSequence {
         val num = StringBuilder()
