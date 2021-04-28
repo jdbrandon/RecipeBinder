@@ -138,9 +138,9 @@ class EditRecipeViewModelTest {
 
     @Test
     fun `test ingredient moveTo`(): Unit = runBlocking {
-        underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
-
         scope.launch {
+            underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
+
             underTest.moveEditIngredientBefore(TestRecipeData.INGREDIENT_1_1)
 
             val ingredients = underTest.getIngredients().getOrAwaitValue()
@@ -157,9 +157,9 @@ class EditRecipeViewModelTest {
 
     @Test
     fun `test instruction moveTo`(): Unit = runBlocking {
-        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
-
         scope.launch {
+            underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
+
             underTest.moveEditInstructionBefore(TestRecipeData.INSTRUCTION_1_2)
 
             val instructions = underTest.getInstructions().getOrAwaitValue()
