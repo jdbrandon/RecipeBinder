@@ -24,6 +24,14 @@ class EditRecipeViewBinder @Inject constructor() {
     private lateinit var binder: FragmentEditRecipeBinding
     private var selectedPage: Int? = null
 
+    private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            selectedPage?.let { viewModel.viewModelScope.launch { binder.fragmentPager.adapter?.save(it) } }
+            selectedPage = position
+        }
+    }
+
     fun bind(
         vm: EditRecipeViewModel,
         activity: FragmentActivity,
@@ -32,15 +40,7 @@ class EditRecipeViewBinder @Inject constructor() {
         viewModel = vm
         binder = FragmentEditRecipeBinding.bind(view)
         with(binder) {
-            val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    selectedPage?.let { viewModel.viewModelScope.launch { fragmentPager.adapter?.save(it) } }
-                    selectedPage = position
-                }
-            }
             fragmentPager.adapter = EditFragmentPagerAdapter(activity)
-            fragmentPager.registerOnPageChangeCallback(pageChangeCallback)
 
             TabLayoutMediator(navigationTabs, fragmentPager) { tab, pos ->
                 tab.text = view.context.getString(EditFragmentPagerAdapter.tabNameResourceIdList[pos])
@@ -62,10 +62,12 @@ class EditRecipeViewBinder @Inject constructor() {
 
     fun onResume() {
         viewModel.beginEditing()
+        binder.fragmentPager.registerOnPageChangeCallback(pageChangeCallback)
     }
 
     fun onPause() {
         viewModel.stopEditing()
+        binder.fragmentPager.unregisterOnPageChangeCallback(pageChangeCallback)
     }
 
     private suspend fun RecyclerView.Adapter<*>.save(i: Int) {
