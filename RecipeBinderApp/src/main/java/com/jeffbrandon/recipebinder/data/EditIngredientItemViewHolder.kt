@@ -11,7 +11,6 @@ import com.jeffbrandon.recipebinder.databinding.EditIngredientListItemBinding
 import com.jeffbrandon.recipebinder.util.DragShadowHelper
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class EditIngredientItemViewHolder(
     private val viewModel: EditRecipeViewModel,
