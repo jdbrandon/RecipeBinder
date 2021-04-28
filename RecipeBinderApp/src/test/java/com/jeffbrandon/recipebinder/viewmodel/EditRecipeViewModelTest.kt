@@ -14,6 +14,8 @@ import com.jeffbrandon.recipebinder.testutils.TestRecipeData
 import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import com.jeffbrandon.recipebinder.testutils.observeForTest
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -132,5 +134,56 @@ class EditRecipeViewModelTest {
             val expected = TestRecipeData.RECIPE_1.copy(name = name, cookTime = time, tags = tags)
             verify(dataSource).updateRecipe(eq(expected))
         }.join()
+    }
+
+    @Test
+    fun `test ingredient moveTo`(): Unit = runBlocking {
+        underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
+
+        scope.launch {
+            underTest.moveEditIngredientBefore(TestRecipeData.INGREDIENT_1_1)
+
+            val ingredients = underTest.getIngredients().getOrAwaitValue()
+
+            assertEquals(listOf(TestRecipeData.INGREDIENT_1_3,
+                                TestRecipeData.INGREDIENT_1_1,
+                                TestRecipeData.INGREDIENT_1_2), ingredients)
+
+            val editIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
+
+            assertNull(editIngredient)
+        }.join()
+    }
+
+    @Test
+    fun `test instruction moveTo`(): Unit = runBlocking {
+        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
+
+        scope.launch {
+            underTest.moveEditInstructionBefore(TestRecipeData.INSTRUCTION_1_2)
+
+            val instructions = underTest.getInstructions().getOrAwaitValue()
+
+            assertEquals(listOf(TestRecipeData.INSTRUCTION_1_1,
+                                TestRecipeData.INSTRUCTION_1_3,
+                                TestRecipeData.INSTRUCTION_1_2), instructions)
+
+            val editInstruction = underTest.editInstructionLiveData.getOrAwaitValue()
+
+            assertNull(editInstruction)
+        }.join()
+    }
+
+    @Test
+    fun `test should warn about unsaved`() = runBlocking {
+        underTest.beginEditing()
+        assertTrue(underTest.shouldWarnAboutUnsavedData())
+        assertFalse(underTest.shouldWarnAboutUnsavedData())
+        assertFalse(underTest.shouldWarnAboutUnsavedData())
+        underTest.stopEditing()
+        assertFalse(underTest.shouldWarnAboutUnsavedData())
+        underTest.beginEditing()
+        assertTrue(underTest.shouldWarnAboutUnsavedData())
+        assertFalse(underTest.shouldWarnAboutUnsavedData())
     }
 }

@@ -19,6 +19,10 @@ class EditRecipeMetadataFragment : EditFragment(R.layout.fragment_edit_recipe_me
         binder.bind(viewModel, requireView(), viewLifecycleOwner)
     }
 
+    override fun edit(){
+        binder.edit()
+    }
+
     override suspend fun save() {
         binder.save()
     }

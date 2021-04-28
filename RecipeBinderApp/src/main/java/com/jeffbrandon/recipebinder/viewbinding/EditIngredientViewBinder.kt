@@ -14,14 +14,17 @@ import com.jeffbrandon.recipebinder.enums.FractionalMeasurement
 import com.jeffbrandon.recipebinder.enums.FractionalMeasurement.Companion.fractionViewMap
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.enums.UnitType.Companion.unitMap
+import com.jeffbrandon.recipebinder.fragments.Savable
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import com.jeffbrandon.recipebinder.widgets.ConvertDialog
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
-class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: Context) {
+class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: Context) : Savable {
     private var unit: String? = null
     private var selectedUnitText: String?
         get() = unit
@@ -116,12 +119,15 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
         }
     }
 
-    fun onResume() {
+    override fun edit() {
         viewModel.beginEditing()
     }
 
-    fun continueEditing() {
-        viewModel.beginEditing()
+    /**
+     * Non blocking implementation run in onPause so we run on Main
+     */
+    override suspend fun save() = withContext(Dispatchers.Main) {
+        viewModel.stopEditing()
     }
 
     private fun FragmentAddIngredientBinding.saveAndPop(fm: FragmentManager) {

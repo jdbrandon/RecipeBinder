@@ -29,6 +29,7 @@ class EditRecipeViewBinder @Inject constructor() {
             super.onPageSelected(position)
             selectedPage?.let { viewModel.viewModelScope.launch { binder.fragmentPager.adapter?.save(it) } }
             selectedPage = position
+            selectedPage?.let { viewModel.viewModelScope.launch { binder.fragmentPager.adapter?.edit(it) } }
         }
     }
 
@@ -61,18 +62,22 @@ class EditRecipeViewBinder @Inject constructor() {
     }
 
     fun onResume() {
-        viewModel.beginEditing()
         binder.fragmentPager.registerOnPageChangeCallback(pageChangeCallback)
     }
 
     fun onPause() {
-        viewModel.stopEditing()
         binder.fragmentPager.unregisterOnPageChangeCallback(pageChangeCallback)
     }
 
     private suspend fun RecyclerView.Adapter<*>.save(i: Int) {
         ((this as FragmentPagerAdapter).fragments[i].value as? Savable)?.let {
             withContext(Dispatchers.IO) { it.save() }
+        }
+    }
+
+    private suspend fun RecyclerView.Adapter<*>.edit(i: Int) {
+        ((this as FragmentPagerAdapter).fragments[i].value as? Savable)?.let {
+            withContext(Dispatchers.IO) { it.edit() }
         }
     }
 }

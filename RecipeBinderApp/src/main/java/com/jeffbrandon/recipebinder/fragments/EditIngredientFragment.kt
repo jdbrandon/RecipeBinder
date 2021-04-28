@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewbinding.EditIngredientViewBinder
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -21,16 +23,16 @@ class EditIngredientFragment : Fragment(R.layout.fragment_add_ingredient) {
         binder.bind(viewModel, view, parentFragmentManager, viewLifecycleOwner)
     }
 
+    /**
+     * Hook into lifecycle callbacks to determine if we should warn about unsaved data
+     */
     override fun onResume() {
         super.onResume()
-        binder.onResume()
+        binder.edit()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // When we pop this off the back stack it doesn't trigger onResume so this is a workaround
-        // to make sure we still warn about back presses in EditRecipeFragment, which should be the
-        // only entry point to this fragment
-        binder.continueEditing()
+    override fun onPause() {
+        super.onPause()
+        lifecycleScope.launch { binder.save() }
     }
 }
