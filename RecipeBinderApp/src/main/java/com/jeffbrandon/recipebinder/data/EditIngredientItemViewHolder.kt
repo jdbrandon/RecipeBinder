@@ -2,7 +2,6 @@ package com.jeffbrandon.recipebinder.data
 
 import android.animation.AnimatorInflater
 import android.content.ClipData
-import android.graphics.Point
 import android.view.DragEvent
 import android.view.View
 import androidx.core.view.ViewCompat
@@ -48,9 +47,6 @@ class EditIngredientItemViewHolder(
         dragTarget.setOnLongClickListener {
             val clipData = ClipData.newPlainText(view.context.getString(R.string.ingredient), "")
             ViewCompat.startDragAndDrop(view, clipData, dragShadowBuilder, current, 0)
-
-            // TODO: figure out what happens when list fills screen, maybe add margin to the recycler to account for that?
-
             true
         }
         view.setOnDragListener(dragListener)
