@@ -183,7 +183,7 @@ class EditRecipeViewModelTest {
 
             val target = TestRecipeData.RECIPE_1.copy(ingredients = TestRecipeData.INGREDIENT_LIST_1.drop(1))
             verify(dataSource).updateRecipe(eq(target))
-        }
+        }.join()
     }
 
     @Test
@@ -195,11 +195,11 @@ class EditRecipeViewModelTest {
 
             val target = TestRecipeData.RECIPE_1.copy(instructions = TestRecipeData.INSTRUCTION_LIST_1.drop(2))
             verify(dataSource).updateRecipe(eq(target))
-        }
+        }.join()
     }
 
     @Test
-    fun `test should warn about unsaved, begin editing, stop editing `() = runBlocking {
+    fun `test should warn about unsaved, begin editing, stop editing `(): Unit = runBlocking {
         underTest.beginEditing()
         assertTrue(underTest.shouldWarnAboutUnsavedData())
         assertFalse(underTest.shouldWarnAboutUnsavedData())
