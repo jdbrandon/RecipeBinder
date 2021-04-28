@@ -50,7 +50,7 @@ class EditRecipeViewModelTest {
     private val testObserver = Observer<RecipeData> { t -> currentRecipeData = t }
 
     private val dispatcher = TestCoroutineDispatcher()
-    private val testScope = TestCoroutineScope(dispatcher)
+    private val scope = TestCoroutineScope(dispatcher)
 
     @Before
     fun setUp() {
@@ -92,7 +92,7 @@ class EditRecipeViewModelTest {
 
     @Test
     fun saveIngredient() = runBlocking {
-        testScope.launch {
+        scope.launch {
             underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
             verify(dataSource).updateRecipe(any())
         }.join()
@@ -100,7 +100,7 @@ class EditRecipeViewModelTest {
 
     @Test
     fun saveInstruction() = runBlocking {
-        testScope.launch {
+        scope.launch {
             underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
             verify(dataSource).updateRecipe(any())
         }.join()
@@ -117,5 +117,13 @@ class EditRecipeViewModelTest {
             assertEquals("type", UnitType.GRAM, newIngredient!!.unit)
             assertTrue("conversion", newIngredient.amount > 453 && newIngredient.amount < 454)
         }
+    }
+
+    @Test
+    fun `test save metadata`(): Unit = runBlocking {
+        scope.launch {
+            underTest.saveMetadata("dummy", 0, listOf())
+            verify(dataSource).updateRecipe(any())
+        }.join()
     }
 }
