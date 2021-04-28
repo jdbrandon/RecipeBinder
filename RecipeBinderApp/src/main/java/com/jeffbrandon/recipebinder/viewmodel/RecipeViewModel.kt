@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.map
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
@@ -16,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @SuppressWarnings("TooManyFunctions")
@@ -34,9 +36,15 @@ open class RecipeViewModel @Inject constructor(
 
     fun getRecipe(): LiveData<RecipeData> = recipe
 
-    protected fun getIngredientIndex(data: Ingredient): Int? = recipe.value?.ingredients?.indexOf(data)
+    fun getIngredients() = recipe.map { it.ingredients }
 
-    protected fun getInstructionIndex(data: Instruction): Int? = recipe.value?.instructions?.indexOf(data)
+    fun getInstructions() = recipe.map { it.instructions }
+
+    protected fun getIngredientIndex(data: Ingredient): Int? =
+        recipe.value?.ingredients?.indexOf(data).takeIf { it != -1 }
+
+    protected fun getInstructionIndex(data: Instruction): Int? =
+        recipe.value?.instructions?.indexOf(data).takeIf { it != -1 }
 
     protected suspend fun appendIngredient(data: Ingredient) = withContext(Dispatchers.Default) {
         val newIngredientList =
@@ -65,7 +73,7 @@ open class RecipeViewModel @Inject constructor(
     protected suspend fun updateRecipeMetadata(
         recipeName: String,
         cookTime: Int,
-        tags: MutableList<RecipeTag>,
+        tags: List<RecipeTag>,
     ) = withContext(Dispatchers.Default) {
         val newRecipe = recipe.value?.copy(name = recipeName, cookTime = cookTime, tags = tags)
             ?: error("failed to update metadata")
@@ -84,18 +92,26 @@ open class RecipeViewModel @Inject constructor(
         updateRecipeInstructions(newInstructionList)
     }
 
-    protected suspend fun moveTo(i: Int, data: Ingredient) = withContext(Dispatchers.Default) {
+    protected suspend fun moveTo(target: Ingredient, data: Ingredient) = withContext(Dispatchers.Default) {
         val newIngredients = recipe.value?.ingredients?.toMutableList()?.apply {
-            remove(data)
-            add(i, data)
+            if (contains(target)) {
+                remove(data)
+                add(indexOf(target), data)
+            } else {
+                Timber.w("Attempted to move to an element not contained in ingredients")
+            }
         } ?: error("Failed to move ingredient")
         updateRecipeIngredients(newIngredients)
     }
 
-    protected suspend fun moveTo(i: Int, data: Instruction) = withContext(Dispatchers.Default) {
+    protected suspend fun moveTo(target: Instruction, data: Instruction) = withContext(Dispatchers.Default) {
         val newInstructions = recipe.value?.instructions?.toMutableList()?.apply {
-            remove(data)
-            add(i, data)
+            if (contains(target)) {
+                remove(data)
+                add(indexOf(target), data)
+            } else {
+                Timber.w("Attempted to move to an element not contained in instructions")
+            }
         } ?: error("Failed to move instruction")
         updateRecipeInstructions(newInstructions)
     }

@@ -2,18 +2,20 @@ package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewModelScope
+import com.google.android.material.chip.Chip
 import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeMetadataBinding
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.enums.RecipeTag.Companion.recipeMap
+import com.jeffbrandon.recipebinder.fragments.Savable
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class EditRecipeMetadataViewBinder @Inject constructor() {
+class EditRecipeMetadataViewBinder @Inject constructor() : Savable {
     private lateinit var viewModel: EditRecipeViewModel
     private lateinit var binder: FragmentEditRecipeMetadataBinding
+    private lateinit var tagMap: Map<RecipeTag, Chip>
 
     fun bind(vm: EditRecipeViewModel, viewRoot: View, lifecycle: LifecycleOwner) {
         viewModel = vm
@@ -24,7 +26,7 @@ class EditRecipeMetadataViewBinder @Inject constructor() {
                 cookTime.setText(recipe.cookTime.toString())
             }
             with(binder.tags) {
-                val tagMap = recipeMap()
+                tagMap = recipeMap()
                 recipe.tags.forEach { tag ->
                     tagMap[tag]?.apply { isChecked = true } ?: error("Unmapped tag")
                 }
@@ -32,16 +34,12 @@ class EditRecipeMetadataViewBinder @Inject constructor() {
         }
     }
 
-    fun save() = with(binder.meta) {
-        val recipeName = name.text.toString()
-        val cookTime = cookTime.text.toString().toInt()
-        val tags = mutableListOf<RecipeTag>()
-        binder.tags.recipeMap().entries.forEach { entry ->
-            if (entry.value.isChecked) tags.add(entry.key)
-        }
-        Timber.i("saving $recipeName, $cookTime, $tags")
-        with(viewModel) {
-            viewModelScope.launch { saveMetadata(recipeName, cookTime, tags) }
+    override suspend fun save() = withContext(Dispatchers.Default) {
+        with(binder.meta) {
+            val recipeName = name.text.toString()
+            val cookTime = cookTime.text.toString().toInt()
+            val tags = tagMap.entries.filter { it.value.isChecked }.map { it.key }
+            viewModel.saveMetadata(recipeName, cookTime, tags)
         }
     }
 }

@@ -25,11 +25,11 @@ class EditRecipeViewModel @Inject constructor(
     @ApplicationContext context: Context,
 ) : RecipeViewModel(dataSource, state, context) {
 
-    private var editIngredient: MutableLiveData<Edit<Ingredient>> = MutableLiveData()
-    private var editInstruction: MutableLiveData<Edit<Instruction>> = MutableLiveData()
+    private var editIngredient: MutableLiveData<Edit<Ingredient>?> = MutableLiveData()
+    private var editInstruction: MutableLiveData<Edit<Instruction>?> = MutableLiveData()
 
-    val editIngredientLiveData: LiveData<Ingredient> = editIngredient.map { it.data }
-    val editInstructionLiveData: LiveData<Instruction> = editInstruction.map { it.data }
+    val editIngredientLiveData: LiveData<Ingredient?> = editIngredient.map { it?.data }
+    val editInstructionLiveData: LiveData<Instruction?> = editInstruction.map { it?.data }
     private var shouldWarn = false
     private var editing = false
 
@@ -43,7 +43,7 @@ class EditRecipeViewModel @Inject constructor(
         editInstruction.value = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
     }
 
-    suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: MutableList<RecipeTag>) {
+    suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: List<RecipeTag>) {
         updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), cookTime, tags)
     }
 
@@ -85,16 +85,16 @@ class EditRecipeViewModel @Inject constructor(
     }
 
     suspend fun moveEditIngredientBefore(target: Ingredient) {
-        getIngredientIndex(target)?.let { idx ->
-            editIngredient.value?.let { moveTo(idx, it.data) }
-        } ?: Timber.w("Failed to move ingredient")
+        Timber.d("target ${target.name}")
+        editIngredient.value?.let {
+            Timber.d("edit: ${it.data.name}")
+            moveTo(target, it.data)
+        }
         editIngredient.value = null
     }
 
     suspend fun moveEditInstructionBefore(target: Instruction) {
-        getInstructionIndex(target)?.let { idx ->
-            editInstruction.value?.let { moveTo(idx, it.data) }
-        } ?: Timber.w("Failed to move instruction")
+        editInstruction.value?.let { moveTo(target, it.data) }
         editInstruction.value = null
     }
 

@@ -25,7 +25,6 @@ class EditIngredientItemViewHolder(
     private val dragShadowBuilder = DragShadowHelper(view)
 
     private val dragListener = View.OnDragListener { _, event ->
-        Timber.i("Drag event ${event.action}")
         val dragIngredient = event.localState as Ingredient
         when (event.action) {
             DragEvent.ACTION_DROP -> with(viewModel) {

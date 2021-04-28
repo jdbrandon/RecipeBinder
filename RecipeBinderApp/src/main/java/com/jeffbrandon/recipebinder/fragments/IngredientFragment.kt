@@ -1,13 +1,23 @@
 package com.jeffbrandon.recipebinder.fragments
 
-import androidx.recyclerview.widget.RecyclerView
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.jeffbrandon.recipebinder.R
-import com.jeffbrandon.recipebinder.data.IngredientAdapter
-import com.jeffbrandon.recipebinder.data.IngredientItemViewHolder
-import com.jeffbrandon.recipebinder.room.RecipeData
+import com.jeffbrandon.recipebinder.viewbinding.IngredientListFragmentViewBinder
+import com.jeffbrandon.recipebinder.viewmodel.RecipeViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class IngredientFragment : ListFragment<IngredientItemViewHolder>() {
-    override val nameResourceId: Int = R.string.ingredients
-    override fun buildAdapter(recipe: RecipeData): RecyclerView.Adapter<IngredientItemViewHolder> =
-        IngredientAdapter(recipe.ingredients)
+@AndroidEntryPoint
+class IngredientFragment : Fragment(R.layout.fragment_list) {
+
+    private val viewModel: RecipeViewModel by activityViewModels()
+    @Inject lateinit var binder: IngredientListFragmentViewBinder
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binder.bind(viewModel, view, viewLifecycleOwner)
+    }
 }
