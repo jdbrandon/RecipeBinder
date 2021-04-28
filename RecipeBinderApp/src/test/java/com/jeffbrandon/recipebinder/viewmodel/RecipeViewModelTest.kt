@@ -59,9 +59,21 @@ class RecipeViewModelTest {
     }
 
     @Test
-    fun `test get`() = scope.runBlockingTest {
+    fun `test get recipe`() = scope.runBlockingTest {
         val recipe = underTest.getRecipe().getOrAwaitValue()
-        assertEquals("live data is set", TestRecipeData.RECIPE_1, recipe)
+        assertEquals(TestRecipeData.RECIPE_1, recipe)
         verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
+    }
+
+    @Test
+    fun `test get ingredients`() = scope.run {
+        val ingredients = underTest.getIngredients().getOrAwaitValue()
+        assertEquals(TestRecipeData.RECIPE_1.ingredients, ingredients)
+    }
+
+    @Test
+    fun `test get instructions`() = scope.run {
+        val instructions = underTest.getInstructions().getOrAwaitValue()
+        assertEquals(TestRecipeData.RECIPE_1.instructions, instructions)
     }
 }
