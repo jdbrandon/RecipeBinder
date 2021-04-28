@@ -75,22 +75,26 @@ class EditRecipeViewModelTest {
 
     @Test
     fun setEditIngredient() = runBlocking {
-        val index = 1
+        scope.launch {
+            val index = 1
 
-        underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[index])
-        val ingredient = underTest.editIngredientLiveData.getOrAwaitValue()
+            underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[index])
+            val ingredient = underTest.editIngredientLiveData.getOrAwaitValue()
 
-        assertEquals("Got correct ingredient", TestRecipeData.INGREDIENT_1_2, ingredient)
+            assertEquals("Got correct ingredient", TestRecipeData.INGREDIENT_1_2, ingredient)
+        }.join()
     }
 
     @Test
     fun setEditInstruction() = runBlocking {
-        val index = 1
+        scope.launch {
+            val index = 1
 
-        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[index])
-        val instruction = underTest.editInstructionLiveData.getOrAwaitValue()
+            underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[index])
+            val instruction = underTest.editInstructionLiveData.getOrAwaitValue()
 
-        assertEquals("Got correct instruction", TestRecipeData.INSTRUCTION_1_2, instruction!!)
+            assertEquals("Got correct instruction", TestRecipeData.INSTRUCTION_1_2, instruction!!)
+        }.join()
     }
 
     @Test
