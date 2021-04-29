@@ -34,7 +34,7 @@ class RecipeActivityBinder @Inject constructor() {
         when (recipeMode) {
             RecipeMode.EDIT -> EditRecipeFragment::class.java.also { editFragment ->
                 Timber.i("got edit fragment")
-                fragmentManager.beginTransaction().add(R.id.fragment_container, editFragment, null).commit()
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, editFragment, null).commit()
             }
             RecipeMode.VIEW -> Timber.i("got view fragment")
             else -> Timber.w("unable to get RecipeMode, falling back to VIEW")
