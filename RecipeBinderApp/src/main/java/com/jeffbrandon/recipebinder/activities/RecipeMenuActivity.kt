@@ -20,9 +20,9 @@ class RecipeMenuActivity : RecipeAppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fragment_host)
+        setContentView(R.layout.activity_recipe_menu)
         findViewById<FragmentContainerView>(R.id.fragment_container)?.let { view ->
-            binder.bind(view, viewModel, supportFragmentManager, this)
+            binder.bind(view, viewModel, this)
         }
     }
 

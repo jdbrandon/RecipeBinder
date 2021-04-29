@@ -11,6 +11,7 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_large"
         android:textSize="@dimen/item_text_size"
         android:textStyle="bold"
         />
@@ -19,7 +20,7 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="@dimen/margin_medium"
+        android:layout_margin="@dimen/margin_xxlarge"
         android:layout_weight="1"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         />

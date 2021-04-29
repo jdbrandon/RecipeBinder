@@ -31,6 +31,7 @@ class RecipeMenuViewModel @Inject constructor(
         filter?.let { data.fetchAllRecipes(filter) } ?: data.fetchAllRecipes()
     }
     private val toastMessage = MutableLiveData<String?>()
+    private val selectedRecipeId = MutableLiveData<Long>()
     private val errorMessageContent by lazy { context.getString(R.string.error_import_failed) }
     private val importSuccessFmt by lazy { context.getString(R.string.import_success) }
 
@@ -38,8 +39,14 @@ class RecipeMenuViewModel @Inject constructor(
 
     fun toastObservable(): LiveData<String?> = toastMessage
 
+    fun selectedRecipeId(): LiveData<Long> = selectedRecipeId
+
     fun resetToastMessage() {
         toastMessage.value = null
+    }
+
+    fun setRecipe(id: Long) {
+        selectedRecipeId.value = id
     }
 
     suspend fun delete(id: Long) = withContext(Dispatchers.IO) {

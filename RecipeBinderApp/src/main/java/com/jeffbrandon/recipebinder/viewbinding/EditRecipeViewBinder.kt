@@ -27,9 +27,17 @@ class EditRecipeViewBinder @Inject constructor() {
     private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
-            selectedPage?.let { viewModel.viewModelScope.launch { binder.fragmentPager.adapter?.save(it) } }
+            selectedPage?.let {
+                viewModel.viewModelScope.launch(Dispatchers.Default) {
+                    binder.fragmentPager.adapter?.save(it)
+                }
+            }
             selectedPage = position
-            selectedPage?.let { viewModel.viewModelScope.launch { binder.fragmentPager.adapter?.edit(it) } }
+            selectedPage?.let {
+                viewModel.viewModelScope.launch(Dispatchers.Default) {
+                    binder.fragmentPager.adapter?.edit(it)
+                }
+            }
         }
     }
 

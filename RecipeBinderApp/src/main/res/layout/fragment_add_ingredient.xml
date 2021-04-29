@@ -1,72 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/margin_small"
-    android:layout_marginBottom="@dimen/margin_small"
     android:background="@color/colorSecondary"
-    android:orientation="vertical"
     >
 
     <TextView
+        android:id="@+id/ingredient_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginHorizontal="@dimen/margin_medium"
+        android:layout_toStartOf="@+id/delete_button"
         android:text="@string/ingredient"
         android:textSize="@dimen/title_text_size"
         android:textStyle="bold"
         />
 
-    <LinearLayout
-        android:id="@+id/input_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/quantity_input_layout"
-            style="@style/TextInputStyle"
-            android:layout_width="@dimen/ingredient_dialog_input_width"
-            android:layout_height="wrap_content"
-            android:hint="@string/quantity"
-            app:boxCornerRadiusBottomEnd="@dimen/square_corner"
-            app:boxCornerRadiusTopEnd="@dimen/square_corner"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/quantity_input"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="number"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ingredient_layout"
-            style="@style/TextInputStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/ingredient"
-            app:boxCornerRadiusBottomStart="@dimen/square_corner"
-            app:boxCornerRadiusTopStart="@dimen/square_corner"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ingredient_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapSentences"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_alignBottom="@id/ingredient_text_view"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_fab"
+        android:layout_marginEnd="@dimen/margin_fab"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:contentDescription="@string/delete"
+        android:text="@string/delete"
+        app:icon="@drawable/ic_delete_24"
+        />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/quantity_input_layout"
+        style="@style/TextInputStyle"
+        android:layout_width="@dimen/ingredient_dialog_input_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ingredient_text_view"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:hint="@string/quantity"
+        app:boxCornerRadiusBottomEnd="@dimen/square_corner"
+        app:boxCornerRadiusTopEnd="@dimen/square_corner"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/quantity_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ingredient_layout"
+        style="@style/TextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ingredient_text_view"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_toEndOf="@+id/quantity_input_layout"
+        android:hint="@string/ingredient"
+        app:boxCornerRadiusBottomStart="@dimen/square_corner"
+        app:boxCornerRadiusTopStart="@dimen/square_corner"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ingredient_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/fraction_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/quantity_input_layout"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:text="@string/fractional_measurement"
+        android:textSize="@dimen/item_text_size"
+        />
+
+    <LinearLayout
+        android:id="@+id/fraction_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fraction_text_view"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_small"
         android:orientation="horizontal"
@@ -113,19 +140,50 @@
         </com.google.android.material.chip.ChipGroup>
     </LinearLayout>
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/unit_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_alignTop="@+id/convert_button"
+        android:layout_alignBottom="@+id/convert_button"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:text="@string/measurement_units"
+        android:textSize="@dimen/item_text_size"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/convert_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fraction_layout"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_fab"
+        android:contentDescription="@string/convert_unit_type"
+        android:text="@string/convert"
+        app:icon="@drawable/ic_scale_balance"
+        />
+
+    <LinearLayout
+        android:id="@+id/unit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/unit_text_view"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center_horizontal"
         android:orientation="horizontal"
         >
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/unit_chips"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="fill_horizontal"
             app:singleSelection="true"
             >
 
@@ -198,44 +256,16 @@
         </com.google.android.material.chip.ChipGroup>
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/save_ingredient_button"
+        style="@style/FabStyle.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_fab"
+        android:contentDescription="@string/save_ingredient"
+        app:srcCompat="@drawable/save_to_edit"
+        />
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/convert_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|top"
-            android:layout_margin="@dimen/margin_fab"
-            android:contentDescription="@string/convert_unit_type"
-            android:text="@string/convert"
-            app:icon="@drawable/ic_scale_balance"
-            />
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_fab"
-            android:contentDescription="@string/delete"
-            android:text="@string/delete"
-            app:icon="@drawable/ic_delete_24"
-            />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/save_ingredient_button"
-            style="@style/FabStyle.Primary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_margin="@dimen/margin_fab"
-            android:contentDescription="@string/save_ingredient"
-            app:srcCompat="@drawable/save_to_edit"
-            />
-    </FrameLayout>
-
-</LinearLayout>
+</RelativeLayout>

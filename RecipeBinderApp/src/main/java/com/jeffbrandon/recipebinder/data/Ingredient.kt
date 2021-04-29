@@ -13,40 +13,10 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     fun amountString(context: Context, useLongUnits: Boolean = false): CharSequence {
         val num = StringBuilder()
         if (amountWhole() > 0) num.append(amountWhole())
-        when (amountFraction()) {
-            FractionalMeasurement.ZERO -> Unit
-            FractionalMeasurement.QUARTER -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._1_quarter))
-            }
-            FractionalMeasurement.THIRD -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._1_third))
-            }
-            FractionalMeasurement.HALF -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._1_half))
-            }
-            FractionalMeasurement.THIRD_TWO -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._2_thirds))
-            }
-            FractionalMeasurement.QUARTER_THREE -> num.apply {
-                if (isNotEmpty()) append(" ")
-                append(context.getString(R.string._3_quarters))
-            }
-            FractionalMeasurement.ROUND_UP -> num.apply {
-                clear()
-                append(amountWhole() + 1)
-            }
-        }
-        when (unit) {
-            UnitType.NONE -> Unit
-            else -> {
-                if (num.isNotEmpty()) num.append(" ")
-                num.append(unit.getString(context, useLongUnits))
-            }
-        }
+
+        num.appendFractionalComponent(context)
+        num.appendUnit(context, useLongUnits)
+
         return num.toString()
     }
 
@@ -82,6 +52,46 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         UnitType.NONE -> amount
     }.let {
         this.copy(amount = it, unit = type)
+    }
+
+    private fun StringBuilder.appendFractionalComponent(context: Context) {
+        when (amountFraction()) {
+            FractionalMeasurement.ZERO -> Unit
+            FractionalMeasurement.QUARTER -> {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_quarter))
+            }
+            FractionalMeasurement.THIRD -> {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_third))
+            }
+            FractionalMeasurement.HALF -> {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._1_half))
+            }
+            FractionalMeasurement.THIRD_TWO -> {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._2_thirds))
+            }
+            FractionalMeasurement.QUARTER_THREE -> {
+                if (isNotEmpty()) append(" ")
+                append(context.getString(R.string._3_quarters))
+            }
+            FractionalMeasurement.ROUND_UP -> {
+                clear()
+                append(amountWhole() + 1)
+            }
+        }
+    }
+
+    private fun StringBuilder.appendUnit(context: Context, useLongUnits: Boolean) {
+        when (unit) {
+            UnitType.NONE -> Unit
+            else -> {
+                if (isNotEmpty()) append(" ")
+                append(unit.getString(context, useLongUnits))
+            }
+        }
     }
 
     @SuppressWarnings("MagicNumber")

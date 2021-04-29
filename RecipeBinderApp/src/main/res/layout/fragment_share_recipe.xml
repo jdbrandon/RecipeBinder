@@ -3,17 +3,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     >
 
-    <ImageView
-        android:id="@+id/qr_code"
-        android:layout_width="@dimen/qr_size"
-        android:layout_height="@dimen/qr_size"
-        android:layout_margin="@dimen/margin_xxxlarge"
-        android:contentDescription="@string/qr_code"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="@dimen/margin_large"
+        android:text="@string/sharing"
+        android:textSize="@dimen/item_text_size"
         />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:id="@+id/qr_code"
+            android:layout_width="@dimen/qr_size"
+            android:layout_height="@dimen/qr_size"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_xxxlarge"
+            android:contentDescription="@string/qr_code"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/qr_size"
+            android:layout_height="@dimen/qr_size"
+            android:alpha=".60"
+            android:contentDescription="@string/app_logo"
+            app:tint="#000"
+            android:src="@drawable/ic_launcher_foreground"
+            />
+    </FrameLayout>
 
     <Button
         android:id="@+id/copy_raw_button"

@@ -17,9 +17,4 @@ abstract class CallbackViewHolder<T, V>(rootView: View, callbackView: View, call
     init {
         callbackView.setOnClickListener { callback(current) }
     }
-
-    /**
-     * Convenience constructor for when the clickable view is the same as the root view
-     */
-    constructor(view: View, callback: (V) -> Unit) : this(view, view, callback)
 }
