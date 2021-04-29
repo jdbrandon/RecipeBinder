@@ -20,6 +20,40 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
         return num.toString()
     }
 
+    fun amountWhole() = amount.toInt()
+
+    /**
+     * Ranges used to capture floating point and conversion rounding
+     */
+    @SuppressWarnings("MagicNumber")
+    fun amountFraction(): FractionalMeasurement = when (((amount - amountWhole()) * 100).toInt()) {
+        in 0..12 -> FractionalMeasurement.ZERO
+        in 13..29 -> FractionalMeasurement.QUARTER
+        in 30..41 -> FractionalMeasurement.THIRD
+        in 42..58 -> FractionalMeasurement.HALF
+        in 59..70 -> FractionalMeasurement.THIRD_TWO
+        in 71..82 -> FractionalMeasurement.QUARTER_THREE
+        in 82..100 -> FractionalMeasurement.ROUND_UP
+        else -> error("I don't know how math works for ingredient conversions")
+    }
+
+    fun convertTo(type: UnitType): Ingredient = when (unit) {
+        UnitType.GALLON -> gallonTo(type)
+        UnitType.QUART -> quartTo(type)
+        UnitType.PINT -> pintTo(type)
+        UnitType.CUP -> cupTo(type)
+        UnitType.OUNCE -> ounceTo(type)
+        UnitType.TABLE_SPOON -> tableSpoonTo(type)
+        UnitType.TEA_SPOON -> teaSpoonTo(type)
+        UnitType.POUND -> poundTo(type)
+        UnitType.LITER -> literTo(type)
+        UnitType.MILLILITER -> milliLiterTo(type)
+        UnitType.GRAM -> gramTo(type)
+        UnitType.NONE -> amount
+    }.let {
+        this.copy(amount = it, unit = type)
+    }
+
     private fun StringBuilder.appendFractionalComponent(context: Context) {
         when (amountFraction()) {
             FractionalMeasurement.ZERO -> Unit
@@ -58,40 +92,6 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
                 append(unit.getString(context, useLongUnits))
             }
         }
-    }
-
-    fun amountWhole() = amount.toInt()
-
-    /**
-     * Ranges used to capture floating point and conversion rounding
-     */
-    @SuppressWarnings("MagicNumber")
-    fun amountFraction(): FractionalMeasurement = when (((amount - amountWhole()) * 100).toInt()) {
-        in 0..12 -> FractionalMeasurement.ZERO
-        in 13..29 -> FractionalMeasurement.QUARTER
-        in 30..41 -> FractionalMeasurement.THIRD
-        in 42..58 -> FractionalMeasurement.HALF
-        in 59..70 -> FractionalMeasurement.THIRD_TWO
-        in 71..82 -> FractionalMeasurement.QUARTER_THREE
-        in 82..100 -> FractionalMeasurement.ROUND_UP
-        else -> error("I don't know how math works for ingredient conversions")
-    }
-
-    fun convertTo(type: UnitType): Ingredient = when (unit) {
-        UnitType.GALLON -> gallonTo(type)
-        UnitType.QUART -> quartTo(type)
-        UnitType.PINT -> pintTo(type)
-        UnitType.CUP -> cupTo(type)
-        UnitType.OUNCE -> ounceTo(type)
-        UnitType.TABLE_SPOON -> tableSpoonTo(type)
-        UnitType.TEA_SPOON -> teaSpoonTo(type)
-        UnitType.POUND -> poundTo(type)
-        UnitType.LITER -> literTo(type)
-        UnitType.MILLILITER -> milliLiterTo(type)
-        UnitType.GRAM -> gramTo(type)
-        UnitType.NONE -> amount
-    }.let {
-        this.copy(amount = it, unit = type)
     }
 
     @SuppressWarnings("MagicNumber")
