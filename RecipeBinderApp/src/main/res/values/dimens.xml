@@ -18,4 +18,6 @@
     <dimen name="instruction_list_text_size">26sp</dimen>
     <dimen name="save_check_size">44dp</dimen>
     <dimen name="qr_size">300dp</dimen>
+    <dimen name="drag_target_width">40dp</dimen>
+    <dimen name="drag_animation_height">@dimen/margin_medium</dimen>
 </resources>

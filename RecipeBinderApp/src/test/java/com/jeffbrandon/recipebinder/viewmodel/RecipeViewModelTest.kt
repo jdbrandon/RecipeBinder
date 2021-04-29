@@ -11,10 +11,11 @@ import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -54,14 +55,33 @@ class RecipeViewModelTest {
 
     @After
     fun tearDown() {
+        scope.advanceUntilIdle()
         dispatcher.cleanupTestCoroutines()
         Dispatchers.resetMain()
     }
 
     @Test
-    fun `test get`() = scope.runBlockingTest {
-        val recipe = underTest.getRecipe().getOrAwaitValue()
-        assertEquals("live data is set", TestRecipeData.RECIPE_1, recipe)
-        verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
+    fun `test get recipe`(): Unit = runBlocking {
+        scope.launch {
+            val recipe = underTest.getRecipe().getOrAwaitValue()
+            assertEquals(TestRecipeData.RECIPE_1, recipe)
+            verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
+        }
+    }
+
+    @Test
+    fun `test get ingredients`(): Unit = runBlocking {
+        scope.launch {
+            val ingredients = underTest.getIngredients().getOrAwaitValue()
+            assertEquals(TestRecipeData.RECIPE_1.ingredients, ingredients)
+        }
+    }
+
+    @Test
+    fun `test get instructions`(): Unit = runBlocking {
+        scope.launch {
+            val instructions = underTest.getInstructions().getOrAwaitValue()
+            assertEquals(TestRecipeData.RECIPE_1.instructions, instructions)
+        }
     }
 }

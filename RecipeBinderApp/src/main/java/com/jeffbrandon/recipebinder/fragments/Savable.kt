@@ -1,5 +1,6 @@
 package com.jeffbrandon.recipebinder.fragments
 
 interface Savable {
-    fun save()
+    fun edit()
+    suspend fun save()
 }
