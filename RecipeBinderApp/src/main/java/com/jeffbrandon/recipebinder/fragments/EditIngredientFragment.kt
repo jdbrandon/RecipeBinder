@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewbinding.EditIngredientViewBinder
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
@@ -33,6 +33,6 @@ class EditIngredientFragment : Fragment(R.layout.fragment_add_ingredient) {
 
     override fun onPause() {
         super.onPause()
-        lifecycleScope.launch { binder.save() }
+        viewModel.viewModelScope.launch { binder.save() }
     }
 }
