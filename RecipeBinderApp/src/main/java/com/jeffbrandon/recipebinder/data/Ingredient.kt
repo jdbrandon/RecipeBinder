@@ -13,41 +13,51 @@ data class Ingredient(val name: String, val amount: Float, val unit: UnitType) {
     fun amountString(context: Context, useLongUnits: Boolean = false): CharSequence {
         val num = StringBuilder()
         if (amountWhole() > 0) num.append(amountWhole())
+
+        num.appendFractionalComponent(context)
+        num.appendUnit(context, useLongUnits)
+
+        return num.toString()
+    }
+
+    private fun StringBuilder.appendFractionalComponent(context: Context) {
         when (amountFraction()) {
             FractionalMeasurement.ZERO -> Unit
-            FractionalMeasurement.QUARTER -> num.apply {
+            FractionalMeasurement.QUARTER -> {
                 if (isNotEmpty()) append(" ")
                 append(context.getString(R.string._1_quarter))
             }
-            FractionalMeasurement.THIRD -> num.apply {
+            FractionalMeasurement.THIRD -> {
                 if (isNotEmpty()) append(" ")
                 append(context.getString(R.string._1_third))
             }
-            FractionalMeasurement.HALF -> num.apply {
+            FractionalMeasurement.HALF -> {
                 if (isNotEmpty()) append(" ")
                 append(context.getString(R.string._1_half))
             }
-            FractionalMeasurement.THIRD_TWO -> num.apply {
+            FractionalMeasurement.THIRD_TWO -> {
                 if (isNotEmpty()) append(" ")
                 append(context.getString(R.string._2_thirds))
             }
-            FractionalMeasurement.QUARTER_THREE -> num.apply {
+            FractionalMeasurement.QUARTER_THREE -> {
                 if (isNotEmpty()) append(" ")
                 append(context.getString(R.string._3_quarters))
             }
-            FractionalMeasurement.ROUND_UP -> num.apply {
+            FractionalMeasurement.ROUND_UP -> {
                 clear()
                 append(amountWhole() + 1)
             }
         }
+    }
+
+    private fun StringBuilder.appendUnit(context: Context, useLongUnits: Boolean) {
         when (unit) {
             UnitType.NONE -> Unit
             else -> {
-                if (num.isNotEmpty()) num.append(" ")
-                num.append(unit.getString(context, useLongUnits))
+                if (isNotEmpty()) append(" ")
+                append(unit.getString(context, useLongUnits))
             }
         }
-        return num.toString()
     }
 
     fun amountWhole() = amount.toInt()

@@ -1,11 +1,8 @@
 package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.Snackbar
-import com.jeffbrandon.recipebinder.R
-import com.jeffbrandon.recipebinder.fragments.MenuFragment
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import com.jeffbrandon.recipebinder.widgets.ImportRecipeBlobDialog
 import dagger.Lazy
