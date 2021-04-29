@@ -7,6 +7,14 @@
     android:orientation="vertical"
     >
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/sharing"
+        android:textSize="@dimen/item_text_size"
+        />
+
     <ImageView
         android:id="@+id/qr_code"
         android:layout_width="@dimen/qr_size"

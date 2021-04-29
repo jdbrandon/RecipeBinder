@@ -18,7 +18,7 @@ class RecipeActivity : RecipeAppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fragment_host)
+        setContentView(R.layout.activity_recipe_detail)
         val mode = intent.getSerializableExtra(getString(R.string.extra_view_mode)) as? RecipeMode
         Timber.w("${intent.data}")
         Timber.w("${intent.dataString}")

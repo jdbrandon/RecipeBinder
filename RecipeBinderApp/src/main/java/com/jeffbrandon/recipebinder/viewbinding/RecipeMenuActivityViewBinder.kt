@@ -20,7 +20,6 @@ class RecipeMenuActivityViewBinder @Inject constructor(dialog: Lazy<ImportRecipe
     fun bind(
         view: View,
         vm: RecipeMenuViewModel,
-        fm: FragmentManager,
         lifecycleOwner: LifecycleOwner,
     ) {
         viewRoot = view
@@ -32,8 +31,6 @@ class RecipeMenuActivityViewBinder @Inject constructor(dialog: Lazy<ImportRecipe
                 viewModel.resetToastMessage()
             }
         }
-
-        fm.beginTransaction().add(R.id.fragment_container, MenuFragment::class.java, null).commit()
     }
 
     fun import(): Boolean {

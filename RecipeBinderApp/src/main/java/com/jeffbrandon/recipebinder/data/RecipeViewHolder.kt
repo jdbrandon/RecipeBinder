@@ -4,13 +4,22 @@ import android.view.View
 import android.widget.TextView
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
+import com.jeffbrandon.recipebinder.util.NavigationUtil
+import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 
-class RecipeViewHolder(view: View, callback: (Long) -> Unit) : CallbackViewHolder<RecipeData, Long>(view, callback) {
-    override var current: Long = -1
+class RecipeViewHolder(private val viewModel: RecipeMenuViewModel, view: View) : BindableViewHolder<RecipeData>(view) {
     private var nameView: TextView = view.findViewById(R.id.recipe_name)
 
     override fun bind(item: RecipeData) {
-        current = item.recipeId ?: -1
         nameView.text = item.name
+        item.recipeId?.let { id ->
+            nameView.setOnClickListener {
+                NavigationUtil.viewRecipe(nameView.context, id)
+            }
+            nameView.setOnLongClickListener {
+                viewModel.setRecipe(id)
+                false
+            }
+        }
     }
 }

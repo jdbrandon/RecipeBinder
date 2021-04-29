@@ -16,7 +16,6 @@
         android:paddingBottom="@dimen/margin_medium"
         android:textSize="@dimen/title_text_size"
         android:textStyle="bold"
-        android:transitionName="@string/name_transition"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"

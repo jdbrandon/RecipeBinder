@@ -5,15 +5,12 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
 import com.jeffbrandon.recipebinder.databinding.FragmentRecipeMenuBinding
-import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import dagger.Module
@@ -33,13 +30,9 @@ class RecipeMenuViewBinder @Inject constructor() {
 
     private lateinit var viewModel: RecipeMenuViewModel
     private lateinit var viewRoot: View
-    private lateinit var lifecycle: LifecycleOwner
-    private lateinit var recipeList: List<RecipeData>
-    private val scope: LifecycleCoroutineScope by lazy { lifecycle.lifecycleScope }
+    private var selectedRecipeId: Long? = null
 
-    private val binder: FragmentRecipeMenuBinding by lazy {
-        FragmentRecipeMenuBinding.bind(ViewCompat.requireViewById(viewRoot, R.id.recipe_content_root))
-    }
+    private lateinit var binder: FragmentRecipeMenuBinding
 
     fun bind(
         vm: RecipeMenuViewModel,
@@ -49,16 +42,16 @@ class RecipeMenuViewBinder @Inject constructor() {
     ) {
         viewModel = vm
         viewRoot = view
-        this.lifecycle = lifecycle
+        binder = FragmentRecipeMenuBinding.bind(ViewCompat.requireViewById(view, R.id.recipe_content_root))
 
         binder.recipeRecyclerView.setHasFixedSize(true)
         viewModel.getRecipes().observe(lifecycle) {
             vc.unregisterContextMenu(binder.recipeRecyclerView)
-            recipeList = it
-            binder.recipeRecyclerView.adapter = RecipeAdapter(recipeList) { id ->
-                NavigationUtil.viewRecipe(viewRoot.context, id)
-            }
+            binder.recipeRecyclerView.adapter = RecipeAdapter(it, viewModel)
             vc.registerContextMenu(binder.recipeRecyclerView)
+        }
+        viewModel.selectedRecipeId().observe(lifecycle) {
+            selectedRecipeId = it
         }
         binder.recipeFilterText.addTextChangedListener { text ->
             viewModel.filter(if (text.isNullOrEmpty()) null else text.toString())
@@ -78,9 +71,11 @@ class RecipeMenuViewBinder @Inject constructor() {
                         Snackbar.make(viewRoot, R.string.toast_recipe_name, Snackbar.LENGTH_SHORT).show()
                     } else {
                         // add basic recipe to db
-                        scope.launch {
-                            val id = viewModel.insert(name)
-                            NavigationUtil.editRecipe(viewRoot.context, id)
+                        with(viewModel) {
+                            viewModelScope.launch {
+                                val id = insert(name)
+                                NavigationUtil.editRecipe(viewRoot.context, id)
+                            }
                         }
                     }
                 }.setNegativeButton(android.R.string.cancel) { _, _ ->
@@ -90,14 +85,14 @@ class RecipeMenuViewBinder @Inject constructor() {
     }
 
     fun edit(): Boolean {
-        (binder.recipeRecyclerView.adapter as RecipeAdapter).recipeId?.let {
+        selectedRecipeId?.let {
             NavigationUtil.editRecipe(viewRoot.context, it)
         } ?: error("Recipe id from db was null")
         return true
     }
 
     fun delete(): Boolean {
-        (binder.recipeRecyclerView.adapter as RecipeAdapter).recipeId?.let { id ->
+        selectedRecipeId?.let { id ->
             with(viewModel) {
                 viewModelScope.launch { delete(id) }
             }

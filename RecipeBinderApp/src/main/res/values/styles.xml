@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
-        <item name="android:windowSoftInputMode">adjustPan</item>
+        <item name="android:windowSoftInputMode">adjustNothing</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
@@ -16,11 +16,6 @@
         <!-- specify enter and exit transitions -->
         <item name="android:windowEnterTransition">@transition/explode</item>
         <item name="android:windowExitTransition">@transition/explode</item>
-        <!-- specify shared element transitions -->
-        <item name="android:windowSharedElementEnterTransition">@transition/change_image_transform
-        </item>
-        <item name="android:windowSharedElementExitTransition">@transition/change_image_transform
-        </item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

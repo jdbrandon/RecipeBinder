@@ -6,7 +6,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.RecipeMode
 import com.jeffbrandon.recipebinder.fragments.EditRecipeFragment
-import com.jeffbrandon.recipebinder.fragments.ViewRecipeFragment
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,11 +31,13 @@ class RecipeActivityBinder @Inject constructor() {
     }
 
     private fun initFragment(fragmentManager: FragmentManager, recipeMode: RecipeMode?) {
-        val fragment = when (recipeMode) {
-            RecipeMode.VIEW -> ViewRecipeFragment::class.java.also { Timber.i("got view fragment") }
-            RecipeMode.EDIT -> EditRecipeFragment::class.java.also { Timber.i("got edit fragment") }
-            else -> ViewRecipeFragment::class.java.also { Timber.w("unable to get RecipeMode, falling back to VIEW") }
+        when (recipeMode) {
+            RecipeMode.EDIT -> EditRecipeFragment::class.java.also { editFragment ->
+                Timber.i("got edit fragment")
+                fragmentManager.beginTransaction().add(R.id.fragment_container, editFragment, null).commit()
+            }
+            RecipeMode.VIEW -> Timber.i("got view fragment")
+            else -> Timber.w("unable to get RecipeMode, falling back to VIEW")
         }
-        fragmentManager.beginTransaction().add(R.id.fragment_container, fragment, null).commit()
     }
 }

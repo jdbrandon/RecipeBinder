@@ -67,7 +67,6 @@
     <string name="save_ingredient">save ingredient</string>
     <string name="add_ingredient">add ingredient</string>
     <string name="add_instruction">Add instruction</string>
-    <string name="name_transition">nameTransitionId</string>
     <string name="cook_time_hint">Cook Time</string>
     <string name="metadata">Metadata</string>
     <string name="edit_recipe_title">Recipe Editor</string>
@@ -97,4 +96,5 @@
     <string name="error_import_failed">Unable to import provided recipe paste</string>
     <string name="import_success">Recipe \"<xliff:g id="recipe_name">%s</xliff:g>\" imported successfully</string>
     <string name="error_recipe_too_large">This recipe is too big to export as a blob</string>
+    <string name="sharing">Sharing</string>
 </resources>
