@@ -97,4 +97,7 @@
     <string name="import_success">Recipe \"<xliff:g id="recipe_name">%s</xliff:g>\" imported successfully</string>
     <string name="error_recipe_too_large">This recipe is too big to export as a blob</string>
     <string name="sharing">Sharing</string>
+    <string name="fractional_measurement">Fractional measurement</string>
+    <string name="measurement_units">Measurement</string>
+    <string name="app_logo">app logo</string>
 </resources>
