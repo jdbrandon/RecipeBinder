@@ -2,6 +2,7 @@ package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.commit
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -60,8 +61,10 @@ class EditRecipeViewBinder @Inject constructor() {
                 with(activity.supportFragmentManager) {
                     when (backStackEntryCount) {
                         // Handles case where we began editing from menu fragment
-                        0 -> beginTransaction().replace(R.id.fragment_container, ViewRecipeFragment::class.java, null)
-                            .commit()
+                        0 -> commit {
+                            setReorderingAllowed(true)
+                            replace(R.id.fragment_container, ViewRecipeFragment::class.java, null)
+                        }
                         else -> popBackStack()
                     }
                 }
