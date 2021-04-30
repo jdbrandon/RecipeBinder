@@ -1,138 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tags_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cook_type"
-        android:textSize="@dimen/item_text_size"
-        android:textStyle="italic"
-        />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/cook_type_chips"
+    <LinearLayout
+        android:id="@+id/tags_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:singleSelection="true"
+        android:orientation="vertical"
         >
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_instant_pot"
-            style="@style/CheckableChip"
-            android:text="@string/instant_pot"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cook_type"
+            android:textSize="@dimen/item_text_size"
+            android:textStyle="italic"
             />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_stove"
-            style="@style/CheckableChip"
-            android:text="@string/stove_top"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cook_type_chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            >
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_instant_pot"
+                style="@style/CheckableChip"
+                android:text="@string/instant_pot"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_stove"
+                style="@style/CheckableChip"
+                android:text="@string/stove_top"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_oven"
+                style="@style/CheckableChip"
+                android:text="@string/oven"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_sous_vide"
+                style="@style/CheckableChip"
+                android:text="@string/sous_vide"
+                />
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/course"
+            android:textSize="@dimen/item_text_size"
+            android:textStyle="italic"
             />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_oven"
-            style="@style/CheckableChip"
-            android:text="@string/oven"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/dish_type_chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            >
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_entree"
+                style="@style/CheckableChip"
+                android:text="@string/entree"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_side"
+                style="@style/CheckableChip"
+                android:text="@string/side"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_soup"
+                style="@style/CheckableChip"
+                android:text="@string/soup"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_dessert"
+                style="@style/CheckableChip"
+                android:text="@string/dessert"
+                />
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tools"
+            android:textSize="@dimen/item_text_size"
             />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_sous_vide"
-            style="@style/CheckableChip"
-            android:text="@string/sous_vide"
-            />
-    </com.google.android.material.chip.ChipGroup>
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="false"
+            >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/course"
-        android:textSize="@dimen/item_text_size"
-        android:textStyle="italic"
-        />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_mixer"
+                style="@style/CheckableChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mixer"
+                />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/dish_type_chips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:singleSelection="true"
-        >
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_food_processor"
+                style="@style/CheckableChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/food_processor"
+                />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_entree"
-            style="@style/CheckableChip"
-            android:text="@string/entree"
-            />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_blender"
+                style="@style/CheckableChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/blender"
+                />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_side"
-            style="@style/CheckableChip"
-            android:text="@string/side"
-            />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_immersion_blender"
+                style="@style/CheckableChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/immersion_blender"
+                />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_soup"
-            style="@style/CheckableChip"
-            android:text="@string/soup"
-            />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_torch"
+                style="@style/CheckableChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/torch"
+                />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_dessert"
-            style="@style/CheckableChip"
-            android:text="@string/dessert"
-            />
-    </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_mortar_pestle"
+                style="@style/CheckableChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mortar_amp_pestle"
+                />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/other_information"
-        android:textSize="@dimen/item_text_size"
-        android:textStyle="italic"
-        />
+        </com.google.android.material.chip.ChipGroup>
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/tags_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:singleLine="false"
-        app:singleSelection="false"
-        >
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_fast"
-            style="@style/CheckableChip"
-            android:text="@string/fast"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/other_information"
+            android:textSize="@dimen/item_text_size"
+            android:textStyle="italic"
             />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_easy"
-            style="@style/CheckableChip"
-            android:text="@string/easy"
-            />
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/tags_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleLine="false"
+            app:singleSelection="false"
+            >
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_healthy"
-            style="@style/CheckableChip"
-            android:text="@string/healthy"
-            />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_fast"
+                style="@style/CheckableChip"
+                android:text="@string/fast"
+                />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_vegetarian"
-            style="@style/CheckableChip"
-            android:text="@string/vegetarian"
-            />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_easy"
+                style="@style/CheckableChip"
+                android:text="@string/easy"
+                />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_vegan"
-            style="@style/CheckableChip"
-            android:text="@string/vegan"
-            />
-    </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_healthy"
+                style="@style/CheckableChip"
+                android:text="@string/healthy"
+                />
 
-</LinearLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_vegetarian"
+                style="@style/CheckableChip"
+                android:text="@string/vegetarian"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_vegan"
+                style="@style/CheckableChip"
+                android:text="@string/vegan"
+                />
+        </com.google.android.material.chip.ChipGroup>
+
+    </LinearLayout>
+</ScrollView>
