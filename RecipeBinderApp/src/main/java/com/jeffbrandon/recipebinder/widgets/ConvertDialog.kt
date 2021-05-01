@@ -10,17 +10,19 @@ import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 
 class ConvertDialog(context: Context, startUnit: UnitType, vm: EditRecipeViewModel) {
     private companion object {
-        private val volumeUnits = setOf(UnitType.NONE,
-                                        UnitType.OUNCE,
-                                        UnitType.CUP,
-                                        UnitType.MILLILITER,
-                                        UnitType.MILLILITER,
-                                        UnitType.LITER,
-                                        UnitType.TEA_SPOON,
-                                        UnitType.TABLE_SPOON,
-                                        UnitType.PINT,
-                                        UnitType.QUART,
-                                        UnitType.GALLON)
+        private val volumeUnits = setOf(
+            UnitType.NONE,
+            UnitType.OUNCE,
+            UnitType.CUP,
+            UnitType.MILLILITER,
+            UnitType.MILLILITER,
+            UnitType.LITER,
+            UnitType.TEA_SPOON,
+            UnitType.TABLE_SPOON,
+            UnitType.PINT,
+            UnitType.QUART,
+            UnitType.GALLON,
+        )
 
         private val massUnits = setOf(UnitType.NONE, UnitType.OUNCE, UnitType.POUND, UnitType.GRAM)
     }

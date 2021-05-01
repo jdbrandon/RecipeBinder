@@ -81,8 +81,8 @@
     <string name="abandon">abandon</string>
     <string name="delete_this_confirmation_message">Delete this ingredient?</string>
     <string name="hourglass">hourglass</string>
-    <string name="copy_to_clipboard">Copy to clipboard</string>
-    <string name="copy_import_text">Copy importable text</string>
+    <string name="copy_to_clipboard">Recipe Text</string>
+    <string name="copy_import_text">Importable text</string>
     <string name="qr_code">qr code</string>
     <string name="app_scheme" translatable="false">&schema;</string>
     <string name="recipe_uri_path" translatable="false">recipe</string>
@@ -100,4 +100,14 @@
     <string name="fractional_measurement">Fractional measurement</string>
     <string name="measurement_units">Measurement</string>
     <string name="app_logo">app logo</string>
+    <string name="mortar_amp_pestle">Mortar &amp; Pestle</string>
+    <string name="torch">Torch</string>
+    <string name="immersion_blender">Immersion Blender</string>
+    <string name="blender">Blender</string>
+    <string name="food_processor">Food Processor</string>
+    <string name="mixer">Mixer</string>
+    <string name="tools">Tools</string>
+    <string name="filter">Filter</string>
+    <string name="reset">Reset</string>
+    <string name="filter_recipes">Filter Recipes</string>
 </resources>

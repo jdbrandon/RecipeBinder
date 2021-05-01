@@ -2,6 +2,7 @@ package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.databinding.FragmentViewRecipeBinding
@@ -32,8 +33,11 @@ class ViewRecipeViewBinder @Inject constructor() {
         with(binder) {
             listFragmentContainer.adapter = ViewFragmentPagerAdapter(activity)
             editButton.setOnClickListener {
-                activity.supportFragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, EditRecipeFragment::class.java, null).addToBackStack(null).commit()
+                activity.supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    add(R.id.fragment_container, EditRecipeFragment::class.java, null)
+                    addToBackStack(null)
+                }
             }
         }
     }

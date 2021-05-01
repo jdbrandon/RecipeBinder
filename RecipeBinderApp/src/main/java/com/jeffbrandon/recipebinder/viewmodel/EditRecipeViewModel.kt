@@ -13,6 +13,8 @@ import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -43,7 +45,7 @@ class EditRecipeViewModel @Inject constructor(
         editInstruction.value = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
     }
 
-    suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: List<RecipeTag>) {
+    suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: Set<RecipeTag>) {
         updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), cookTime, tags)
     }
 
@@ -123,8 +125,10 @@ class EditRecipeViewModel @Inject constructor(
         shouldWarn = true
     }
 
-    fun stopEditing() {
+    suspend fun stopEditing() = withContext(Dispatchers.Main) {
         editing = false
+        editIngredient.value = null
+        editInstruction.value = null
     }
 
     private data class Edit<T>(val index: Int, val data: T)

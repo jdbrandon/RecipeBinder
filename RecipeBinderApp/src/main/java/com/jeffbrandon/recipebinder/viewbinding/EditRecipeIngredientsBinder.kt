@@ -2,6 +2,7 @@ package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.EditIngredientAdapter
@@ -33,7 +34,10 @@ class EditRecipeIngredientsBinder @Inject constructor() {
     }
 
     private fun openEditIngredientFragment(fm: FragmentManager) {
-        fm.beginTransaction().add(R.id.fragment_container, EditIngredientFragment::class.java, null)
-            .addToBackStack(null).commit()
+        fm.commit {
+            setReorderingAllowed(true)
+            add(R.id.fragment_container, EditIngredientFragment::class.java, null)
+            addToBackStack(null)
+        }
     }
 }

@@ -18,9 +18,7 @@ import com.jeffbrandon.recipebinder.fragments.Savable
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import com.jeffbrandon.recipebinder.widgets.ConvertDialog
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -123,10 +121,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
         viewModel.beginEditing()
     }
 
-    /**
-     * Non blocking implementation run in onPause so we run on Main
-     */
-    override suspend fun save() = withContext(Dispatchers.Main) {
+    override suspend fun save() {
         viewModel.stopEditing()
     }
 

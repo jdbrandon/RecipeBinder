@@ -2,6 +2,7 @@ package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.RecipeMode
@@ -34,7 +35,10 @@ class RecipeActivityBinder @Inject constructor() {
         when (recipeMode) {
             RecipeMode.EDIT -> EditRecipeFragment::class.java.also { editFragment ->
                 Timber.i("got edit fragment")
-                fragmentManager.beginTransaction().replace(R.id.fragment_container, editFragment, null).commit()
+                fragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace(R.id.fragment_container, editFragment, null)
+                }
             }
             RecipeMode.VIEW -> Timber.i("got view fragment")
             else -> Timber.w("unable to get RecipeMode, falling back to VIEW")
