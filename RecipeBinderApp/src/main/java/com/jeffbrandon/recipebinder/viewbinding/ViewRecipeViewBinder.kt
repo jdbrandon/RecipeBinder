@@ -45,8 +45,9 @@ class ViewRecipeViewBinder @Inject constructor() {
     private fun onNewRecipe(recipe: RecipeData) {
         with(binder) {
             recipe.run {
-                cookTimeView.text = cookTime.toString()
                 nameText.text = name
+                cookTimeView.text = cookTime.toString()
+                servingsText.text = servings.toString()
             }
         }
     }

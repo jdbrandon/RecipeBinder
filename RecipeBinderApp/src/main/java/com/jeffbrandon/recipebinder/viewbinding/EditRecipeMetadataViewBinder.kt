@@ -24,6 +24,7 @@ class EditRecipeMetadataViewBinder @Inject constructor() : Savable {
             with(binder.meta) {
                 name.setText(recipe.name)
                 cookTime.setText(recipe.cookTime.toString())
+                servings.setText(recipe.servings.toString())
             }
             with(binder.tags) {
                 tagMap = recipeMap()
@@ -42,8 +43,9 @@ class EditRecipeMetadataViewBinder @Inject constructor() : Savable {
         with(binder.meta) {
             val recipeName = name.text.toString()
             val cookTime = cookTime.text.toString().toInt()
+            val servings = servings.text.toString().toInt()
             val tags = tagMap.entries.filter { it.value.isChecked }.map { it.key }.toSet()
-            viewModel.saveMetadata(recipeName, cookTime, tags)
+            viewModel.saveMetadata(recipeName, cookTime, servings, tags)
         }
         viewModel.stopEditing()
     }
