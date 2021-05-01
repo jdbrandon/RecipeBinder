@@ -37,7 +37,7 @@
             android:alpha=".60"
             android:contentDescription="@string/app_logo"
             android:src="@drawable/ic_launcher_foreground"
-            app:tint="#000"
+            app:tint="@android:color/black"
             />
     </FrameLayout>
 

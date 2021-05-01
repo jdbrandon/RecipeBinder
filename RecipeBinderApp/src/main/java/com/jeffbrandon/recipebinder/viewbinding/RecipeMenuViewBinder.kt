@@ -52,7 +52,7 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
         binder.recipeRecyclerView.setHasFixedSize(true)
         viewModel.getRecipes().observe(lifecycle) {
             vc.unregisterContextMenu(binder.recipeRecyclerView)
-            binder.recipeRecyclerView.adapter = RecipeAdapter(it ?: listOf(), viewModel)
+            binder.recipeRecyclerView.adapter = RecipeAdapter(it, viewModel)
             vc.registerContextMenu(binder.recipeRecyclerView)
         }
         viewModel.selectedRecipeId().observe(lifecycle) {
