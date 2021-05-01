@@ -29,7 +29,7 @@ class RecipeMenuViewModel @Inject constructor(
     private val data by lazy { dataSource.get() }
     private val importer by lazy { lazyImportUtil.get() }
     private val searchFilter = MutableLiveData<String?>(null)
-    private val tagsFilter = MutableLiveData<List<RecipeTag>>()
+    private val tagsFilter = MutableLiveData<Set<RecipeTag>>()
     private val recipes: LiveData<List<RecipeData>> = searchFilter.switchMap { filter ->
         filter?.let { data.fetchAllRecipes(filter) } ?: data.fetchAllRecipes()
     }
@@ -53,7 +53,7 @@ class RecipeMenuViewModel @Inject constructor(
 
     fun selectedRecipeId(): LiveData<Long> = selectedRecipeId
 
-    fun selectedTags(): LiveData<List<RecipeTag>> = tagsFilter
+    fun selectedTags(): LiveData<Set<RecipeTag>> = tagsFilter
 
     fun resetToastMessage() {
         toastMessage.value = null
@@ -81,7 +81,7 @@ class RecipeMenuViewModel @Inject constructor(
         searchFilter.value = text?.let { "%$text%" }
     }
 
-    fun filterTags(tags: List<RecipeTag>) {
+    fun filterTags(tags: Set<RecipeTag>) {
         tagsFilter.value = tags
     }
 

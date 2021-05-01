@@ -2,8 +2,9 @@ package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.liveData
+import androidx.lifecycle.MutableLiveData
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
@@ -49,7 +50,7 @@ class RecipeMenuViewModelTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(dispatcher)
-        whenever(dataSource.fetchAllRecipes(anyString())).thenReturn(liveData { recipeList })
+        whenever(dataSource.fetchAllRecipes(anyString())).thenReturn(MutableLiveData(recipeList))
         underTest = RecipeMenuViewModel(context, { dataSource }, { importer })
     }
 
@@ -105,5 +106,67 @@ class RecipeMenuViewModelTest {
         val message = underTest.toastObservable().getOrAwaitValue()
         verify(importer).import(any())
         assertEquals(errorMsg, message)
+    }
+
+    @Test
+    fun `test fetch recipes - no tag filter`() = scope.runBlockingTest {
+        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        assertEquals(recipeList, recipeData)
+    }
+
+    @Test
+    fun `test fetch recipes - tag filter for one`() = scope.runBlockingTest {
+        underTest.filterTags(TestRecipeData.RECIPE_1.tags)
+
+        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        assertEquals(listOf(TestRecipeData.RECIPE_1), recipeData)
+    }
+
+    @Test
+    fun `test fetch recipes - tag filter on empty list`() = scope.runBlockingTest {
+        underTest.filterTags(setOf())
+
+        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        assertEquals(recipeList, recipeData)
+    }
+
+    @Test
+    fun `test fetch recipes - tag filter for multiple`() = scope.runBlockingTest {
+        underTest.filterTags(setOf(RecipeTag.EASY))
+
+        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        underTest.filterTags(setOf(RecipeTag.DESSERT))
+        val newData = underTest.getRecipes().getOrAwaitValue()
+
+        assertEquals(listOf(TestRecipeData.RECIPE_1, TestRecipeData.RECIPE_3), recipeData)
+        assertEquals(listOf(TestRecipeData.RECIPE_2, TestRecipeData.RECIPE_3), newData)
+    }
+
+    @Test
+    fun `test fetch recipes - tag filter for out everything`() = scope.runBlockingTest {
+        underTest.filterTags(setOf(RecipeTag.SIDE))
+
+        val recipeData = underTest.getRecipes().getOrAwaitValue()
+
+        assertEquals(listOf<RecipeData>(), recipeData)
+    }
+
+    @Test
+    fun `test filterTags list`() {
+        val testTags = setOf(RecipeTag.SIDE, RecipeTag.SIDE)
+        underTest.filterTags(testTags)
+
+        val tags = underTest.selectedTags().getOrAwaitValue()
+
+        assertEquals(testTags, tags)
+    }
+
+    @Test
+    fun `test filterTags empty list`() {
+        underTest.filterTags(setOf())
+
+        val tags = underTest.selectedTags().getOrAwaitValue()
+
+        assertEquals(setOf<RecipeTag>(), tags)
     }
 }

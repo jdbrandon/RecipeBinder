@@ -8,7 +8,7 @@ class RecipeTagConverter private constructor() {
     companion object {
         @TypeConverter
         @JvmStatic
-        fun toInt(tags: MutableList<RecipeTag>): Int {
+        fun toInt(tags: Set<RecipeTag>): Int {
             var res = 0
             for (tag in tags) {
                 res = res or (1 shl RecipeTag.values.indexOf(tag))
@@ -18,8 +18,8 @@ class RecipeTagConverter private constructor() {
 
         @TypeConverter
         @JvmStatic
-        fun toListRecipeTag(tags: Int): MutableList<RecipeTag> {
-            val res = mutableListOf<RecipeTag>()
+        fun toListRecipeTag(tags: Int): Set<RecipeTag> {
+            val res = mutableSetOf<RecipeTag>()
             for (i in RecipeTag.values.indices) {
                 if ((1 shl i) and tags != 0) res.add(RecipeTag.values[i])
             }

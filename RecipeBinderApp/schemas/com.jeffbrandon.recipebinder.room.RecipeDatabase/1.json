@@ -9,7 +9,7 @@
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `cookTime` INTEGER NOT NULL, `tags` INTEGER NOT NULL, `ingredientsJson` TEXT NOT NULL, `instructionsJson` TEXT NOT NULL)",
         "fields": [
           {
-            "fieldPath": "id",
+            "fieldPath": "recipeId",
             "columnName": "id",
             "affinity": "INTEGER",
             "notNull": false
@@ -33,13 +33,13 @@
             "notNull": true
           },
           {
-            "fieldPath": "ingredientsJson",
+            "fieldPath": "ingredients",
             "columnName": "ingredientsJson",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "instructionsJson",
+            "fieldPath": "instructions",
             "columnName": "instructionsJson",
             "affinity": "TEXT",
             "notNull": true
@@ -55,9 +55,10 @@
         "foreignKeys": []
       }
     ],
+    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"20459ac26f28b7346b4c046f5005339b\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '20459ac26f28b7346b4c046f5005339b')"
     ]
   }
 }

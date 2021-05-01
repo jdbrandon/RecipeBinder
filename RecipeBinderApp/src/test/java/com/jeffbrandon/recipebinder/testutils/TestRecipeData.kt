@@ -11,12 +11,13 @@ class TestRecipeData {
         fun buildTestData() = mutableListOf(
             RECIPE_1,
             RECIPE_2,
+            RECIPE_3,
         )
 
         const val ID_1 = 1L
         const val NAME_1 = "testName"
         const val COOK_TIME_1 = 5
-        val TAGS_LIST_1 = listOf(RecipeTag.EASY, RecipeTag.FAST, RecipeTag.HEALTHY)
+        val TAGS_SET_1 = setOf(RecipeTag.EASY, RecipeTag.FAST, RecipeTag.HEALTHY)
         const val INGREDIENT_NAME_1_1 = "tomatoes"
         const val AMOUNT_1_1 = 600.1f
         val TYPE_1_1 = UnitType.NONE
@@ -41,7 +42,7 @@ class TestRecipeData {
         const val ID_2 = 1L
         const val NAME_2 = "testName"
         const val COOK_TIME_2 = 5
-        val TAGS_LIST_2 = listOf(RecipeTag.DESSERT)
+        val TAGS_SET_2 = setOf(RecipeTag.DESSERT)
         const val INGREDIENT_NAME_2_1 = "birds"
         const val AMOUNT_2_1 = 2f
         val TYPE_2_1 = UnitType.NONE
@@ -63,17 +64,49 @@ class TestRecipeData {
         val INSTRUCTION_2_2 = Instruction("we're")
         val INSTRUCTION_2_3 = Instruction("talking")
         val INSTRUCTION_LIST_2 = listOf(INSTRUCTION_2_1, INSTRUCTION_2_2, INSTRUCTION_2_3)
+        const val ID_3 = 2L
+        const val NAME_3 = "I am also a recipe"
+        const val COOK_TIME_3 = 45000
+        val TAGS_SET_3 =
+            setOf(RecipeTag.EASY, RecipeTag.DESSERT) // Chosen to insersect with recipe one and two distinctly
+        const val INGREDIENT_NAME_3_1 = "impossible burger"
+        const val AMOUNT_3_1 = 1f
+        val TYPE_3_1 = UnitType.NONE
+        val INGREDIENT_3_1 = Ingredient(INGREDIENT_NAME_3_1, AMOUNT_3_1, TYPE_3_1)
+        const val INGREDIENT_NAME_3_2 = "lettuce"
+        const val AMOUNT_3_2 = 2f
+        val TYPE_3_2 = UnitType.NONE
+        val INGREDIENT_3_2 = Ingredient(INGREDIENT_NAME_3_2, AMOUNT_3_2, TYPE_3_2)
+        const val INGREDIENT_NAME_3_3 = "Buns"
+        const val AMOUNT_3_3 = 2f
+        val TYPE_3_3 = UnitType.NONE
+        val INGREDIENT_3_3 = Ingredient(INGREDIENT_NAME_3_3, AMOUNT_3_3, TYPE_3_3)
+        val INGREDIENT_LIST_3 = listOf(
+            INGREDIENT_3_1,
+            INGREDIENT_3_2,
+            INGREDIENT_3_3,
+        )
+        val INSTRUCTION_3_1 = Instruction("Fry those illogical burgers up in a skillet")
+        val INSTRUCTION_3_2 = Instruction("Put them on those tasty buns")
+        val INSTRUCTION_3_3 = Instruction("lettuce gpes on next")
+        val INSTRUCTION_LIST_3 = listOf(INSTRUCTION_3_1, INSTRUCTION_3_2, INSTRUCTION_3_3)
         val RECIPE_1 = RecipeData(recipeId = ID_1,
                                   name = NAME_1,
                                   cookTime = COOK_TIME_1,
-                                  tags = TAGS_LIST_1,
+                                  tags = TAGS_SET_1,
                                   ingredients = INGREDIENT_LIST_1,
                                   instructions = INSTRUCTION_LIST_1)
         val RECIPE_2 = RecipeData(recipeId = ID_2,
                                   name = NAME_2,
                                   cookTime = COOK_TIME_2,
-                                  tags = TAGS_LIST_2,
+                                  tags = TAGS_SET_2,
                                   ingredients = INGREDIENT_LIST_2,
                                   instructions = INSTRUCTION_LIST_2)
+        val RECIPE_3 = RecipeData(recipeId = ID_3,
+                                  name = NAME_3,
+                                  cookTime = COOK_TIME_3,
+                                  tags = TAGS_SET_3,
+                                  ingredients = INGREDIENT_LIST_3,
+                                  instructions = INSTRUCTION_LIST_3)
     }
 }

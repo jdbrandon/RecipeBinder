@@ -45,7 +45,7 @@ class EditRecipeViewModel @Inject constructor(
         editInstruction.value = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
     }
 
-    suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: List<RecipeTag>) {
+    suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: Set<RecipeTag>) {
         updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), cookTime, tags)
     }
 

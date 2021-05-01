@@ -14,9 +14,9 @@ data class RecipeData(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val recipeId: Long?,
     val name: String,
     val cookTime: Int,
-    val tags: List<RecipeTag>,
+    val tags: Set<RecipeTag>,
     @ColumnInfo(name = "ingredientsJson") val ingredients: List<Ingredient>,
     @ColumnInfo(name = "instructionsJson") val instructions: List<Instruction>,
 ) {
-    constructor() : this(null, "", 0, listOf(), listOf(), listOf())
+    constructor() : this(null, "", 0, setOf(), listOf(), listOf())
 }
