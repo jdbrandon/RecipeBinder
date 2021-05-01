@@ -20,6 +20,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
+@SuppressWarnings("TooManyFunctions")
 class RecipeMenuViewModel @Inject constructor(
     @ApplicationContext context: Context,
     dataSource: Lazy<RecipeMenuDataSource>,
