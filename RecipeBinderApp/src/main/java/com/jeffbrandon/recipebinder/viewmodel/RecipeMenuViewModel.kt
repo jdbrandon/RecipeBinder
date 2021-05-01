@@ -2,10 +2,12 @@ package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
 import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
@@ -27,6 +29,7 @@ class RecipeMenuViewModel @Inject constructor(
     private val data by lazy { dataSource.get() }
     private val importer by lazy { lazyImportUtil.get() }
     private val searchFilter = MutableLiveData<String?>(null)
+    private val tagsFilter = MutableLiveData<List<RecipeTag>>()
     private val recipes: LiveData<List<RecipeData>> = searchFilter.switchMap { filter ->
         filter?.let { data.fetchAllRecipes(filter) } ?: data.fetchAllRecipes()
     }
@@ -35,11 +38,22 @@ class RecipeMenuViewModel @Inject constructor(
     private val errorMessageContent by lazy { context.getString(R.string.error_import_failed) }
     private val importSuccessFmt by lazy { context.getString(R.string.import_success) }
 
-    fun getRecipes(): LiveData<List<RecipeData>> = recipes
+    fun getRecipes(): LiveData<List<RecipeData>> {
+        val data = MediatorLiveData<List<RecipeData>>()
+        data.addSource(recipes) { list ->
+            data.value = list.filter { recipe -> tagsFilter.value?.let { recipe.tags.containsAll(it) } ?: true }
+        }
+        data.addSource(tagsFilter) { tags ->
+            data.value = recipes.value?.filter { recipe -> recipe.tags.containsAll(tags) }
+        }
+        return data
+    }
 
     fun toastObservable(): LiveData<String?> = toastMessage
 
     fun selectedRecipeId(): LiveData<Long> = selectedRecipeId
+
+    fun selectedTags(): LiveData<List<RecipeTag>> = tagsFilter
 
     fun resetToastMessage() {
         toastMessage.value = null
@@ -65,6 +79,10 @@ class RecipeMenuViewModel @Inject constructor(
 
     fun filter(text: String?) {
         searchFilter.value = text?.let { "%$text%" }
+    }
+
+    fun filterTags(tags: List<RecipeTag>) {
+        tagsFilter.value = tags
     }
 
     suspend fun import(blobString: String) {

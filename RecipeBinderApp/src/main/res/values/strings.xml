@@ -107,4 +107,7 @@
     <string name="food_processor">Food Processor</string>
     <string name="mixer">Mixer</string>
     <string name="tools">Tools</string>
+    <string name="filter">Filter</string>
+    <string name="reset">Reset</string>
+    <string name="filter_recipes">Filter Recipes</string>
 </resources>

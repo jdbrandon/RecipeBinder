@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recipe_content_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_recipe_menu"
     >
 
     <com.google.android.material.textfield.TextInputLayout
@@ -15,13 +13,13 @@
         style="@style/TextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="16dp"
         android:hint="@string/recipe_filter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -36,6 +34,7 @@
         android:id="@+id/recipe_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/recipe_filter_layout"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="4dp"
@@ -43,23 +42,46 @@
         android:text="@string/recipes"
         android:textSize="@dimen/title_text_size"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipe_filter_layout"
+        />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/filter_button"
+        style="@style/Widget.MaterialComponents.Chip.Action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/recipe_text"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_toEndOf="@id/recipe_text"
+        android:text="@string/filter"
+        app:chipIcon="@drawable/ic_filter_24"
+        />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/clear_filters_button"
+        style="@style/Widget.MaterialComponents.Chip.Action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/filter_button"
+        android:layout_alignBottom="@id/filter_button"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_toEndOf="@id/filter_button"
+        android:text="@string/reset"
+        app:chipIcon="@drawable/ic_clear_24"
         />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipe_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_below="@+id/recipe_text"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="13dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginBottom="-5dp"
         android:contentDescription="@string/recipe_list"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipe_text"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -67,13 +89,12 @@
         style="@style/FabStyle.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         android:contentDescription="@string/add_recipe"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_add_white_24dp"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

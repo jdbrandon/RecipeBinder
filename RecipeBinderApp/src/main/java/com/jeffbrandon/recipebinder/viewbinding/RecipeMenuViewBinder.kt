@@ -11,8 +11,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
 import com.jeffbrandon.recipebinder.databinding.FragmentRecipeMenuBinding
+import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
+import com.jeffbrandon.recipebinder.widgets.TagsFilterDialog
+import dagger.Lazy
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
@@ -22,15 +25,17 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(FragmentComponent::class)
-class RecipeMenuViewBinder @Inject constructor() {
+class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilterDialog>) {
     interface ViewContract {
         fun registerContextMenu(v: View)
         fun unregisterContextMenu(v: View)
     }
 
+    private val filterDialog by lazy { dialog.get() }
     private lateinit var viewModel: RecipeMenuViewModel
     private lateinit var viewRoot: View
     private var selectedRecipeId: Long? = null
+    private var filterTags: List<RecipeTag>? = null
 
     private lateinit var binder: FragmentRecipeMenuBinding
 
@@ -47,14 +52,22 @@ class RecipeMenuViewBinder @Inject constructor() {
         binder.recipeRecyclerView.setHasFixedSize(true)
         viewModel.getRecipes().observe(lifecycle) {
             vc.unregisterContextMenu(binder.recipeRecyclerView)
-            binder.recipeRecyclerView.adapter = RecipeAdapter(it, viewModel)
+            binder.recipeRecyclerView.adapter = RecipeAdapter(it ?: listOf(), viewModel)
             vc.registerContextMenu(binder.recipeRecyclerView)
         }
         viewModel.selectedRecipeId().observe(lifecycle) {
             selectedRecipeId = it
         }
+        viewModel.selectedTags().observe(lifecycle) { tags ->
+            filterTags = tags
+        }
         binder.recipeFilterText.addTextChangedListener { text ->
             viewModel.filter(if (text.isNullOrEmpty()) null else text.toString())
+        }
+        binder.filterButton.setOnClickListener {
+            filterDialog.show(view.context, filterTags ?: listOf()) { tags ->
+                viewModel.filterTags(tags)
+            }
         }
         setupNewRecipeButton()
     }
