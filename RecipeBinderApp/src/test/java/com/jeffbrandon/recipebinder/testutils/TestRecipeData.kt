@@ -6,6 +6,7 @@ import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.room.RecipeData
 
+@Suppress("MemberVisibilityCanBePrivate")
 class TestRecipeData {
     companion object {
         fun buildTestData() = mutableListOf(
@@ -68,7 +69,7 @@ class TestRecipeData {
         const val NAME_3 = "I am also a recipe"
         const val COOK_TIME_3 = 45000
         val TAGS_SET_3 =
-            setOf(RecipeTag.EASY, RecipeTag.DESSERT) // Chosen to insersect with recipe one and two distinctly
+            setOf(RecipeTag.EASY, RecipeTag.DESSERT) // Chosen to intersect with recipe one and two distinctly
         const val INGREDIENT_NAME_3_1 = "impossible burger"
         const val AMOUNT_3_1 = 1f
         val TYPE_3_1 = UnitType.NONE
@@ -88,7 +89,7 @@ class TestRecipeData {
         )
         val INSTRUCTION_3_1 = Instruction("Fry those illogical burgers up in a skillet")
         val INSTRUCTION_3_2 = Instruction("Put them on those tasty buns")
-        val INSTRUCTION_3_3 = Instruction("lettuce gpes on next")
+        val INSTRUCTION_3_3 = Instruction("lettuce goes on next")
         val INSTRUCTION_LIST_3 = listOf(INSTRUCTION_3_1, INSTRUCTION_3_2, INSTRUCTION_3_3)
         val RECIPE_1 = RecipeData(recipeId = ID_1,
                                   name = NAME_1,
