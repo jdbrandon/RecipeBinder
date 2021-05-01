@@ -18,6 +18,7 @@ class TestRecipeData {
         const val ID_1 = 1L
         const val NAME_1 = "testName"
         const val COOK_TIME_1 = 5
+        const val SERVING_SIZE_1 = 4
         val TAGS_SET_1 = setOf(RecipeTag.EASY, RecipeTag.FAST, RecipeTag.HEALTHY)
         const val INGREDIENT_NAME_1_1 = "tomatoes"
         const val AMOUNT_1_1 = 600.1f
@@ -43,6 +44,7 @@ class TestRecipeData {
         const val ID_2 = 1L
         const val NAME_2 = "testName"
         const val COOK_TIME_2 = 5
+        const val SERVING_SIZE_2 = 10
         val TAGS_SET_2 = setOf(RecipeTag.DESSERT)
         const val INGREDIENT_NAME_2_1 = "birds"
         const val AMOUNT_2_1 = 2f
@@ -68,6 +70,7 @@ class TestRecipeData {
         const val ID_3 = 2L
         const val NAME_3 = "I am also a recipe"
         const val COOK_TIME_3 = 45000
+        const val SERVING_SIZE_3 = 30
         val TAGS_SET_3 =
             setOf(RecipeTag.EASY, RecipeTag.DESSERT) // Chosen to intersect with recipe one and two distinctly
         const val INGREDIENT_NAME_3_1 = "impossible burger"
@@ -94,18 +97,21 @@ class TestRecipeData {
         val RECIPE_1 = RecipeData(recipeId = ID_1,
                                   name = NAME_1,
                                   cookTime = COOK_TIME_1,
+                                  servings = SERVING_SIZE_1,
                                   tags = TAGS_SET_1,
                                   ingredients = INGREDIENT_LIST_1,
                                   instructions = INSTRUCTION_LIST_1)
         val RECIPE_2 = RecipeData(recipeId = ID_2,
                                   name = NAME_2,
                                   cookTime = COOK_TIME_2,
+                                  servings = SERVING_SIZE_2,
                                   tags = TAGS_SET_2,
                                   ingredients = INGREDIENT_LIST_2,
                                   instructions = INSTRUCTION_LIST_2)
         val RECIPE_3 = RecipeData(recipeId = ID_3,
                                   name = NAME_3,
                                   cookTime = COOK_TIME_3,
+                                  servings = SERVING_SIZE_3,
                                   tags = TAGS_SET_3,
                                   ingredients = INGREDIENT_LIST_3,
                                   instructions = INSTRUCTION_LIST_3)

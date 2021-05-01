@@ -73,9 +73,10 @@ open class RecipeViewModel @Inject constructor(
     protected suspend fun updateRecipeMetadata(
         recipeName: String,
         cookTime: Int,
+        servings: Int,
         tags: Set<RecipeTag>,
     ) = withContext(Dispatchers.Default) {
-        val newRecipe = recipe.value?.copy(name = recipeName, cookTime = cookTime, tags = tags)
+        val newRecipe = recipe.value?.copy(name = recipeName, cookTime = cookTime, servings = servings, tags = tags)
             ?: error("failed to update metadata")
         db.updateRecipe(newRecipe)
     }

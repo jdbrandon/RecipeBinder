@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.abs
 
 @SuppressWarnings("TooManyFunctions")
 @HiltViewModel
@@ -45,8 +46,8 @@ class EditRecipeViewModel @Inject constructor(
         editInstruction.value = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
     }
 
-    suspend fun saveMetadata(recipeName: String, cookTime: Int, tags: Set<RecipeTag>) {
-        updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), cookTime, tags)
+    suspend fun saveMetadata(recipeName: String, cookTime: Int, servings: Int, tags: Set<RecipeTag>) {
+        updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), abs(cookTime), abs(servings), tags)
     }
 
     suspend fun saveIngredient(data: Ingredient) {

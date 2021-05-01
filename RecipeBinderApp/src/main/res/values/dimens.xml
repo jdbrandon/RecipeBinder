@@ -2,7 +2,6 @@
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">16dp</dimen>
-    <dimen name="margin_xlarge">20dp</dimen>
     <dimen name="margin_xxlarge">24dp</dimen>
     <dimen name="margin_xxxlarge">64dp</dimen>
 

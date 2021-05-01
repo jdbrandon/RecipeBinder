@@ -130,12 +130,13 @@ class EditRecipeViewModelTest {
     fun `test save metadata`(): Unit = runBlocking {
         val name = "newName"
         val time = 5
+        val servings = 8
         val tags = setOf(RecipeTag.DESSERT, RecipeTag.SIDE, RecipeTag.EASY)
         scope.launch {
 
-            underTest.saveMetadata(name, time, tags)
+            underTest.saveMetadata(name, time, servings, tags)
 
-            val expected = TestRecipeData.RECIPE_1.copy(name = name, cookTime = time, tags = tags)
+            val expected = TestRecipeData.RECIPE_1.copy(name = name, cookTime = time, servings = servings, tags = tags)
             verify(dataSource).updateRecipe(eq(expected))
         }.join()
     }
