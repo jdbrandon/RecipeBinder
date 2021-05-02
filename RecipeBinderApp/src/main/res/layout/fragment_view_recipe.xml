@@ -39,18 +39,6 @@
         android:textSize="@dimen/item_text_size"
         />
 
-    <TextView
-        android:id="@+id/minutes_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/cook_time_view"
-        android:layout_toEndOf="@id/cook_time_view"
-        android:gravity="start"
-        android:paddingHorizontal="@dimen/margin_small"
-        android:text="@string/minutes"
-        android:textSize="@dimen/item_text_size"
-        />
-
     <ImageView
         android:id="@+id/servings_icon"
         android:layout_width="wrap_content"
@@ -59,7 +47,7 @@
         android:layout_alignBottom="@id/servings_text"
         android:layout_marginStart="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_toEndOf="@id/minutes_label"
+        android:layout_toEndOf="@id/cook_time_view"
         android:contentDescription="@string/servings"
         android:src="@drawable/ic_group_24"
         />

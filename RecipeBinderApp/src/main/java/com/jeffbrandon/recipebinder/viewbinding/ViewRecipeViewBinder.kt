@@ -46,7 +46,7 @@ class ViewRecipeViewBinder @Inject constructor() {
         with(binder) {
             recipe.run {
                 nameText.text = name
-                cookTimeView.text = cookTime.toString()
+                cookTimeView.text = viewRoot.resources.getQuantityString(R.plurals.minute, cookTime, cookTime)
                 servingsText.text = servings.toString()
             }
         }

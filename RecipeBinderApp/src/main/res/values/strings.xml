@@ -24,11 +24,11 @@
     <string name="table_spoon">Table Spoon</string>
     <string name="ounce">Ounce</string>
     <string name="cup">Cup</string>
-    <string name="_3_quarters">&#190;</string>
-    <string name="_2_thirds">\u2154</string>
-    <string name="_1_half">&#189;</string>
-    <string name="_1_third">&#8531;</string>
-    <string name="_1_quarter">&#188;</string>
+    <string name="_3_quarters" translatable="false">&#190;</string>
+    <string name="_2_thirds" translatable="false">\u2154</string>
+    <string name="_1_half" translatable="false">&#189;</string>
+    <string name="_1_third" translatable="false">&#8531;</string>
+    <string name="_1_quarter" translatable="false">&#188;</string>
     <string name="quantity">quantity</string>
     <string name="delete">Delete</string>
     <string name="minutes">minutes</string>
@@ -86,9 +86,6 @@
     <string name="qr_code">qr code</string>
     <string name="app_scheme" translatable="false">&schema;</string>
     <string name="recipe_uri_path" translatable="false">recipe</string>
-    <string name="recipe_string_format"><xliff:g id="name">%1$s</xliff:g>, <xliff:g
-        id="time">%2$d</xliff:g> minutes:<xliff:g id="ingredients">\n%3$s\n</xliff:g><xliff:g
-        id="instructions">%4$s\n</xliff:g></string>
     <string name="list_join_format">,\n\t</string>
     <string name="title_join_format">:\n\t</string>
     <string name="copied_toast">Copied to clipboard</string>
@@ -120,7 +117,7 @@
     <string name="contact">Contact</string>
     <string name="support_the_app">Support the app</string>
     <string name="personal_website">Personal Website</string>
-    <string name="contact_uri">mailto:jeff@jeffbrandon.me</string>
-    <string name="website_uri">http://jeffbrandon.me</string>
-    <string name="support_uri">https://buymeacoffee.com/jeffbrandon</string>
+    <string name="contact_uri" translatable="false">mailto:jeff@jeffbrandon.me</string>
+    <string name="website_uri" translatable="false">http://jeffbrandon.me</string>
+    <string name="support_uri" translatable="false">https://buymeacoffee.com/jeffbrandon</string>
 </resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <plurals name="recipe_string_format">
+        <item quantity="one">
+            <xliff:g id="name">%1$s</xliff:g>, <xliff:g id="time">%2$d</xliff:g> minute:<xliff:g
+            id="ingredients">\n%3$s\n</xliff:g><xliff:g id="instructions">%4$s\n</xliff:g>
+        </item>
+        <item quantity="many">
+            <xliff:g id="name">%1$s</xliff:g>, <xliff:g id="time">%2$d</xliff:g> minutes:<xliff:g
+            id="ingredients">\n%3$s\n</xliff:g><xliff:g id="instructions">%4$s\n</xliff:g>
+        </item>
+        <item quantity="zero">
+            <xliff:g id="name">%1$s</xliff:g>, <xliff:g id="time">%2$d</xliff:g> minutes:<xliff:g
+            id="ingredients">\n%3$s\n</xliff:g><xliff:g id="instructions">%4$s\n</xliff:g>
+        </item>
+    </plurals>
+    <plurals name="minute">
+        <item quantity="one"><xliff:g id="minutes">%1$d</xliff:g> minute</item>
+        <item quantity="many"><xliff:g id="minutes">%1$d</xliff:g> minutes</item>
+        <item quantity="zero"><xliff:g id="minutes">%1$d</xliff:g> minutes</item>
+    </plurals>
+</resources>
