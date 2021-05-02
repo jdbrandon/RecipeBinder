@@ -26,11 +26,9 @@ class EditRecipeMetadataViewBinder @Inject constructor() : Savable {
                 cookTime.setText(recipe.cookTime.toString())
                 servings.setText(recipe.servings.toString())
             }
-            with(binder.tags) {
-                tagMap = recipeMap()
-                recipe.tags.forEach { tag ->
-                    tagMap[tag]?.apply { isChecked = true } ?: error("Unmapped tag")
-                }
+            tagMap = binder.tags.recipeMap()
+            recipe.tags.forEach { tag ->
+                tagMap[tag]?.apply { isChecked = true } ?: error("Unmapped tag")
             }
         }
     }

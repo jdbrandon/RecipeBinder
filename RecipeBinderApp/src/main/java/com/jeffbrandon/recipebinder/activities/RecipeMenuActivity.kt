@@ -43,7 +43,7 @@ class RecipeMenuActivity : RecipeAppActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_import -> binder.import()
-            R.id.action_settings -> binder.settings()
+            R.id.action_about -> binder.about(supportFragmentManager)
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -1,8 +1,12 @@
 package com.jeffbrandon.recipebinder.viewbinding
 
 import android.view.View
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.Snackbar
+import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.fragments.AboutFragment
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import com.jeffbrandon.recipebinder.widgets.ImportRecipeBlobDialog
 import dagger.Lazy
@@ -35,8 +39,12 @@ class RecipeMenuActivityViewBinder @Inject constructor(dialog: Lazy<ImportRecipe
         return true
     }
 
-    fun settings(): Boolean {
-        // TODO show a Settings/About page
+    fun about(fm: FragmentManager): Boolean {
+        fm.commit {
+            setReorderingAllowed(true)
+            add(R.id.fragment_container, AboutFragment::class.java, null)
+            addToBackStack(null)
+        }
         return true
     }
 }
