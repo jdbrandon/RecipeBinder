@@ -1,1 +1,3 @@
 /build
+/src/main/java/com/jeffbrandon/recipebinder/room/BitmapConverter.kt
+/src/test/java/com/jeffbrandon/recipebinder/room/BitmapConverterTest.kt

@@ -18,6 +18,7 @@ data class RecipeData(
     val tags: Set<RecipeTag>,
     @ColumnInfo(name = "ingredientsJson") val ingredients: List<Ingredient>,
     @ColumnInfo(name = "instructionsJson") val instructions: List<Instruction>,
+    val image: String?,
 ) {
-    constructor() : this(null, "", 0, 0, setOf(), listOf(), listOf())
+    constructor() : this(null, "", 0, 0, setOf(), listOf(), listOf(), null)
 }
