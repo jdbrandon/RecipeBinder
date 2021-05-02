@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_xlarge"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/app_logo"
+            android:src="@drawable/ic_launcher_foreground"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_xxlarge"
+            android:gravity="fill_horizontal"
+            android:text="@string/about_contents_1"
+            android:textSize="@dimen/about_text_size"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_large"
+            android:gravity="fill_horizontal"
+            android:text="@string/about_contents_2"
+            android:textSize="@dimen/about_text_size"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_xxlarge"
+            android:gravity="fill_horizontal"
+            android:text="@string/about_contents_3"
+            android:textSize="@dimen/about_text_size"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_xxlarge"
+            android:layout_marginBottom="@dimen/margin_xxlarge"
+            android:gravity="fill_horizontal"
+            android:text="@string/about_contents_4"
+            android:textSize="@dimen/about_text_size"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="fill_horizontal"
+            android:text="@string/about_contents_5"
+            android:textSize="@dimen/about_text_size"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_xxlarge"
+            android:layout_marginBottom="@dimen/margin_xxlarge"
+            android:gravity="fill_horizontal"
+            android:text="@string/about_contents_6"
+            android:textSize="@dimen/about_text_size"
+            />
+
+        <Button
+            android:id="@+id/contact_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_xxlarge"
+            android:text="@string/contact"
+            />
+
+        <Button
+            android:id="@+id/support_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_xxlarge"
+            android:text="@string/support_the_app"
+            />
+
+        <Button
+            android:id="@+id/site_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/personal_website"
+            />
+    </LinearLayout>
+
+</ScrollView>
