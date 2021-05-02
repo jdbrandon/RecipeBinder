@@ -21,7 +21,9 @@ import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.util.RecipeExporter
 import com.jeffbrandon.recipebinder.viewmodel.RecipeViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -57,7 +59,7 @@ class ShareFragmentViewBinder @Inject constructor(
                         addToClipboard(recipe.name, getClipString(recipe), viewRoot)
                     }
                 }
-                val bitmap = uriString.asQRCode()
+                val bitmap = buildQRCode(uriString)
                 binder.qrCode.setImageBitmap(bitmap)
             }
         }
@@ -83,8 +85,8 @@ class ShareFragmentViewBinder @Inject constructor(
         return "$ingredientString$titleJoin$list"
     }
 
-    private fun String.asQRCode(): Bitmap {
-        val matrix = QRCodeWriter().encode(this, BarcodeFormat.QR_CODE, qrSize, qrSize)
+    private suspend fun buildQRCode(data: String): Bitmap = withContext(Dispatchers.Default) {
+        val matrix = QRCodeWriter().encode(data, BarcodeFormat.QR_CODE, qrSize, qrSize)
 
         val bm = Bitmap.createBitmap(matrix.width, matrix.height, Bitmap.Config.RGB_565)
         for (i in 0 until matrix.width) {
@@ -92,7 +94,7 @@ class ShareFragmentViewBinder @Inject constructor(
                 bm[i, j] = if (matrix[i, j]) Color.BLACK else Color.WHITE
             }
         }
-        return bm
+        bm
     }
 
     private fun addToClipboard(label: String, content: Uri, view: View) {

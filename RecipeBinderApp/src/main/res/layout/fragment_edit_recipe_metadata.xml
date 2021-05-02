@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingHorizontal="@dimen/margin_large"
-    android:paddingVertical="@dimen/margin_medium"
     >
 
-    <include
-        android:id="@+id/meta"
-        layout="@layout/edit_name"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/margin_large"
+        android:paddingVertical="@dimen/margin_medium"
+        >
+
+        <include
+            android:id="@+id/meta"
+            layout="@layout/edit_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <include
+            android:id="@+id/tags"
+            layout="@layout/edit_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_image_button"
+        style="@style/FabStyle.Primary"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_margin="@dimen/margin_fab"
+        android:contentDescription="@string/add_a_photo"
+        app:srcCompat="@drawable/ic_add_photo_24"
         />
 
-    <include
-        android:id="@+id/tags"
-        layout="@layout/edit_tags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-</LinearLayout>
+</FrameLayout>

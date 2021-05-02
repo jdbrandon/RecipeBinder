@@ -1,9 +1,11 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.jeffbrandon.recipebinder.R
@@ -36,9 +38,11 @@ open class RecipeViewModel @Inject constructor(
 
     fun getRecipe(): LiveData<RecipeData> = recipe
 
-    fun getIngredients() = recipe.map { it.ingredients }
+    fun getIngredients() = recipe.map { it.ingredients }.distinctUntilChanged()
 
-    fun getInstructions() = recipe.map { it.instructions }
+    fun getInstructions() = recipe.map { it.instructions }.distinctUntilChanged()
+
+    fun getImage() = recipe.map { it.image }.distinctUntilChanged()
 
     protected fun getIngredientIndex(data: Ingredient): Int? =
         recipe.value?.ingredients?.indexOf(data).takeIf { it != -1 }
@@ -115,6 +119,13 @@ open class RecipeViewModel @Inject constructor(
             }
         } ?: error("Failed to move instruction")
         updateRecipeInstructions(newInstructions)
+    }
+
+    protected suspend fun saveImageInternal(image: Uri) = withContext(Dispatchers.IO) {
+        recipe.value?.let {
+            val newRecipe = it.copy(image = image.toString())
+            db.updateRecipe(newRecipe)
+        }
     }
 
     private suspend fun updateRecipeIngredients(newIngredientList: List<Ingredient>) = withContext(Dispatchers.IO) {

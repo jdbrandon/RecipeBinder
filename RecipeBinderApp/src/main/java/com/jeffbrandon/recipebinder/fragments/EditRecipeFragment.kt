@@ -17,7 +17,7 @@ class EditRecipeFragment : Fragment(R.layout.fragment_edit_recipe) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binder.bind(viewModel, requireActivity(), requireView())
+        binder.bind(viewModel, requireActivity(), requireView(), viewLifecycleOwner)
     }
 
     override fun onResume() {

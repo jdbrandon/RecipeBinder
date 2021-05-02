@@ -94,26 +94,35 @@ class TestRecipeData {
         val INSTRUCTION_3_2 = Instruction("Put them on those tasty buns")
         val INSTRUCTION_3_3 = Instruction("lettuce goes on next")
         val INSTRUCTION_LIST_3 = listOf(INSTRUCTION_3_1, INSTRUCTION_3_2, INSTRUCTION_3_3)
-        val RECIPE_1 = RecipeData(recipeId = ID_1,
-                                  name = NAME_1,
-                                  cookTime = COOK_TIME_1,
-                                  servings = SERVING_SIZE_1,
-                                  tags = TAGS_SET_1,
-                                  ingredients = INGREDIENT_LIST_1,
-                                  instructions = INSTRUCTION_LIST_1)
-        val RECIPE_2 = RecipeData(recipeId = ID_2,
-                                  name = NAME_2,
-                                  cookTime = COOK_TIME_2,
-                                  servings = SERVING_SIZE_2,
-                                  tags = TAGS_SET_2,
-                                  ingredients = INGREDIENT_LIST_2,
-                                  instructions = INSTRUCTION_LIST_2)
-        val RECIPE_3 = RecipeData(recipeId = ID_3,
-                                  name = NAME_3,
-                                  cookTime = COOK_TIME_3,
-                                  servings = SERVING_SIZE_3,
-                                  tags = TAGS_SET_3,
-                                  ingredients = INGREDIENT_LIST_3,
-                                  instructions = INSTRUCTION_LIST_3)
+        val RECIPE_1 = RecipeData(
+            recipeId = ID_1,
+            name = NAME_1,
+            cookTime = COOK_TIME_1,
+            servings = SERVING_SIZE_1,
+            tags = TAGS_SET_1,
+            ingredients = INGREDIENT_LIST_1,
+            instructions = INSTRUCTION_LIST_1,
+            image = null,
+        )
+        val RECIPE_2 = RecipeData(
+            recipeId = ID_2,
+            name = NAME_2,
+            cookTime = COOK_TIME_2,
+            servings = SERVING_SIZE_2,
+            tags = TAGS_SET_2,
+            ingredients = INGREDIENT_LIST_2,
+            instructions = INSTRUCTION_LIST_2,
+            image = null,
+        )
+        val RECIPE_3 = RecipeData(
+            recipeId = ID_3,
+            name = NAME_3,
+            cookTime = COOK_TIME_3,
+            servings = SERVING_SIZE_3,
+            tags = TAGS_SET_3,
+            ingredients = INGREDIENT_LIST_3,
+            instructions = INSTRUCTION_LIST_3,
+            image = null,
+        )
     }
 }

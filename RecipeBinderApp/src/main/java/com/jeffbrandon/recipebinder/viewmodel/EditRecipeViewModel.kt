@@ -1,6 +1,7 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -131,6 +132,8 @@ class EditRecipeViewModel @Inject constructor(
         editIngredient.value = null
         editInstruction.value = null
     }
+
+    suspend fun saveImage(image: Uri) = saveImageInternal(image)
 
     private data class Edit<T>(val index: Int, val data: T)
 }

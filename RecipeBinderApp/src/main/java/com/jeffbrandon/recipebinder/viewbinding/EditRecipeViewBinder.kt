@@ -3,6 +3,7 @@ package com.jeffbrandon.recipebinder.viewbinding
 import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commit
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -46,6 +47,7 @@ class EditRecipeViewBinder @Inject constructor() {
         vm: EditRecipeViewModel,
         activity: FragmentActivity,
         view: View,
+        lifecycle: LifecycleOwner,
     ) {
         viewModel = vm
         binder = FragmentEditRecipeBinding.bind(view)
@@ -68,6 +70,10 @@ class EditRecipeViewBinder @Inject constructor() {
                         else -> popBackStack()
                     }
                 }
+            }
+            viewModel.getImage().observe(lifecycle) { uri ->
+                // TODO
+                // root.background = image from uri
             }
         }
     }

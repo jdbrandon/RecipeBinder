@@ -3,6 +3,7 @@ package com.jeffbrandon.recipebinder.dagger
 import android.content.Context
 import androidx.room.Room
 import com.jeffbrandon.recipebinder.room.Migration1
+import com.jeffbrandon.recipebinder.room.Migration2
 import com.jeffbrandon.recipebinder.room.RecipeDao
 import com.jeffbrandon.recipebinder.room.RecipeDatabase
 import dagger.Module
@@ -20,7 +21,5 @@ class DatabaseModule {
     @Singleton
     fun providesDao(@ApplicationContext context: Context): RecipeDao =
         Room.databaseBuilder(context.applicationContext, RecipeDatabase::class.java, "recipesBinderRecipes")
-            .addMigrations(Migration1)
-            .build()
-            .recipeDao()
+            .addMigrations(Migration1, Migration2).build().recipeDao()
 }
