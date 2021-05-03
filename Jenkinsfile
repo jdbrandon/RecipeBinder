@@ -7,6 +7,8 @@ pipeline {
         stage('Checkout'){
             steps {
                 checkout scm
+                // Undo crashlytics integration commit because without google-services.json builds will fail
+                sh 'git revert e8cc0aea9436e2a0a36f02635fb214bbff2825c9 --no-commit'
             }
         }
         stage('Compile') {
