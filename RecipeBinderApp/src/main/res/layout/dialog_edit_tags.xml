@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+
+    <TextView
+        android:id="@+id/excludes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:text="@string/excludes"
+        android:textSize="@dimen/title_text_size"
+        />
+
+    <CheckBox
+        android:id="@+id/exclusion_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/excludes"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_toEndOf="@id/excludes"
+        android:buttonTint="@color/colorOnSecondary"
+        />
 
     <include
         android:id="@+id/tags"
         layout="@layout/edit_tags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/excludes"
         android:layout_marginHorizontal="@dimen/margin_xxlarge"
         />
 
-</FrameLayout>
+</RelativeLayout>

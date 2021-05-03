@@ -41,7 +41,7 @@ class TestRecipeData {
         val INSTRUCTION_1_2 = Instruction("the")
         val INSTRUCTION_1_3 = Instruction("pasta")
         val INSTRUCTION_LIST_1 = listOf(INSTRUCTION_1_1, INSTRUCTION_1_2, INSTRUCTION_1_3)
-        const val ID_2 = 1L
+        const val ID_2 = 2L
         const val NAME_2 = "testName"
         const val COOK_TIME_2 = 5
         const val SERVING_SIZE_2 = 10
@@ -67,7 +67,7 @@ class TestRecipeData {
         val INSTRUCTION_2_2 = Instruction("we're")
         val INSTRUCTION_2_3 = Instruction("talking")
         val INSTRUCTION_LIST_2 = listOf(INSTRUCTION_2_1, INSTRUCTION_2_2, INSTRUCTION_2_3)
-        const val ID_3 = 2L
+        const val ID_3 = 3L
         const val NAME_3 = "I am also a recipe"
         const val COOK_TIME_3 = 45000
         const val SERVING_SIZE_3 = 30
