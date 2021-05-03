@@ -99,6 +99,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tools"
             android:textSize="@dimen/item_text_size"
+            android:textStyle="italic"
             />
 
         <com.google.android.material.chip.ChipGroup
@@ -160,7 +161,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/other_information"
+            android:text="@string/dietary_and_other"
             android:textSize="@dimen/item_text_size"
             android:textStyle="italic"
             />
@@ -201,6 +202,48 @@
                 android:id="@+id/chip_vegan"
                 style="@style/CheckableChip"
                 android:text="@string/vegan"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_dairy"
+                style="@style/CheckableChip"
+                android:text="@string/dairy"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_peanuts"
+                style="@style/CheckableChip"
+                android:text="@string/peanuts"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_soy"
+                style="@style/CheckableChip"
+                android:text="@string/soy"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_wheat"
+                style="@style/CheckableChip"
+                android:text="@string/wheat"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_tree_nuts"
+                style="@style/CheckableChip"
+                android:text="@string/tree_nuts"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_shellfish"
+                style="@style/CheckableChip"
+                android:text="@string/shellfish"
+                />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_sesame"
+                style="@style/CheckableChip"
+                android:text="@string/sesame"
                 />
         </com.google.android.material.chip.ChipGroup>
 
