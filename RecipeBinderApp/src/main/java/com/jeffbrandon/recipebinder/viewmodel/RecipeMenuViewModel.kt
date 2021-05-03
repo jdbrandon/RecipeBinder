@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import com.jeffbrandon.recipebinder.R
-import com.jeffbrandon.recipebinder.enums.RecipeTag
+import com.jeffbrandon.recipebinder.data.TagFilter
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
 import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
@@ -30,7 +30,7 @@ class RecipeMenuViewModel @Inject constructor(
     private val data by lazy { dataSource.get() }
     private val importer by lazy { lazyImportUtil.get() }
     private val searchFilter = MutableLiveData<String?>(null)
-    private val tagsFilter = MutableLiveData<Set<RecipeTag>>()
+    private val tagsFilter = MutableLiveData<TagFilter>()
     private val recipes: LiveData<List<RecipeData>> = searchFilter.switchMap { filter ->
         filter?.let { data.fetchAllRecipes(filter) } ?: data.fetchAllRecipes()
     }
@@ -42,10 +42,10 @@ class RecipeMenuViewModel @Inject constructor(
     fun getRecipes(): LiveData<List<RecipeData>> {
         val data = MediatorLiveData<List<RecipeData>>()
         data.addSource(recipes) { list ->
-            data.value = list.filter { recipe -> tagsFilter.value?.let { recipe.tags.containsAll(it) } ?: true }
+            data.value = list.filter { recipe -> tagsFilter.value?.match(recipe.tags) ?: true }
         }
         data.addSource(tagsFilter) { tags ->
-            data.value = recipes.value?.filter { recipe -> recipe.tags.containsAll(tags) }
+            data.value = recipes.value?.filter { recipe -> tags.match(recipe.tags) }
         }
         return data
     }
@@ -54,7 +54,7 @@ class RecipeMenuViewModel @Inject constructor(
 
     fun selectedRecipeId(): LiveData<Long> = selectedRecipeId
 
-    fun selectedTags(): LiveData<Set<RecipeTag>> = tagsFilter
+    fun selectedTags(): LiveData<TagFilter> = tagsFilter
 
     fun resetToastMessage() {
         toastMessage.value = null
@@ -82,7 +82,7 @@ class RecipeMenuViewModel @Inject constructor(
         searchFilter.value = text?.let { "%$text%" }
     }
 
-    fun filterTags(tags: Set<RecipeTag>) {
+    fun filterTags(tags: TagFilter) {
         tagsFilter.value = tags
     }
 

@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.view.View
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.data.TagFilter
 import com.jeffbrandon.recipebinder.databinding.DialogEditTagsBinding
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.enums.RecipeTag.Companion.recipeMap
@@ -13,13 +14,19 @@ import javax.inject.Singleton
 @Singleton
 class TagsFilterDialog @Inject constructor() {
 
-    fun show(context: Context, currentFilters: Set<RecipeTag>, callback: (Set<RecipeTag>) -> Unit) {
+    fun show(context: Context, currentFilters: TagFilter, callback: (TagFilter) -> Unit) {
         val view = View.inflate(context, R.layout.dialog_edit_tags, null)
         val binding = DialogEditTagsBinding.bind(view)
-        binding.setupChecks(currentFilters)
+        binding.exclusionCheckbox.isChecked = currentFilters.exclude
+        binding.setupChecks(currentFilters.tags)
         AlertDialog.Builder(context).setView(view).setTitle(context.getString(R.string.filter_recipes))
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                binding.tags.recipeMap().filter { it.value.isChecked }.map { it.key }.toSet().also { callback(it) }
+                with(binding) {
+                    tags.recipeMap().filter { it.value.isChecked }.map { it.key }.toSet().also {
+                        val filter = TagFilter(it, exclusionCheckbox.isChecked)
+                        callback(filter)
+                    }
+                }
             }.show()
     }
 

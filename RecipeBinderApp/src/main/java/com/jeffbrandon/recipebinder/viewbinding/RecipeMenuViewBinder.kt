@@ -10,8 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
+import com.jeffbrandon.recipebinder.data.TagFilter
 import com.jeffbrandon.recipebinder.databinding.FragmentRecipeMenuBinding
-import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import com.jeffbrandon.recipebinder.widgets.TagsFilterDialog
@@ -35,7 +35,8 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
     private lateinit var viewModel: RecipeMenuViewModel
     private lateinit var viewRoot: View
     private var selectedRecipeId: Long? = null
-    private var filterTags: Set<RecipeTag>? = null
+    private var tagFilter: TagFilter? = null
+    private val defaultTagFilter = TagFilter(setOf(), false)
 
     private lateinit var binder: FragmentRecipeMenuBinding
 
@@ -59,18 +60,18 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
             selectedRecipeId = it
         }
         viewModel.selectedTags().observe(lifecycle) { tags ->
-            filterTags = tags
+            tagFilter = tags
         }
         binder.recipeFilterText.addTextChangedListener { text ->
             viewModel.filter(if (text.isNullOrEmpty()) null else text.toString())
         }
         binder.filterButton.setOnClickListener {
-            filterDialog.show(view.context, filterTags ?: setOf()) { tags ->
+            filterDialog.show(view.context, tagFilter ?: defaultTagFilter) { tags ->
                 viewModel.filterTags(tags)
             }
         }
         binder.clearFiltersButton.setOnClickListener {
-            viewModel.filterTags(setOf())
+            viewModel.filterTags(defaultTagFilter)
         }
         setupNewRecipeButton()
     }
