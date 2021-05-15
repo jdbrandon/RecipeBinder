@@ -40,7 +40,7 @@ the app directory: `RecipeBinderApp`
 1. Remove firebase integrations from the project and app `build.gradle`, they are not necessary to
 build and run the app. The easiest way to do this is to run the following command:
     ```bash
-    git revert e8cc0aea9436e2a0a36f02635fb214bbff2825c9
+    git revert 7328082b0bab7cd1926e9e5f3060499bb8032e12
     ```
 1. _Optional_: If you are using continuous integration, one may wish to edit
 [Jenkinsfile](/Jenkinsfile) to remove the step in checkout that reverts the firebase dependencies
