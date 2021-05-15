@@ -47,7 +47,9 @@ class EditRecipeViewModel @Inject constructor(
     }
 
     suspend fun saveMetadata(recipeName: String, cookTime: Int, servings: Int, tags: Set<RecipeTag>) {
-        updateRecipeMetadata(recipeName.trim().capitalize(Locale.getDefault()), abs(cookTime), abs(servings), tags)
+        updateRecipeMetadata(recipeName.trim().replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }, abs(cookTime), abs(servings), tags)
     }
 
     suspend fun saveIngredient(data: Ingredient) {

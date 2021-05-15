@@ -74,7 +74,9 @@ class RecipeMenuViewModel @Inject constructor(
      * @return unique id of the new item
      */
     suspend fun insert(name: String): Long = withContext(Dispatchers.IO) {
-        val recipeData = RecipeData().copy(name = name.trim().capitalize(Locale.getDefault()))
+        val recipeData = RecipeData().copy(name = name.trim().replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        })
         insertInternal(recipeData)
     }
 
