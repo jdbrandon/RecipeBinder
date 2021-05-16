@@ -16,7 +16,8 @@ class InstructionListFragmentViewBinder @Inject constructor() {
         lifecycle: LifecycleOwner,
     ) {
         with(FragmentListBinding.bind(view)) {
-            name.text = view.context.getString(R.string.instructions)
+            name.text = view.resources.getString(R.string.instructions)
+            recycler.contentDescription = view.resources.getString(R.string.instruction_list)
             viewModel.getInstructions().observe(lifecycle) { instructions ->
                 recycler.adapter = InstructionAdapter(instructions)
             }

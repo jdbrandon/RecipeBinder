@@ -64,7 +64,7 @@
         android:layout_below="@+id/ingredient_text_view"
         android:layout_marginEnd="@dimen/margin_large"
         android:layout_toEndOf="@+id/quantity_input_layout"
-        android:hint="@string/ingredient"
+        android:hint="@string/ingredient_name"
         app:boxCornerRadiusBottomStart="@dimen/square_corner"
         app:boxCornerRadiusTopStart="@dimen/square_corner"
         >
