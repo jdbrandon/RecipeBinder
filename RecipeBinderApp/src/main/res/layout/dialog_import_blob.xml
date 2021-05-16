@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_xxlarge"
         app:placeholderText="@string/paste_example"
+        app:helperText="@string/import_helper"
         >
 
         <com.google.android.material.textfield.TextInputEditText

@@ -11,8 +11,11 @@
     <string name="extra_recipe_id" translatable="false">recipeId</string>
     <string name="extra_view_mode" translatable="false">viewMode</string>
     <string name="ingredient">Ingredient</string>
+    <string name="ingredient_name">Ingredient name</string>
+    <string name="ingredient_list">ingredient list</string>
     <string name="ingredients">Ingredients</string>
     <string name="instructions">Instructions</string>
+    <string name="instruction_list">instruction list</string>
     <string name="gram">Gram</string>
     <string name="pound">Pound</string>
     <string name="milliliter">Milliliter</string>
@@ -128,4 +131,5 @@
     <string name="shellfish">Shellfish</string>
     <string name="sesame">Sesame</string>
     <string name="excludes">Excludes</string>
+    <string name="import_helper">Paste a recipe blob here to add a recipe from a QR code or friend to your collection</string>
 </resources>
