@@ -6,7 +6,9 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.EditIngredientAdapter
+import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeItemsBinding
+import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.fragments.EditIngredientFragment
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import javax.inject.Inject
@@ -27,6 +29,7 @@ class EditRecipeIngredientsBinder @Inject constructor() {
                     openEditIngredientFragment(fm)
                 }
                 addItemFab.setOnClickListener {
+                    vm.setEditIngredient(Ingredient("", 0f, UnitType.NONE))
                     openEditIngredientFragment(fm)
                 }
             }

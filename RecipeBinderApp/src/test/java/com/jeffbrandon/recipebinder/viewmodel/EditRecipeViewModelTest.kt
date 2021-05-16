@@ -116,8 +116,10 @@ class EditRecipeViewModelTest {
     @Test
     fun convertIngredientUnits() = runBlocking {
         underTest.editIngredientLiveData.observeForTest {
-            underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
-            underTest.convertIngredientUnits(UnitType.GRAM)
+            val ingredient = TestRecipeData.INGREDIENT_1_3
+            underTest.setEditIngredient(ingredient)
+
+            underTest.convertIngredientUnits(ingredient.amount, ingredient.unit, UnitType.GRAM)
 
             val newIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
 
