@@ -16,7 +16,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         def major = 0
         def minor = 0
-        def patch = 8
+        def patch = 9
         versionCode major << 16 | minor << 8 | patch
         versionName "$major.$minor.$patch"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
