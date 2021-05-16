@@ -3,11 +3,13 @@ package com.jeffbrandon.recipebinder.enums
 import android.content.Context
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.databinding.EditTagsBinding
+import com.squareup.moshi.JsonClass
 
 /**
  * We can store up to 32 of these without changing the database implementation
  * @see com.jeffbrandon.recipebinder.room.RecipeTagConverter
  */
+@JsonClass(generateAdapter = false)
 enum class RecipeTag(private val resId: Int) {
     INSTANT_POT(R.string.instant_pot),
     STOVE(R.string.stove_top),
