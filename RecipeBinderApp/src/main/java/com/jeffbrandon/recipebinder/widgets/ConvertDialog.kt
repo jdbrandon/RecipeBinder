@@ -8,7 +8,7 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 
-class ConvertDialog(context: Context, startUnit: UnitType, vm: EditRecipeViewModel) {
+class ConvertDialog(context: Context, amount: Float, startUnit: UnitType, vm: EditRecipeViewModel) {
     private companion object {
         private val volumeUnits = setOf(
             UnitType.NONE,
@@ -42,10 +42,10 @@ class ConvertDialog(context: Context, startUnit: UnitType, vm: EditRecipeViewMod
             UnitType.POUND,
             UnitType.GRAM,
             -> massUnits
-        } - startUnit).toList()
+        } - startUnit - UnitType.NONE).toList()
 
         val listener = DialogInterface.OnClickListener { _, index ->
-            vm.convertIngredientUnits(convertibleUnitTypes[index])
+            vm.convertIngredientUnits(amount, startUnit, convertibleUnitTypes[index])
         }
 
         val adapter =

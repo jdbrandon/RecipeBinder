@@ -74,7 +74,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
             setupAddIngredientViews()
 
             convertButton.setOnClickListener {
-                ConvertDialog(viewRoot.context, getSelectedUnit(), viewModel)
+                ConvertDialog(viewRoot.context, getAmount(), getSelectedUnit(), viewModel)
             }
 
             deleteButton.setOnClickListener {
@@ -92,15 +92,12 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
             }
         }
         vm.editIngredientLiveData.observe(lifecycle) { ingredient ->
-            // Ingredient is null when adding an ingredient
             if (ingredient == null) {
-                Timber.i("Ingredient was null, hiding delete button")
-                binder.deleteButton.hide()
+                Timber.w("Ingredient was null, hiding delete button")
             } else {
                 with(binder) {
                     ingredientInput.setText(ingredient.name)
                     quantityInput.setText(ingredient.amountWhole().toString())
-                    deleteButton.show()
 
                     val fractionTagMap = fractionViewMap()
                     fractionTagMap[ingredient.amountFraction()]?.apply {
@@ -131,17 +128,7 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
     }
 
     private fun FragmentAddIngredientBinding.saveIngredient() {
-        val whole = this.quantityInput.text
-        val fraction = when (fractionChipGroup.checkedChipId) {
-            R.id.chip_input_quarter -> FractionalMeasurement.QUARTER
-            R.id.chip_input_third -> FractionalMeasurement.THIRD
-            R.id.chip_input_half -> FractionalMeasurement.HALF
-            R.id.chip_input_2_thirds -> FractionalMeasurement.THIRD_TWO
-            R.id.chip_input_3_quarter -> FractionalMeasurement.QUARTER_THREE
-            else -> FractionalMeasurement.ZERO
-        }
-
-        val amount = computeAmount(whole, fraction)
+        val amount = getAmount()
 
         Timber.d("amount: $amount")
 
@@ -152,6 +139,16 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
             viewModelScope.launch { saveIngredient(newIngredient) }
         }
     }
+
+    private fun FragmentAddIngredientBinding.getAmount() =
+        computeAmount(quantityInput.text, when (fractionChipGroup.checkedChipId) {
+            R.id.chip_input_quarter -> FractionalMeasurement.QUARTER
+            R.id.chip_input_third -> FractionalMeasurement.THIRD
+            R.id.chip_input_half -> FractionalMeasurement.HALF
+            R.id.chip_input_2_thirds -> FractionalMeasurement.THIRD_TWO
+            R.id.chip_input_3_quarter -> FractionalMeasurement.QUARTER_THREE
+            else -> FractionalMeasurement.ZERO
+        })
 
     private fun FragmentAddIngredientBinding.getSelectedUnit() = when (unitChips.checkedChipId) {
         R.id.gallon_chip -> UnitType.GALLON

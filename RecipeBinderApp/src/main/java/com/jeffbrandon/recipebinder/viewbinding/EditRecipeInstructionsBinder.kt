@@ -3,6 +3,7 @@ package com.jeffbrandon.recipebinder.viewbinding
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.jeffbrandon.recipebinder.data.EditInstructionAdapter
+import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeItemsBinding
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import com.jeffbrandon.recipebinder.widgets.UpdateInstructionDialog
@@ -23,6 +24,7 @@ class EditRecipeInstructionsBinder @Inject constructor(private val dialog: Updat
                     dialog.show(viewRoot.context, vm, it)
                 }
                 addItemFab.setOnClickListener {
+                    vm.setEditInstruction(Instruction(""))
                     dialog.show(viewRoot.context, vm)
                 }
             }

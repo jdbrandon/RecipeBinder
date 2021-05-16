@@ -38,18 +38,18 @@ class EditRecipeViewModel @Inject constructor(
 
     fun setEditIngredient(data: Ingredient) {
         Timber.i("Editing $data")
-        editIngredient.value = Edit(getIngredientIndex(data) ?: error("Invalid index"), data)
+        editIngredient.value = Edit(getIngredientIndex(data), data)
     }
 
     fun setEditInstruction(data: Instruction) {
         Timber.i("Editing $data")
-        editInstruction.value = Edit(getInstructionIndex(data) ?: error("Invalid index"), data)
+        editInstruction.value = Edit(getInstructionIndex(data), data)
     }
 
     suspend fun saveMetadata(recipeName: String, cookTime: Int, servings: Int, tags: Set<RecipeTag>) {
         updateRecipeMetadata(recipeName.trim().replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-            }, abs(cookTime), abs(servings), tags)
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }, abs(cookTime), abs(servings), tags)
     }
 
     suspend fun saveIngredient(data: Ingredient) {
@@ -62,9 +62,9 @@ class EditRecipeViewModel @Inject constructor(
         }
         oldValue?.apply {
             if (data != this.data) {
-                updateIngredient(index, sanitized)
+                index?.let { updateIngredient(it, sanitized) } ?: appendIngredient(sanitized)
             }
-        } ?: appendIngredient(sanitized)
+        } ?: error("Edit ingredient was not set")
     }
 
     suspend fun saveInstruction(data: Instruction) {
@@ -77,16 +77,16 @@ class EditRecipeViewModel @Inject constructor(
         }
         oldValue?.apply {
             if (data != this.data) {
-                updateInstruction(index, sanitized)
+                index?.let { updateInstruction(it, sanitized) } ?: appendInstruction(sanitized)
             }
-        } ?: appendInstruction(sanitized)
+        } ?: error("Edit Instruction was not set")
     }
 
-    fun convertIngredientUnits(unitType: UnitType) {
+    fun convertIngredientUnits(amount: Float, startType: UnitType, targetType: UnitType) {
         editIngredient.value?.let {
-            val newIngredient = it.copy(data = it.data.convertTo(unitType))
+            val newIngredient = it.copy(data = it.data.copy(amount = amount, unit = startType).convertTo(targetType))
             editIngredient.value = newIngredient
-        }
+        } ?: Timber.w("Edit ingredient null")
     }
 
     suspend fun moveEditIngredientBefore(target: Ingredient) {
@@ -104,15 +104,15 @@ class EditRecipeViewModel @Inject constructor(
     }
 
     suspend fun deleteEditIngredient() {
-        editIngredient.value?.let {
-            deleteIngredient(it.index)
+        editIngredient.value?.index?.let {
+            deleteIngredient(it)
         }
         editIngredient.value = null
     }
 
     suspend fun deleteEditInstruction() {
-        editInstruction.value?.let {
-            deleteInstruction(it.index)
+        editInstruction.value?.index?.let {
+            deleteInstruction(it)
         }
         editIngredient.value = null
     }
@@ -134,5 +134,9 @@ class EditRecipeViewModel @Inject constructor(
         editInstruction.value = null
     }
 
-    private data class Edit<T>(val index: Int, val data: T)
+    /**
+     * @param index null when adding a new item
+     * @param data to edit
+     */
+    private data class Edit<T>(val index: Int?, val data: T)
 }
