@@ -3,7 +3,9 @@ package com.jeffbrandon.recipebinder.enums
 import android.content.Context
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.databinding.FragmentAddIngredientBinding
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = false)
 enum class UnitType(private val resId: Int, private val abbreviationResId: Int) {
     GALLON(R.string.gallon, R.string.abbreviation_gallon),
     QUART(R.string.quart, R.string.abbreviation_quart),
