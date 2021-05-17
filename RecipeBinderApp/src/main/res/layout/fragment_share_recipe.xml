@@ -35,7 +35,7 @@
             android:layout_width="@dimen/qr_size"
             android:layout_height="@dimen/qr_size"
             android:alpha=".60"
-            android:contentDescription="@string/app_logo"
+            android:importantForAccessibility="no"
             android:src="@drawable/ic_launcher_foreground"
             app:tint="@android:color/black"
             />
