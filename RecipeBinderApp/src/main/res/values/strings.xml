@@ -44,7 +44,7 @@
     <string name="healthy">Healthy</string>
     <string name="vegetarian">Vegetarian</string>
     <string name="vegan">Vegan</string>
-    <string name="recipe_filter">Recipe filter</string>
+    <string name="search">Search</string>
     <string name="add_recipe">Add Recipe</string>
     <string name="abbreviation_cup">c</string>
     <string name="abbreviation_ounce">oz</string>
@@ -63,13 +63,13 @@
     <string name="dessert">Dessert</string>
     <string name="new_instruction">New instruction</string>
     <string name="update_instruction">Update instruction</string>
+    <string name="add_instruction">Add instruction</string>
     <string name="cook_type">Cook type</string>
     <string name="course">Course</string>
     <string name="dietary_and_other">Dietary and other</string>
     <string name="recipe_list">recipe list</string>
     <string name="save_ingredient">save ingredient</string>
     <string name="add_ingredient">add ingredient</string>
-    <string name="add_instruction">Add instruction</string>
     <string name="cook_time_hint">Cook Time</string>
     <string name="metadata">Metadata</string>
     <string name="edit_recipe_title">Recipe Editor</string>

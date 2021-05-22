@@ -19,7 +19,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="16dp"
-        android:hint="@string/recipe_filter"
+        android:hint="@string/search"
         >
 
         <com.google.android.material.textfield.TextInputEditText
