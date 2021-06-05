@@ -66,11 +66,11 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
-    implementation 'androidx.appcompat:appcompat:1.3.0-rc01'
-    implementation 'androidx.core:core-ktx:1.6.0-alpha03'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.4.0-alpha02'
+    implementation 'androidx.core:core-ktx:1.6.0-beta02'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
-    implementation 'com.google.android.material:material:1.4.0-beta01'
+    implementation 'com.google.android.material:material:1.4.0-rc01'
     implementation "androidx.savedstate:savedstate-ktx:1.1.0"
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
@@ -94,7 +94,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_version"
     testImplementation "org.mockito.kotlin:mockito-kotlin:3.1.0"
-    androidTestImplementation 'androidx.test:runner:1.4.0-alpha06'
+    androidTestImplementation 'androidx.test:runner:1.4.0-beta01'
 
     detekt("io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version")
     detekt("io.gitlab.arturbosch.detekt:detekt-cli:$detekt_version")
