@@ -9,16 +9,23 @@
     <dimen name="about_text_size">24sp</dimen>
     <dimen name="item_text_size">32sp</dimen>
     <dimen name="title_text_size">48sp</dimen>
+    <dimen name="instruction_list_text_size">26sp</dimen>
+    <dimen name="ingredient_list_text_size">@dimen/item_text_size</dimen>
+
+    <dimen name="about_text_size_sm">20sp</dimen>
+    <dimen name="item_text_size_sm">28sp</dimen>
+    <dimen name="title_text_size_sm">32sp</dimen>
+    <dimen name="instruction_list_text_size_sm">22sp</dimen>
+    <dimen name="ingredient_list_text_size_sm">@dimen/item_text_size_sm</dimen>
 
     <dimen name="square_corner">4dp</dimen>
 
     <dimen name="ingredient_dialog_input_width">150dp</dimen>
 
     <dimen name="margin_fab">@dimen/margin_large</dimen>
-    <dimen name="ingredient_list_text_size">@dimen/item_text_size</dimen>
-    <dimen name="instruction_list_text_size">26sp</dimen>
     <dimen name="save_check_size">44dp</dimen>
     <dimen name="qr_size">300dp</dimen>
+    <dimen name="qr_size_sm">200dp</dimen>
     <dimen name="drag_target_width">40dp</dimen>
     <dimen name="drag_animation_height">@dimen/margin_medium</dimen>
 </resources>

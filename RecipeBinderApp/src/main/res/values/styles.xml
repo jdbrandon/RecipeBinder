@@ -44,6 +44,11 @@
 
     <style name="TabLayoutStyle" parent="Widget.MaterialComponents.TabLayout.PrimarySurface">
         <item name="android:background">@color/colorSecondary</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance</item>
+    </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="FabStyle.Primary" parent="Widget.MaterialComponents.FloatingActionButton">

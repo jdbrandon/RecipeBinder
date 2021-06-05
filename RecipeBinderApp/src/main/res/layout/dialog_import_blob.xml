@@ -10,9 +10,11 @@
         style="@style/TextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/import_helper"
+        android:labelFor="@id/blob"
         android:padding="@dimen/margin_xxlarge"
-        app:placeholderText="@string/paste_example"
         app:helperText="@string/import_helper"
+        app:placeholderText="@string/paste_example"
         >
 
         <com.google.android.material.textfield.TextInputEditText
