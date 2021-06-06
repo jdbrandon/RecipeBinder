@@ -19,6 +19,7 @@ import dagger.Lazy
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -40,6 +41,7 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
 
     private lateinit var binder: FragmentRecipeMenuBinding
 
+    @ExperimentalCoroutinesApi
     fun bind(
         vm: RecipeMenuViewModel,
         view: View,
@@ -62,16 +64,20 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
         viewModel.selectedTags().observe(lifecycle) { tags ->
             tagFilter = tags
         }
-        binder.recipeFilterText.addTextChangedListener { text ->
-            viewModel.filter(if (text.isNullOrEmpty()) null else text.toString())
-        }
-        binder.filterButton.setOnClickListener {
-            filterDialog.show(view.context, tagFilter ?: defaultTagFilter) { tags ->
-                viewModel.filterTags(tags)
+        with(viewModel.viewModelScope) {
+            binder.recipeFilterText.addTextChangedListener { text ->
+                launch {
+                    viewModel.filter(if (text.isNullOrEmpty()) null else text.toString())
+                }
             }
-        }
-        binder.clearFiltersButton.setOnClickListener {
-            viewModel.filterTags(defaultTagFilter)
+            binder.filterButton.setOnClickListener {
+                filterDialog.show(view.context, tagFilter ?: defaultTagFilter) { tags ->
+                    launch { viewModel.filterTags(tags) }
+                }
+            }
+            binder.clearFiltersButton.setOnClickListener {
+                launch { viewModel.filterTags(defaultTagFilter) }
+            }
         }
         setupNewRecipeButton()
     }
