@@ -4,12 +4,14 @@ import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.fragments.AboutFragment
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import com.jeffbrandon.recipebinder.widgets.ImportRecipeBlobDialog
 import dagger.Lazy
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RecipeMenuActivityViewBinder @Inject constructor(dialog: Lazy<ImportRecipeBlobDialog>) {
@@ -29,7 +31,9 @@ class RecipeMenuActivityViewBinder @Inject constructor(dialog: Lazy<ImportRecipe
         viewModel.toastObservable().observe(lifecycleOwner) { message ->
             if (message != null) {
                 Snackbar.make(viewRoot, message, Snackbar.LENGTH_SHORT).show()
-                viewModel.resetToastMessage()
+                lifecycleOwner.lifecycleScope.launch {
+                    viewModel.resetToastMessage()
+                }
             }
         }
     }

@@ -1,8 +1,8 @@
 package com.jeffbrandon.recipebinder.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 interface RecipeMenuDataSource {
 
@@ -13,5 +13,5 @@ interface RecipeMenuDataSource {
     fun deleteRecipe(recipeId: Long?): Int
 
     @Query("SELECT * FROM RecipeData WHERE name like :filter")
-    fun fetchAllRecipes(filter: String = "%"): LiveData<List<RecipeData>>
+    fun fetchAllRecipes(filter: String = "%"): Flow<List<RecipeData>>
 }
