@@ -116,7 +116,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for one`() = runTest {
-        underTest.filterTags(TagFilter(TestRecipeData.RECIPE_1.tags, false))
+        underTest.filterTags(TagFilter.Include.create(TestRecipeData.RECIPE_1.tags))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
         assertEquals(listOf(TestRecipeData.RECIPE_1), recipeData)
@@ -125,7 +125,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter exclusion`() = runTest {
-        underTest.filterTags(TagFilter(TestRecipeData.RECIPE_1.tags, true))
+        underTest.filterTags(TagFilter.Exclude.create(TestRecipeData.RECIPE_1.tags))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
         assertEquals(listOf(TestRecipeData.RECIPE_2, TestRecipeData.RECIPE_3), recipeData)
@@ -134,7 +134,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter on empty list`() = runTest {
-        underTest.filterTags(TagFilter(setOf(), false))
+        underTest.filterTags(TagFilter.Include.create(emptySet()))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
         assertEquals(recipeList, recipeData)
@@ -143,7 +143,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter exclusion on empty list`() = runTest {
-        underTest.filterTags(TagFilter(setOf(), true))
+        underTest.filterTags(TagFilter.Exclude.create(emptySet()))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
         assertEquals(recipeList, recipeData)
@@ -152,10 +152,10 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for multiple`() = runTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.EASY), false))
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.EASY)))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
-        underTest.filterTags(TagFilter(setOf(RecipeTag.DESSERT), false))
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.DESSERT)))
         val newData = underTest.getRecipes().getOrAwaitValue()
 
         assertEquals(listOf(TestRecipeData.RECIPE_1, TestRecipeData.RECIPE_3), recipeData)
@@ -165,10 +165,10 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter exclude for multiple`() = runTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.EASY), true))
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.EASY)))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
-        underTest.filterTags(TagFilter(setOf(RecipeTag.DESSERT), true))
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.DESSERT)))
         val newData = underTest.getRecipes().getOrAwaitValue()
 
         assertEquals(listOf(TestRecipeData.RECIPE_2), recipeData)
@@ -178,7 +178,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for out everything`() = runTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.SIDE), false))
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.SIDE)))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
 
@@ -188,7 +188,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for out everything exclusion`() = runTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.SIDE), true))
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.SIDE)))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
 
@@ -198,7 +198,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test filterTags list`() = runTest {
-        val testTags = TagFilter(setOf(RecipeTag.SIDE, RecipeTag.SIDE), false)
+        val testTags = TagFilter.Include.create(setOf(RecipeTag.SIDE, RecipeTag.SIDE))
 
         underTest.filterTags(testTags)
 
@@ -210,10 +210,11 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test filterTags empty list`() = runTest {
-        underTest.filterTags(TagFilter(setOf(), false))
+        val filter = TagFilter.Include.create(setOf())
+        underTest.filterTags(filter)
 
         val tags = underTest.selectedTags().getOrAwaitValue()
 
-        assertEquals(TagFilter(setOf(), false), tags)
+        assertEquals(filter, tags)
     }
 }

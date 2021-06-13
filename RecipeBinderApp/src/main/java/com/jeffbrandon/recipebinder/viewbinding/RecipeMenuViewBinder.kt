@@ -36,8 +36,7 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
     private lateinit var viewModel: RecipeMenuViewModel
     private lateinit var viewRoot: View
     private var selectedRecipeId: Long? = null
-    private var tagFilter: TagFilter? = null
-    private val defaultTagFilter = TagFilter(setOf(), false)
+    private var tagFilter: TagFilter = TagFilter.None
 
     private lateinit var binder: FragmentRecipeMenuBinding
 
@@ -71,12 +70,12 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
                 }
             }
             binder.filterButton.setOnClickListener {
-                filterDialog.show(view.context, tagFilter ?: defaultTagFilter) { tags ->
+                filterDialog.show(view.context, tagFilter) { tags ->
                     launch { viewModel.filterTags(tags) }
                 }
             }
             binder.clearFiltersButton.setOnClickListener {
-                launch { viewModel.filterTags(defaultTagFilter) }
+                launch { viewModel.filterTags(TagFilter.None) }
             }
         }
         setupNewRecipeButton()
