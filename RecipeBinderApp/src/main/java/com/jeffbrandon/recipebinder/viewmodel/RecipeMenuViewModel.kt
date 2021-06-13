@@ -34,12 +34,15 @@ class RecipeMenuViewModel @Inject constructor(
     private val data by lazy { dataSource.get() }
     private val importer by lazy { lazyImportUtil.get() }
     private val dispatchers by lazy { lazyDispatchers.get() }
-    private val searchFilter = MutableStateFlow<String?>(null)
-    private val tagsFilter = MutableStateFlow(TagFilter(setOf(), false))
+    private val searchFilter = MutableStateFlow<Filter>(Filter.None)
+    private val tagsFilter = MutableStateFlow<TagFilter>(TagFilter.None)
 
     @ExperimentalCoroutinesApi
     private val recipes: Flow<List<RecipeData>> = searchFilter.flatMapLatest { filter ->
-        filter?.let { data.fetchAllRecipes(filter) } ?: data.fetchAllRecipes()
+        when (filter) {
+            is Filter.None -> data.fetchAllRecipes()
+            is Filter.Query -> data.fetchAllRecipes(filter.query)
+        }
     }
     private val toastMessage = MutableStateFlow<String?>(null)
     private val selectedRecipeId = MutableStateFlow<Long?>(null)
@@ -81,8 +84,8 @@ class RecipeMenuViewModel @Inject constructor(
         insertInternal(recipeData)
     }
 
-    suspend fun filter(text: String?) {
-        searchFilter.emit(text?.let { "%$text%" })
+    fun filter(text: String?) {
+        searchFilter.value = text?.let { Filter.Query("%$text%") } ?: Filter.None
     }
 
     suspend fun filterTags(tags: TagFilter) {
@@ -101,5 +104,10 @@ class RecipeMenuViewModel @Inject constructor(
 
     private suspend fun insertInternal(recipeData: RecipeData): Long = withContext(dispatchers.io) {
         data.insertRecipe(recipeData)
+    }
+
+    private sealed class Filter {
+        object None : Filter()
+        data class Query(val query: String) : Filter()
     }
 }

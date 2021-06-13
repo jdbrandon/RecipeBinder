@@ -17,13 +17,18 @@ class TagsFilterDialog @Inject constructor() {
     fun show(context: Context, currentFilters: TagFilter, callback: (TagFilter) -> Unit) {
         val view = View.inflate(context, R.layout.dialog_edit_tags, null)
         val binding = DialogEditTagsBinding.bind(view)
-        binding.exclusionCheckbox.isChecked = currentFilters.exclude
-        binding.setupChecks(currentFilters.tags)
-        AlertDialog.Builder(context).setView(view).setTitle(context.getString(R.string.filter_recipes))
+        binding.exclusionCheckbox.isChecked = currentFilters is TagFilter.Exclude
+        if (currentFilters is TagFilter.SetFilter) {
+            binding.setupChecks(currentFilters.tags)
+        }
+        AlertDialog.Builder(context).setView(view)
+            .setTitle(context.getString(R.string.filter_recipes))
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 with(binding) {
                     tags.recipeMap().filter { it.value.isChecked }.map { it.key }.toSet().also {
-                        val filter = TagFilter(it, exclusionCheckbox.isChecked)
+                        val filter =
+                            if (exclusionCheckbox.isChecked) TagFilter.Exclude.create(it)
+                            else TagFilter.Include.create(it)
                         callback(filter)
                     }
                 }

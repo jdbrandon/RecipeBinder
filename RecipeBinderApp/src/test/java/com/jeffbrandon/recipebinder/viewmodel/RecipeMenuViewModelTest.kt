@@ -15,6 +15,7 @@ import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -115,7 +116,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for one`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(TestRecipeData.RECIPE_1.tags, false))
+        underTest.filterTags(TagFilter.Include.create(TestRecipeData.RECIPE_1.tags))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
         assertEquals(listOf(TestRecipeData.RECIPE_1), recipeData)
@@ -124,7 +125,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter exclusion`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(TestRecipeData.RECIPE_1.tags, true))
+        underTest.filterTags(TagFilter.Exclude.create(TestRecipeData.RECIPE_1.tags))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
         assertEquals(listOf(TestRecipeData.RECIPE_2, TestRecipeData.RECIPE_3), recipeData)
@@ -133,7 +134,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter on empty list`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(), false))
+        underTest.filterTags(TagFilter.Include.create(setOf()))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
         assertEquals(recipeList, recipeData)
@@ -142,7 +143,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter exclusion on empty list`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(), true))
+        underTest.filterTags(TagFilter.Exclude.create(setOf()))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
         assertEquals(recipeList, recipeData)
@@ -151,10 +152,10 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for multiple`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.EASY), false))
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.EASY)))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
-        underTest.filterTags(TagFilter(setOf(RecipeTag.DESSERT), false))
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.DESSERT)))
         val newData = underTest.getRecipes().getOrAwaitValue()
 
         assertEquals(listOf(TestRecipeData.RECIPE_1, TestRecipeData.RECIPE_3), recipeData)
@@ -164,10 +165,10 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter exclude for multiple`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.EASY), true))
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.EASY)))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
-        underTest.filterTags(TagFilter(setOf(RecipeTag.DESSERT), true))
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.DESSERT)))
         val newData = underTest.getRecipes().getOrAwaitValue()
 
         assertEquals(listOf(TestRecipeData.RECIPE_2), recipeData)
@@ -177,7 +178,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for out everything`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.SIDE), false))
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.SIDE)))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
 
@@ -187,7 +188,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for out everything exclusion`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.SIDE), true))
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.SIDE)))
 
         val recipeData = underTest.getRecipes().getOrAwaitValue()
 
@@ -197,7 +198,7 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test filterTags list`() = rule.runBlockingTest {
-        val testTags = TagFilter(setOf(RecipeTag.SIDE, RecipeTag.SIDE), false)
+        val testTags = TagFilter.Include.create(setOf(RecipeTag.SIDE, RecipeTag.SIDE))
 
         underTest.filterTags(testTags)
 
@@ -209,10 +210,11 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test filterTags empty list`() = rule.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(), false))
+        val filter = TagFilter.Include.create(setOf())
+        underTest.filterTags(filter)
 
         val tags = underTest.selectedTags().getOrAwaitValue()
 
-        assertEquals(TagFilter(setOf(), false), tags)
+        assertEquals(filter, tags)
     }
 }

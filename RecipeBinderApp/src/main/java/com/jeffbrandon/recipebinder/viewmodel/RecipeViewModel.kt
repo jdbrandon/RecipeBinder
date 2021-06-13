@@ -30,7 +30,7 @@ open class RecipeViewModel @Inject constructor(
 ) : ViewModel() {
     private val id: Long = state[context.getString(R.string.extra_recipe_id)]
         ?: error("Did you forget to provide recipeId in the intent extras or fragment args bundle")
-    private val db by lazy { dataSource.get() }
+    private val db = dataSource.get()
     private val recipe = db.fetchRecipe(id).asLiveData()
     protected val dispatchers: IDispatchers by lazy { lazyDispatchers.get() }
 
