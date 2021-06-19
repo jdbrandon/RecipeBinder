@@ -2,29 +2,23 @@ package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.dagger.IDispatchers
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeDataSource
+import com.jeffbrandon.recipebinder.testutils.MainCoroutineRule
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
 import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
-import com.jeffbrandon.recipebinder.testutils.observeForTest
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.flow.flow
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -44,175 +38,204 @@ class EditRecipeViewModelTest {
         private const val EXTRA_VAL = 1L
     }
 
-    @get:Rule val instantExecutorRule = InstantTaskExecutorRule()
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var dataSource: RecipeDataSource
-    @Mock private lateinit var context: Context
+    @get:Rule
+    val rule = MainCoroutineRule()
+
+    @Mock
+    private lateinit var dataSource: RecipeDataSource
+
+    @Mock
+    private lateinit var context: Context
     private lateinit var underTest: EditRecipeViewModel
     private var currentRecipeData: RecipeData? = null
     private val testObserver = Observer<RecipeData> { t -> currentRecipeData = t }
 
-    private val dispatcher = TestCoroutineDispatcher()
-    private val scope = TestCoroutineScope(dispatcher)
-
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        Dispatchers.setMain(dispatcher)
 
         whenever(context.getString(R.string.extra_recipe_id)).thenReturn(KEY_EXTRA_ID)
-        whenever(dataSource.fetchRecipe(eq(EXTRA_VAL))).thenReturn(MutableLiveData(TestRecipeData.RECIPE_1))
-        underTest = EditRecipeViewModel({ dataSource }, SavedStateHandle(mapOf(KEY_EXTRA_ID to EXTRA_VAL)), context)
+        whenever(dataSource.fetchRecipe(eq(EXTRA_VAL))).thenReturn(flow { emit(TestRecipeData.RECIPE_1) })
+        underTest = EditRecipeViewModel(
+            { dataSource },
+            SavedStateHandle(mapOf(KEY_EXTRA_ID to EXTRA_VAL)),
+            context,
+            {
+                object :
+                    IDispatchers {
+                    override val default = rule.dispatcher
+                    override val io = rule.dispatcher
+                    override val main = rule.dispatcher
+                }
+            },
+        )
         underTest.getRecipe().observeForever(testObserver)
     }
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain()
-        dispatcher.cleanupTestCoroutines()
         underTest.getRecipe().removeObserver(testObserver)
     }
 
     @Test
-    fun setEditIngredient() = runBlocking {
-        scope.launch {
-            val index = 1
+    fun setEditIngredient() = rule.runBlockingTest {
+        val index = 1
 
-            underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[index])
-            val ingredient = underTest.editIngredientLiveData.getOrAwaitValue()
+        underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[index])
+        val ingredient = underTest.editIngredientLiveData.getOrAwaitValue()
 
-            assertEquals("Got correct ingredient", TestRecipeData.INGREDIENT_1_2, ingredient)
-        }.join()
+        assertEquals("Got correct ingredient", TestRecipeData.INGREDIENT_1_2, ingredient)
     }
 
     @Test
-    fun setEditInstruction() = runBlocking {
-        scope.launch {
-            val index = 1
+    fun setEditInstruction() = rule.runBlockingTest {
+        val index = 1
 
-            underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[index])
-            val instruction = underTest.editInstructionLiveData.getOrAwaitValue()
+        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[index])
+        val instruction = underTest.editInstructionLiveData.getOrAwaitValue()
 
-            assertEquals("Got correct instruction", TestRecipeData.INSTRUCTION_1_2, instruction!!)
-        }.join()
+        assertEquals("Got correct instruction", TestRecipeData.INSTRUCTION_1_2, instruction!!)
     }
 
     @Test
-    fun saveIngredient() = runBlocking {
-        scope.launch {
-            underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
-            verify(dataSource).updateRecipe(any())
-        }.join()
+    fun saveIngredient() = rule.runBlockingTest {
+        underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[2])
+
+        underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
+        advanceUntilIdle()
+
+        verify(dataSource).updateRecipe(any())
     }
 
     @Test
-    fun saveInstruction() = runBlocking {
-        scope.launch {
-            underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
-            verify(dataSource).updateRecipe(any())
-        }.join()
+    fun saveInstruction() = rule.runBlockingTest {
+        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[1])
+
+        underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
+
+        verify(dataSource).updateRecipe(any())
     }
 
     @Test
-    fun convertIngredientUnits() = runBlocking {
-        underTest.editIngredientLiveData.observeForTest {
-            val ingredient = TestRecipeData.INGREDIENT_1_3
-            underTest.setEditIngredient(ingredient)
+    fun convertIngredientUnits() = rule.runBlockingTest {
+        val ingredient = TestRecipeData.INGREDIENT_1_3
+        underTest.setEditIngredient(ingredient)
+        underTest.convertIngredientUnits(ingredient.amount, ingredient.unit, UnitType.GRAM)
 
-            underTest.convertIngredientUnits(ingredient.amount, ingredient.unit, UnitType.GRAM)
+        val newIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
 
-            val newIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
-
-            assertEquals("type", UnitType.GRAM, newIngredient!!.unit)
-            assertTrue("conversion", newIngredient.amount > 453 && newIngredient.amount < 454)
-        }
+        assertEquals("type", UnitType.GRAM, newIngredient!!.unit)
+        assertTrue("conversion", newIngredient.amount > 453 && newIngredient.amount < 454)
     }
 
     @Test
-    fun `test save metadata`(): Unit = runBlocking {
+    fun `test save metadata`() = rule.runBlockingTest {
         val name = "newName"
         val time = 5
         val servings = 8
         val tags = setOf(RecipeTag.DESSERT, RecipeTag.SIDE, RecipeTag.EASY)
-        scope.launch {
 
-            underTest.saveMetadata(name, time, servings, tags)
+        underTest.saveMetadata(name, time, servings, tags)
 
-            val expected = TestRecipeData.RECIPE_1.copy(name = name, cookTime = time, servings = servings, tags = tags)
-            verify(dataSource).updateRecipe(eq(expected))
-        }.join()
+        val expected = TestRecipeData.RECIPE_1.copy(
+            name = "NewName",
+            cookTime = time,
+            servings = servings,
+            tags = tags
+        )
+        verify(dataSource).updateRecipe(eq(expected))
     }
 
     @Test
-    fun `test ingredient moveTo`(): Unit = runBlocking {
-        scope.launch {
-            underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
+    fun `test ingredient moveTo`() = rule.runBlockingTest {
+        underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
 
-            underTest.moveEditIngredientBefore(TestRecipeData.INGREDIENT_1_1)
+        underTest.moveEditIngredientBefore(TestRecipeData.INGREDIENT_1_1)
 
-            val ingredients = underTest.getIngredients().getOrAwaitValue()
+        verify(dataSource).updateRecipe(
+            eq(
+                TestRecipeData.RECIPE_1.copy(
+                    ingredients =
+                    listOf(
+                        TestRecipeData.INGREDIENT_1_3,
+                        TestRecipeData.INGREDIENT_1_1,
+                        TestRecipeData.INGREDIENT_1_2
+                    )
+                )
+            )
+        )
 
-            assertEquals(listOf(TestRecipeData.INGREDIENT_1_3,
-                                TestRecipeData.INGREDIENT_1_1,
-                                TestRecipeData.INGREDIENT_1_2), ingredients)
+        val editIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
 
-            val editIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
-
-            assertNull(editIngredient)
-        }.join()
+        assertNull(editIngredient)
     }
 
     @Test
-    fun `test instruction moveTo`(): Unit = runBlocking {
-        scope.launch {
-            underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
+    fun `test instruction moveTo`() = rule.runBlockingTest {
+        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
 
-            underTest.moveEditInstructionBefore(TestRecipeData.INSTRUCTION_1_2)
+        underTest.moveEditInstructionBefore(TestRecipeData.INSTRUCTION_1_2)
 
-            val instructions = underTest.getInstructions().getOrAwaitValue()
+        verify(dataSource).updateRecipe(
+            eq(
+                TestRecipeData.RECIPE_1.copy(
+                    instructions =
+                    listOf(
+                        TestRecipeData.INSTRUCTION_1_1,
+                        TestRecipeData.INSTRUCTION_1_3,
+                        TestRecipeData.INSTRUCTION_1_2
+                    )
+                )
+            )
+        )
 
-            assertEquals(listOf(TestRecipeData.INSTRUCTION_1_1,
-                                TestRecipeData.INSTRUCTION_1_3,
-                                TestRecipeData.INSTRUCTION_1_2), instructions)
+        val editInstruction = underTest.editInstructionLiveData.getOrAwaitValue()
 
-            val editInstruction = underTest.editInstructionLiveData.getOrAwaitValue()
-
-            assertNull(editInstruction)
-        }.join()
+        assertNull(editInstruction)
     }
 
     @Test
-    fun `test delete ingredient`(): Unit = runBlocking {
-        scope.launch {
-            underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_2)
-            underTest.deleteEditIngredient()
+    fun `test delete ingredient`() = rule.runBlockingTest {
+        underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_2)
+        underTest.deleteEditIngredient()
 
-            val target = TestRecipeData.RECIPE_1.copy(ingredients = TestRecipeData.INGREDIENT_LIST_1.drop(1))
-            verify(dataSource).updateRecipe(eq(target))
-        }.join()
+        val target =
+            TestRecipeData.RECIPE_1.copy(
+                ingredients = TestRecipeData.INGREDIENT_LIST_1.minus(
+                    TestRecipeData.INGREDIENT_1_2
+                )
+            )
+        verify(dataSource).updateRecipe(eq(target))
     }
 
     @Test
-    fun `test delete instruction`(): Unit = runBlocking {
-        scope.launch {
-            underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
-            underTest.deleteEditInstruction()
+    fun `test delete instruction`() = rule.runBlockingTest {
+        underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
+        underTest.deleteEditInstruction()
 
-            val target = TestRecipeData.RECIPE_1.copy(instructions = TestRecipeData.INSTRUCTION_LIST_1.drop(2))
-            verify(dataSource).updateRecipe(eq(target))
-        }.join()
+        val target =
+            TestRecipeData.RECIPE_1.copy(
+                instructions = TestRecipeData.INSTRUCTION_LIST_1.minus(
+                    TestRecipeData.INSTRUCTION_1_3
+                )
+            )
+        verify(dataSource).updateRecipe(eq(target))
     }
 
     @Test
-    fun `test should warn about unsaved, begin editing, stop editing `(): Unit = runBlocking {
-        underTest.beginEditing()
-        assertTrue(underTest.shouldWarnAboutUnsavedData())
-        assertFalse(underTest.shouldWarnAboutUnsavedData())
-        assertFalse(underTest.shouldWarnAboutUnsavedData())
-        underTest.stopEditing()
-        assertFalse(underTest.shouldWarnAboutUnsavedData())
-        underTest.beginEditing()
-        assertTrue(underTest.shouldWarnAboutUnsavedData())
-        assertFalse(underTest.shouldWarnAboutUnsavedData())
-    }
+    fun `test should warn about unsaved, begin editing, stop editing `() =
+        rule.runBlockingTest {
+            underTest.beginEditing()
+            assertTrue(underTest.shouldWarnAboutUnsavedData())
+            assertFalse(underTest.shouldWarnAboutUnsavedData())
+            assertFalse(underTest.shouldWarnAboutUnsavedData())
+            underTest.stopEditing()
+            assertFalse(underTest.shouldWarnAboutUnsavedData())
+            underTest.beginEditing()
+            assertTrue(underTest.shouldWarnAboutUnsavedData())
+            assertFalse(underTest.shouldWarnAboutUnsavedData())
+        }
 }

@@ -2,9 +2,9 @@ package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.map
+import androidx.lifecycle.asLiveData
+import com.jeffbrandon.recipebinder.dagger.IDispatchers
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.enums.RecipeTag
@@ -13,7 +13,8 @@ import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Locale
@@ -26,27 +27,34 @@ class EditRecipeViewModel @Inject constructor(
     dataSource: Lazy<RecipeDataSource>,
     state: SavedStateHandle,
     @ApplicationContext context: Context,
-) : RecipeViewModel(dataSource, state, context) {
+    lazyDispatchers: Lazy<IDispatchers>,
+) : RecipeViewModel(dataSource, state, context, lazyDispatchers) {
 
-    private var editIngredient: MutableLiveData<Edit<Ingredient>?> = MutableLiveData()
-    private var editInstruction: MutableLiveData<Edit<Instruction>?> = MutableLiveData()
+    private var editIngredient: MutableStateFlow<Edit<Ingredient>?> = MutableStateFlow(null)
+    private var editInstruction: MutableStateFlow<Edit<Instruction>?> = MutableStateFlow(null)
 
-    val editIngredientLiveData: LiveData<Ingredient?> = editIngredient.map { it?.data }
-    val editInstructionLiveData: LiveData<Instruction?> = editInstruction.map { it?.data }
+    val editIngredientLiveData: LiveData<Ingredient?> = editIngredient.map { it?.data }.asLiveData()
+    val editInstructionLiveData: LiveData<Instruction?> =
+        editInstruction.map { it?.data }.asLiveData()
     private var shouldWarn = false
     private var editing = false
 
-    fun setEditIngredient(data: Ingredient) {
+    suspend fun setEditIngredient(data: Ingredient) {
         Timber.i("Editing $data")
-        editIngredient.value = Edit(getIngredientIndex(data), data)
+        editIngredient.emit(Edit(getIngredientIndex(data), data))
     }
 
-    fun setEditInstruction(data: Instruction) {
+    suspend fun setEditInstruction(data: Instruction) {
         Timber.i("Editing $data")
-        editInstruction.value = Edit(getInstructionIndex(data), data)
+        editInstruction.emit(Edit(getInstructionIndex(data), data))
     }
 
-    suspend fun saveMetadata(recipeName: String, cookTime: Int, servings: Int, tags: Set<RecipeTag>) {
+    suspend fun saveMetadata(
+        recipeName: String,
+        cookTime: Int,
+        servings: Int,
+        tags: Set<RecipeTag>
+    ) {
         updateRecipeMetadata(recipeName.trim().replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }, abs(cookTime), abs(servings), tags)
@@ -56,7 +64,7 @@ class EditRecipeViewModel @Inject constructor(
         Timber.i("Saving ingredient")
         val sanitized = data.copy(name = data.name.trim())
         val oldValue = editIngredient.value
-        editIngredient.value = null
+        editIngredient.emit(null)
         if (sanitized.name.isEmpty()) {
             return
         }
@@ -71,7 +79,7 @@ class EditRecipeViewModel @Inject constructor(
         Timber.i("Saving Instruction")
         val sanitized = data.copy(text = data.text.trim())
         val oldValue = editInstruction.value
-        editInstruction.value = null
+        editInstruction.emit(null)
         if (sanitized.text.isEmpty()) {
             return
         }
@@ -82,10 +90,12 @@ class EditRecipeViewModel @Inject constructor(
         } ?: error("Edit Instruction was not set")
     }
 
-    fun convertIngredientUnits(amount: Float, startType: UnitType, targetType: UnitType) {
+    suspend fun convertIngredientUnits(amount: Float, startType: UnitType, targetType: UnitType) {
         editIngredient.value?.let {
-            val newIngredient = it.copy(data = it.data.copy(amount = amount, unit = startType).convertTo(targetType))
-            editIngredient.value = newIngredient
+            val newIngredient = it.copy(
+                data = it.data.copy(amount = amount, unit = startType).convertTo(targetType)
+            )
+            editIngredient.emit(newIngredient)
         } ?: Timber.w("Edit ingredient null")
     }
 
@@ -95,26 +105,26 @@ class EditRecipeViewModel @Inject constructor(
             Timber.d("edit: ${it.data.name}")
             moveTo(target, it.data)
         }
-        editIngredient.value = null
+        editIngredient.emit(null)
     }
 
     suspend fun moveEditInstructionBefore(target: Instruction) {
         editInstruction.value?.let { moveTo(target, it.data) }
-        editInstruction.value = null
+        editInstruction.emit(null)
     }
 
     suspend fun deleteEditIngredient() {
         editIngredient.value?.index?.let {
             deleteIngredient(it)
         }
-        editIngredient.value = null
+        editIngredient.emit(null)
     }
 
     suspend fun deleteEditInstruction() {
         editInstruction.value?.index?.let {
             deleteInstruction(it)
         }
-        editIngredient.value = null
+        editIngredient.emit(null)
     }
 
     fun shouldWarnAboutUnsavedData(): Boolean {
@@ -128,10 +138,10 @@ class EditRecipeViewModel @Inject constructor(
         shouldWarn = true
     }
 
-    suspend fun stopEditing() = withContext(Dispatchers.Main) {
+    suspend fun stopEditing() = withContext(dispatchers.main) {
         editing = false
-        editIngredient.value = null
-        editInstruction.value = null
+        editIngredient.emit(null)
+        editInstruction.emit(null)
     }
 
     /**

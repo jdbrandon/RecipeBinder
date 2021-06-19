@@ -9,6 +9,7 @@ import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewbinding.RecipeMenuViewBinder
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -16,6 +17,7 @@ class MenuFragment : Fragment(R.layout.fragment_recipe_menu), RecipeMenuViewBind
 
     @Inject lateinit var binder: RecipeMenuViewBinder
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val vm: RecipeMenuViewModel by activityViewModels()
