@@ -5,21 +5,27 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.RecipeAdapter
 import com.jeffbrandon.recipebinder.data.TagFilter
 import com.jeffbrandon.recipebinder.databinding.FragmentRecipeMenuBinding
+import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.util.NavigationUtil
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
+import com.jeffbrandon.recipebinder.viewmodel.Result
 import com.jeffbrandon.recipebinder.widgets.TagsFilterDialog
 import dagger.Lazy
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -40,11 +46,12 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
 
     private lateinit var binder: FragmentRecipeMenuBinding
 
+    @Suppress("UNCHECKED_CAST")
     @ExperimentalCoroutinesApi
     fun bind(
         vm: RecipeMenuViewModel,
         view: View,
-        lifecycle: LifecycleOwner,
+        lifecycleOwner: LifecycleOwner,
         vc: ViewContract,
     ) {
         viewModel = vm
@@ -52,30 +59,44 @@ class RecipeMenuViewBinder @Inject constructor(private val dialog: Lazy<TagsFilt
         binder = FragmentRecipeMenuBinding.bind(ViewCompat.requireViewById(view, R.id.recipe_content_root))
 
         binder.recipeRecyclerView.setHasFixedSize(true)
-        viewModel.getRecipes().observe(lifecycle) {
-            vc.unregisterContextMenu(binder.recipeRecyclerView)
-            binder.recipeRecyclerView.adapter = RecipeAdapter(it, viewModel)
-            vc.registerContextMenu(binder.recipeRecyclerView)
-        }
-        viewModel.selectedRecipeId().observe(lifecycle) {
-            selectedRecipeId = it
-        }
-        viewModel.selectedTags().observe(lifecycle) { tags ->
-            tagFilter = tags
-        }
-        with(viewModel.viewModelScope) {
-            binder.recipeFilterText.addTextChangedListener { text ->
+
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    viewModel.getRecipes().collect {
+                        when (it) {
+                            is Result.Loaded<*> -> {
+                                vc.unregisterContextMenu(binder.recipeRecyclerView)
+                                binder.recipeRecyclerView.adapter =
+                                    RecipeAdapter(it.data as List<RecipeData>, viewModel)
+                                vc.registerContextMenu(binder.recipeRecyclerView)
+                            }
+                            is Result.Loading -> Unit // showProgress
+                            is Result.Error -> Timber.e(it.error)
+                        }
+                    }
+                }
+                launch {
+                    viewModel.selectedRecipeId().collect {
+                        selectedRecipeId = it
+                    }
+                }
+                launch {
+                    viewModel.selectedTags().collect { tags ->
+                        tagFilter = tags
+                    }
+                }
+                binder.recipeFilterText.addTextChangedListener { text ->
                     viewModel.filter(if (text.isNullOrEmpty()) null else text.toString())
                 }
-            }
-            binder.filterButton.setOnClickListener {
-                filterDialog.show(view.context, tagFilter) { tags ->
-                    launch { viewModel.filterTags(tags) }
+                binder.filterButton.setOnClickListener {
+                    filterDialog.show(view.context, tagFilter) { tags ->
+                        launch { viewModel.filterTags(tags) }
+                    }
                 }
-            }
-            binder.clearFiltersButton.setOnClickListener {
-                launch { viewModel.filterTags(TagFilter.None) }
+                binder.clearFiltersButton.setOnClickListener {
+                    launch { viewModel.filterTags(TagFilter.None) }
+                }
             }
         }
         setupNewRecipeButton()

@@ -1,7 +1,6 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.dagger.IDispatchers
 import com.jeffbrandon.recipebinder.data.TagFilter
@@ -9,16 +8,23 @@ import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
-import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
+import com.jeffbrandon.recipebinder.viewmodel.Result.Loaded
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
@@ -29,9 +35,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class RecipeMenuViewModelTest {
-
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
 
     private val recipeList = TestRecipeData.buildTestData()
     private val scheduler = TestCoroutineScheduler()
@@ -51,6 +54,7 @@ class RecipeMenuViewModelTest {
     @ExperimentalCoroutinesApi
     fun setup() {
         MockitoAnnotations.openMocks(this)
+        Dispatchers.setMain(dispatcher)
         whenever(dataSource.fetchAllRecipes(anyString())).thenReturn(flow { emit(recipeList) })
         underTest = RecipeMenuViewModel(context, { dataSource }, { importer }, {
             object :
@@ -62,12 +66,18 @@ class RecipeMenuViewModelTest {
         })
     }
 
+    @After
+    @ExperimentalCoroutinesApi
+    fun cleanup() {
+        Dispatchers.resetMain()
+    }
+
     @Test
     @ExperimentalCoroutinesApi
     fun `test delete`() = runTest {
         underTest.delete(TestRecipeData.RECIPE_1.recipeId!!)
 
-        verify(dataSource).deleteRecipe(eq(TestRecipeData.RECIPE_1.recipeId!!))
+        verify(dataSource).deleteRecipe(eq(TestRecipeData.RECIPE_1.recipeId))
     }
 
     @Test
@@ -101,7 +111,7 @@ class RecipeMenuViewModelTest {
 
         underTest.import("")
 
-        val message = underTest.toastObservable().getOrAwaitValue()
+        val message = underTest.toastObservable().value
         verify(importer).import(any())
         assertEquals(errorMsg, message)
     }
@@ -109,8 +119,13 @@ class RecipeMenuViewModelTest {
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - no tag filter`() = runTest {
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(recipeList, recipeData)
+        job.cancel()
     }
 
     @Test
@@ -118,8 +133,14 @@ class RecipeMenuViewModelTest {
     fun `test fetch recipes - tag filter for one`() = runTest {
         underTest.filterTags(TagFilter.Include.create(TestRecipeData.RECIPE_1.tags))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = launch{ underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }}
+        scheduler.advanceUntilIdle()
         assertEquals(listOf(TestRecipeData.RECIPE_1), recipeData)
+        job.cancel()
+        scheduler.advanceUntilIdle()
     }
 
     @Test
@@ -127,8 +148,13 @@ class RecipeMenuViewModelTest {
     fun `test fetch recipes - tag filter exclusion`() = runTest {
         underTest.filterTags(TagFilter.Exclude.create(TestRecipeData.RECIPE_1.tags))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(listOf(TestRecipeData.RECIPE_2, TestRecipeData.RECIPE_3), recipeData)
+        job.cancel()
     }
 
     @Test
@@ -136,8 +162,13 @@ class RecipeMenuViewModelTest {
     fun `test fetch recipes - tag filter on empty list`() = runTest {
         underTest.filterTags(TagFilter.Include.create(emptySet()))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(recipeList, recipeData)
+        job.cancel()
     }
 
     @Test
@@ -145,20 +176,32 @@ class RecipeMenuViewModelTest {
     fun `test fetch recipes - tag filter exclusion on empty list`() = runTest {
         underTest.filterTags(TagFilter.Exclude.create(emptySet()))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(recipeList, recipeData)
+        job.cancel()
     }
 
     @Test
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter for multiple`() = runTest {
         underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.EASY)))
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
+        val easyList = recipeData
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
         underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.DESSERT)))
-        val newData = underTest.getRecipes().getOrAwaitValue()
+        scheduler.advanceUntilIdle()
+        val newData = recipeData
 
-        assertEquals(listOf(TestRecipeData.RECIPE_1, TestRecipeData.RECIPE_3), recipeData)
+        job.cancel()
+        assertEquals(listOf(TestRecipeData.RECIPE_1, TestRecipeData.RECIPE_3), easyList)
         assertEquals(listOf(TestRecipeData.RECIPE_2, TestRecipeData.RECIPE_3), newData)
     }
 
@@ -166,12 +209,19 @@ class RecipeMenuViewModelTest {
     @ExperimentalCoroutinesApi
     fun `test fetch recipes - tag filter exclude for multiple`() = runTest {
         underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.EASY)))
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
+        val notEasy = recipeData
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
         underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.DESSERT)))
-        val newData = underTest.getRecipes().getOrAwaitValue()
+        scheduler.advanceUntilIdle()
+        val newData = recipeData
 
-        assertEquals(listOf(TestRecipeData.RECIPE_2), recipeData)
+        job.cancel()
+        assertEquals(listOf(TestRecipeData.RECIPE_2), notEasy)
         assertEquals(listOf(TestRecipeData.RECIPE_1), newData)
     }
 
@@ -180,9 +230,14 @@ class RecipeMenuViewModelTest {
     fun `test fetch recipes - tag filter for out everything`() = runTest {
         underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.SIDE)))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
 
         assertEquals(listOf<RecipeData>(), recipeData)
+        job.cancel()
     }
 
     @Test
@@ -190,9 +245,14 @@ class RecipeMenuViewModelTest {
     fun `test fetch recipes - tag filter for out everything exclusion`() = runTest {
         underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.SIDE)))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
 
         assertEquals(recipeList, recipeData)
+        job.cancel()
     }
 
     @Test
@@ -202,7 +262,7 @@ class RecipeMenuViewModelTest {
 
         underTest.filterTags(testTags)
 
-        val tags = underTest.selectedTags().getOrAwaitValue()
+        val tags = underTest.selectedTags().first()
 
         assertEquals(testTags, tags)
     }
@@ -213,8 +273,24 @@ class RecipeMenuViewModelTest {
         val filter = TagFilter.Include.create(setOf())
         underTest.filterTags(filter)
 
-        val tags = underTest.selectedTags().getOrAwaitValue()
+        val tags = underTest.selectedTags().first()
 
         assertEquals(filter, tags)
     }
+}
+
+@ExperimentalCoroutinesApi
+private fun RecipeMenuViewModel.collectRecipesInScope(
+    scope: CoroutineScope,
+    updater: (List<RecipeData>) -> Unit
+): Job {
+    val job = scope.launch {
+        getRecipes(this).collect { result ->
+            when (result) {
+                is Loaded<List<RecipeData>> -> updater(result.data)
+                else -> Unit
+            }
+        }
+    }
+    return job
 }

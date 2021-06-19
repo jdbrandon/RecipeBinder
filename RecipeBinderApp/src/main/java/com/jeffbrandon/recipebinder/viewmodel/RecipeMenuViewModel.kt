@@ -1,9 +1,8 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.dagger.IDispatchers
 import com.jeffbrandon.recipebinder.data.TagFilter
@@ -13,11 +12,15 @@ import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import javax.inject.Inject
@@ -31,14 +34,17 @@ class RecipeMenuViewModel @Inject constructor(
     lazyDispatchers: Lazy<IDispatchers>,
 ) : ViewModel() {
 
+    companion object {
+        private const val FLOW_TIMEOUT_MS = 5000L
+    }
+
     private val data by lazy { dataSource.get() }
     private val importer by lazy { lazyImportUtil.get() }
     private val dispatchers by lazy { lazyDispatchers.get() }
     private val searchFilter = MutableStateFlow<Filter>(Filter.None)
     private val tagsFilter = MutableStateFlow<TagFilter>(TagFilter.None)
 
-    @ExperimentalCoroutinesApi
-    private val recipes: Flow<List<RecipeData>> = searchFilter.flatMapLatest { filter ->
+    @ExperimentalCoroutinesApi private val recipes: Flow<List<RecipeData>> = searchFilter.flatMapLatest { filter ->
         when (filter) {
             is Filter.None -> data.fetchAllRecipes()
             is Filter.Query -> data.fetchAllRecipes(filter.query)
@@ -50,22 +56,27 @@ class RecipeMenuViewModel @Inject constructor(
     private val importSuccessFmt by lazy { context.getString(R.string.import_success) }
 
     @ExperimentalCoroutinesApi
-    fun getRecipes(): LiveData<List<RecipeData>> = recipes.combine(tagsFilter) { recipeList, tags ->
-        recipeList.filter { recipe -> tags.match(recipe.tags) }
-    }.asLiveData()
+    fun getRecipes(scope: CoroutineScope = viewModelScope): StateFlow<Result<List<RecipeData>>> =
+        recipes.combine(tagsFilter) { recipeList, tags ->
+            recipeList.filter { recipe -> tags.match(recipe.tags) }.let {
+                Result.Loaded(it)
+            }
+        }.stateIn(scope = scope,
+                  started = SharingStarted.WhileSubscribed(FLOW_TIMEOUT_MS),
+                  initialValue = Result.Loading<List<RecipeData>>())
 
-    fun toastObservable(): LiveData<String?> = toastMessage.asLiveData()
+    fun toastObservable(): StateFlow<String?> = toastMessage
 
-    fun selectedRecipeId(): LiveData<Long?> = selectedRecipeId.asLiveData()
+    fun selectedRecipeId(): StateFlow<Long?> = selectedRecipeId
 
-    fun selectedTags(): LiveData<TagFilter> = tagsFilter.asLiveData()
+    fun selectedTags(): StateFlow<TagFilter> = tagsFilter
 
-    suspend fun resetToastMessage() {
-        toastMessage.emit(null)
+    fun resetToastMessage() {
+        toastMessage.value = null
     }
 
-    suspend fun setRecipe(id: Long) {
-        selectedRecipeId.emit(id)
+    fun setRecipe(id: Long) {
+        selectedRecipeId.value = id
     }
 
     suspend fun delete(id: Long) = withContext(dispatchers.io) {
@@ -95,10 +106,10 @@ class RecipeMenuViewModel @Inject constructor(
     suspend fun import(blobString: String) {
         val importedRecipe = importer.import(blobString)
         if (importedRecipe == null) {
-            toastMessage.emit(errorMessageContent)
+            toastMessage.value = errorMessageContent
         } else {
             insertInternal(importedRecipe)
-            toastMessage.emit(String.format(importSuccessFmt, importedRecipe.name))
+            toastMessage.value = String.format(importSuccessFmt, importedRecipe.name)
         }
     }
 

@@ -1,7 +1,6 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import com.jeffbrandon.recipebinder.R
@@ -15,15 +14,17 @@ import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -41,9 +42,6 @@ class EditRecipeViewModelTest {
         private const val EXTRA_VAL = 1L
     }
 
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
-
     @Mock
     private lateinit var dataSource: RecipeDataSource
 
@@ -59,6 +57,7 @@ class EditRecipeViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        Dispatchers.setMain(dispatcher)
 
         whenever(context.getString(R.string.extra_recipe_id)).thenReturn(KEY_EXTRA_ID)
         whenever(dataSource.fetchRecipe(eq(EXTRA_VAL))).thenReturn(flow { emit(TestRecipeData.RECIPE_1) })
@@ -79,7 +78,7 @@ class EditRecipeViewModelTest {
 
     @After
     fun tearDown() {
-        underTest.getRecipe().removeObserver(testObserver)
+        Dispatchers.resetMain()
     }
 
     @Test
