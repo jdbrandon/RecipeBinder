@@ -7,7 +7,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    buildToolsVersion = '31-rc3'
+    buildToolsVersion = '31'
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.jeffbrandon.recipebinder"
