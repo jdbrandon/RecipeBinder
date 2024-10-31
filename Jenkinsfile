@@ -42,7 +42,7 @@ pipeline {
         }
         stage('Static analysis') {
             steps {
-                // Run Lint and analyse the results
+                // Run Lint and analyze the results
                 sh './gradlew lintStandardDebug'
                 sh './gradlew lintStandardRelease'
                 sh './gradlew detekt'

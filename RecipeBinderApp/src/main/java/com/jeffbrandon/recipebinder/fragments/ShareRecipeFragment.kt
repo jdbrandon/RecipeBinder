@@ -18,6 +18,7 @@ class ShareRecipeFragment : Fragment(R.layout.fragment_share_recipe) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         binder.bind(viewModel, view, viewLifecycleOwner)
     }
 }

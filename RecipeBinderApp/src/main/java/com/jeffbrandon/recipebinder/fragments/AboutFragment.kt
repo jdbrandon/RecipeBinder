@@ -3,6 +3,9 @@ package com.jeffbrandon.recipebinder.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.viewbinding.AboutFragmentViewBinder
@@ -16,6 +19,7 @@ class AboutFragment : Fragment(R.layout.fragment_about), AboutFragmentViewBinder
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         binder.bind(view, this)
     }
 
