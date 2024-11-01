@@ -14,7 +14,7 @@ pipeline {
         }
         stage('symlink Google Services Config'){
             steps {
-                sh 'ln -s ${GOOGLE_SERVICES_JSON} ./RecipeBinderApp/google-services.json'
+                sh 'ln -sf ${GOOGLE_SERVICES_JSON} ./RecipeBinderApp/google-services.json'
             }
         }
         stage('Compile') {
