@@ -111,7 +111,7 @@ class EditRecipeViewModelTest {
     fun `test should warn about unsaved, begin editing, stop editing `(): Unit = runTest {
         var shouldWarn = false
         val job = launch {
-            underTest.shouldWarnAboutUnsavedData().collect { v-> shouldWarn = v}
+            underTest.shouldWarnAboutUnsavedData().collect { v -> shouldWarn = v }
         }
         underTest.beginEditing()
 

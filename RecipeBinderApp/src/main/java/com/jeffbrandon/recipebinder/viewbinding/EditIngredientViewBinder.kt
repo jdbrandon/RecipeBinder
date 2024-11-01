@@ -36,29 +36,49 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
             fraction = v.also { updateQuantitySuffix(it, selectedUnitText) }
         }
     private val unitChipListener: (Chip) -> Unit = { v ->
-        selectedUnitText = if (selectedUnitText != unitMap[v.text]) unitMap[v.text]
-        else null
+        selectedUnitText = if (selectedUnitText != unitMap[v.text]) {
+            unitMap[v.text]
+        } else {
+            null
+        }
     }
 
     private val fractionChipListener: (Chip) -> Unit = { v ->
         v.text.toString().let { text ->
-            selectedFractionText = if (selectedFractionText != text) text
-            else null
+            selectedFractionText = if (selectedFractionText != text) {
+                text
+            } else {
+                null
+            }
         }
     }
 
     private val unitMap: HashMap<String, String> =
-        hashMapOf(Pair(context.getString(R.string.cup), context.getString(R.string.abbreviation_cup)),
-                  Pair(context.getString(R.string.ounce), context.getString(R.string.abbreviation_ounce)),
-                  Pair(context.getString(R.string.table_spoon), context.getString(R.string.abbreviation_tablespoon)),
-                  Pair(context.getString(R.string.tea_spoon), context.getString(R.string.abbreviation_teaspoon)),
-                  Pair(context.getString(R.string.pint), context.getString(R.string.abbreviation_pint)),
-                  Pair(context.getString(R.string.quart), context.getString(R.string.abbreviation_quart)),
-                  Pair(context.getString(R.string.gallon), context.getString(R.string.abbreviation_gallon)),
-                  Pair(context.getString(R.string.liter), context.getString(R.string.abbreviation_liter)),
-                  Pair(context.getString(R.string.milliliter), context.getString(R.string.abbreviation_milliliter)),
-                  Pair(context.getString(R.string.pound), context.getString(R.string.abbreviation_pound)),
-                  Pair(context.getString(R.string.gram), context.getString(R.string.abbreviation_gram)))
+        hashMapOf(
+            Pair(context.getString(R.string.cup), context.getString(R.string.abbreviation_cup)),
+            Pair(context.getString(R.string.ounce), context.getString(R.string.abbreviation_ounce)),
+            Pair(
+                context.getString(R.string.table_spoon),
+                context.getString(R.string.abbreviation_tablespoon)
+            ),
+            Pair(
+                context.getString(R.string.tea_spoon),
+                context.getString(R.string.abbreviation_teaspoon)
+            ),
+            Pair(context.getString(R.string.pint), context.getString(R.string.abbreviation_pint)),
+            Pair(context.getString(R.string.quart), context.getString(R.string.abbreviation_quart)),
+            Pair(
+                context.getString(R.string.gallon),
+                context.getString(R.string.abbreviation_gallon)
+            ),
+            Pair(context.getString(R.string.liter), context.getString(R.string.abbreviation_liter)),
+            Pair(
+                context.getString(R.string.milliliter),
+                context.getString(R.string.abbreviation_milliliter)
+            ),
+            Pair(context.getString(R.string.pound), context.getString(R.string.abbreviation_pound)),
+            Pair(context.getString(R.string.gram), context.getString(R.string.abbreviation_gram))
+        )
     private lateinit var viewModel: EditRecipeViewModel
     private lateinit var binder: FragmentAddIngredientBinding
 
@@ -78,7 +98,11 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
             }
 
             deleteButton.setOnClickListener {
-                Snackbar.make(viewRoot, R.string.delete_this_confirmation_message, Snackbar.LENGTH_LONG)
+                Snackbar.make(
+                    viewRoot,
+                    R.string.delete_this_confirmation_message,
+                    Snackbar.LENGTH_LONG
+                )
                     .setAction(android.R.string.ok) {
                         with(viewModel) {
                             viewModelScope.launch { deleteEditIngredient() }
@@ -141,14 +165,16 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
     }
 
     private fun FragmentAddIngredientBinding.getAmount() =
-        computeAmount(quantityInput.text, when (fractionChipGroup.checkedChipId) {
-            R.id.chip_input_quarter -> FractionalMeasurement.QUARTER
-            R.id.chip_input_third -> FractionalMeasurement.THIRD
-            R.id.chip_input_half -> FractionalMeasurement.HALF
-            R.id.chip_input_2_thirds -> FractionalMeasurement.THIRD_TWO
-            R.id.chip_input_3_quarter -> FractionalMeasurement.QUARTER_THREE
-            else -> FractionalMeasurement.ZERO
-        })
+        computeAmount(
+            quantityInput.text, when (fractionChipGroup.checkedChipId) {
+                R.id.chip_input_quarter -> FractionalMeasurement.QUARTER
+                R.id.chip_input_third -> FractionalMeasurement.THIRD
+                R.id.chip_input_half -> FractionalMeasurement.HALF
+                R.id.chip_input_2_thirds -> FractionalMeasurement.THIRD_TWO
+                R.id.chip_input_3_quarter -> FractionalMeasurement.QUARTER_THREE
+                else -> FractionalMeasurement.ZERO
+            }
+        )
 
     private fun FragmentAddIngredientBinding.getSelectedUnit() = when (unitChips.checkedChipId) {
         R.id.gallon_chip -> UnitType.GALLON
@@ -167,18 +193,26 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
 
     private fun FragmentAddIngredientBinding.setupAddIngredientViews() {
         val fractionChipList =
-            listOf(chipInputQuarter, chipInputThird, chipInputHalf, chipInput2Thirds, chipInput3Quarter)
-        val unitChipList = listOf(cupChip,
-                                  ounceChip,
-                                  tbspChip,
-                                  tspChip,
-                                  pintChip,
-                                  quartChip,
-                                  gallonChip,
-                                  literChip,
-                                  milliliterChip,
-                                  poundChip,
-                                  gramChip)
+            listOf(
+                chipInputQuarter,
+                chipInputThird,
+                chipInputHalf,
+                chipInput2Thirds,
+                chipInput3Quarter
+            )
+        val unitChipList = listOf(
+            cupChip,
+            ounceChip,
+            tbspChip,
+            tspChip,
+            pintChip,
+            quartChip,
+            gallonChip,
+            literChip,
+            milliliterChip,
+            poundChip,
+            gramChip
+        )
 
         fractionChipList.forEach { view ->
             view.setOnClickListener { fractionChipListener(it as Chip) }
@@ -201,8 +235,11 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
         binder.quantityInputLayout.suffixText = suffix
         // Setting isExpandedHintEnabled doesn't animate, this is hacky but works
         if (binder.quantityInput.text.isNullOrBlank()) {
-            if (!suffix.isNullOrBlank()) binder.quantityInput.setText(" ")
-            else binder.quantityInput.setText("")
+            if (!suffix.isNullOrBlank()) {
+                binder.quantityInput.setText(" ")
+            } else {
+                binder.quantityInput.setText("")
+            }
         }
     }
 }

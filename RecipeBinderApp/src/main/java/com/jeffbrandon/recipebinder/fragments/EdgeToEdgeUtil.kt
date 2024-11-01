@@ -12,13 +12,16 @@ object EdgeToEdgeUtil {
         ViewCompat.setOnApplyWindowInsetsListener(view) { v: View, windowInsets: WindowInsetsCompat ->
             val insets =
                 windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            if (updateLayoutParams) v.updateLayoutParams<MarginLayoutParams> {
-                leftMargin = insets.left
-                topMargin = insets.top
-                rightMargin = insets.right
-                bottomMargin = insets.bottom
-            } else
+            if (updateLayoutParams) {
+                v.updateLayoutParams<MarginLayoutParams> {
+                    leftMargin = insets.left
+                    topMargin = insets.top
+                    rightMargin = insets.right
+                    bottomMargin = insets.bottom
+                }
+            } else {
                 v.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
+            }
             WindowInsetsCompat.CONSUMED
         }
     }

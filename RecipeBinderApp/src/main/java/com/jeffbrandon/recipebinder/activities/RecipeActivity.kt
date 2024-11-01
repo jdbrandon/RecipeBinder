@@ -2,7 +2,6 @@ package com.jeffbrandon.recipebinder.activities
 
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.RecipeMode
@@ -24,11 +23,14 @@ class RecipeActivity : RecipeAppActivity() {
         setContentView(R.layout.activity_recipe_detail)
         val extraKey = getString(R.string.extra_view_mode)
         @Suppress("DEPRECATION") val mode =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) intent.getSerializableExtra(
-                extraKey,
-                RecipeMode::class.java
-            ) else
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getSerializableExtra(
+                    extraKey,
+                    RecipeMode::class.java
+                )
+            } else {
                 intent.getSerializableExtra(extraKey) as? RecipeMode
+            }
         Timber.w("${intent.data}")
         Timber.w("${intent.dataString}")
         binder.bind(

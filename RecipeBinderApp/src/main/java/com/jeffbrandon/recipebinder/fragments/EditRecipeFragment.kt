@@ -2,9 +2,6 @@ package com.jeffbrandon.recipebinder.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.jeffbrandon.recipebinder.R
