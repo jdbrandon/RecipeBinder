@@ -20,6 +20,7 @@ class EditIngredientFragment : Fragment(R.layout.fragment_add_ingredient) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         binder.bind(viewModel, view, parentFragmentManager, viewLifecycleOwner)
     }
 

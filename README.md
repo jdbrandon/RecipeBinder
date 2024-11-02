@@ -38,10 +38,15 @@ To get the app building, there are two options:
 1. Create your own project on Firebase and generate your own `google-services.json` and place it in
 the app directory: `RecipeBinderApp`
 1. Remove firebase integrations from the project and app `build.gradle`, they are not necessary to
-build and run the app. The easiest way to do this is to run the following command:
-    ```bash
-    git revert 7328082b0bab7cd1926e9e5f3060499bb8032e12
+build and run the app. The easiest way to do this is to remove the following lines from the app `build.gradle`:
+    ```groovy
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.crashlytics'
+    ...
+    implementation platform('com.google.firebase:firebase-bom:33.5.1')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
     ```
 1. _Optional_: If you are using continuous integration, one may wish to edit
-[Jenkinsfile](/Jenkinsfile) to remove the step in checkout that reverts the firebase dependencies
-that will otherwise cause build failures
+[Jenkinsfile](/Jenkinsfile) to modify the step that fetches google-services.json from the jenkins server
+credentials.

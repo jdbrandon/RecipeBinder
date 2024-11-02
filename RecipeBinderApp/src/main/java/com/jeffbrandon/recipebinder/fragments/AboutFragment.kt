@@ -16,6 +16,7 @@ class AboutFragment : Fragment(R.layout.fragment_about), AboutFragmentViewBinder
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         binder.bind(view, this)
     }
 

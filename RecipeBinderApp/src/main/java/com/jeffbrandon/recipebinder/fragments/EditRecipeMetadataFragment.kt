@@ -16,6 +16,7 @@ class EditRecipeMetadataFragment : EditFragment(R.layout.fragment_edit_recipe_me
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         binder.bind(viewModel, requireView(), viewLifecycleOwner)
     }
 

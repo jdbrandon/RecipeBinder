@@ -18,6 +18,7 @@ class EditRecipeInstructionsFragment : Fragment(R.layout.fragment_edit_recipe_it
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         binder.bind(viewModel, view, viewLifecycleOwner)
     }
 }

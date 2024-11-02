@@ -18,6 +18,7 @@ class MenuFragment : Fragment(R.layout.fragment_recipe_menu), RecipeMenuViewBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         val vm: RecipeMenuViewModel by activityViewModels()
         binder.bind(vm, view, this, this)
     }

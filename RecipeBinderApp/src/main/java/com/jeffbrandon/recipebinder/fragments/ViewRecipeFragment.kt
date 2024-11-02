@@ -17,6 +17,7 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_view_recipe) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         binder.bind(viewModel, requireView(), requireActivity(), viewLifecycleOwner)
     }
 }

@@ -3,12 +3,18 @@ pipeline {
         // Run on a build agent where we have the Android SDK installed
         label 'android'
     }
+    environment {
+        GOOGLE_SERVICES_JSON = credentials('google-services-json')
+    }
     stages {
         stage('Checkout'){
             steps {
                 checkout scm
-                // Undo crashlytics integration commit because without google-services.json builds will fail
-                sh 'git revert 7328082b0bab7cd1926e9e5f3060499bb8032e12 --no-commit'
+            }
+        }
+        stage('symlink Google Services Config'){
+            steps {
+                sh 'ln -sf ${GOOGLE_SERVICES_JSON} ./RecipeBinderApp/google-services.json'
             }
         }
         stage('Compile') {
@@ -42,7 +48,7 @@ pipeline {
         }
         stage('Static analysis') {
             steps {
-                // Run Lint and analyse the results
+                // Run Lint and analyze the results
                 sh './gradlew lintStandardDebug'
                 sh './gradlew lintStandardRelease'
                 sh './gradlew detekt'

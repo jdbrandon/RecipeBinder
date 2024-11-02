@@ -74,8 +74,7 @@
     <string name="metadata">Metadata</string>
     <string name="edit_recipe_title">Recipe Editor</string>
     <string name="edit">Edit</string>
-    <string name="ingredient_format"><xliff:g id="amount">%1$s</xliff:g> <xliff:g
-        id="name">%2$s</xliff:g></string>
+    <string name="ingredient_format"><xliff:g id="amount">%1$s</xliff:g> <xliff:g id="name">%2$s</xliff:g></string>
     <string name="convert">Convert</string>
     <string name="convert_unit_format">Convert <xliff:g id="unit">%s</xliff:g> to</string>
     <string name="convert_unit_type">convert unit type</string>
@@ -120,7 +119,7 @@
     <string name="contact">Contact</string>
     <string name="support_the_app">Support the app</string>
     <string name="personal_website">Personal Website</string>
-    <string name="contact_uri" translatable="false">mailto:jeff@jeffbrandon.me</string>
+    <string name="contact_uri" translatable="false">mailto:jeffbrandon2010@gmail.com</string>
     <string name="website_uri" translatable="false">http://jeffbrandon.me</string>
     <string name="support_uri" translatable="false">https://buymeacoffee.com/jeffbrandon</string>
     <string name="dairy">Dairy</string>

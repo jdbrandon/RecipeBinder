@@ -12,11 +12,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditRecipeFragment : Fragment(R.layout.fragment_edit_recipe) {
-    @Inject lateinit var binder: EditRecipeViewBinder
+    @Inject
+    lateinit var binder: EditRecipeViewBinder
     private val viewModel: EditRecipeViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        EdgeToEdgeUtil.padInsets(view)
         binder.bind(viewModel, requireActivity(), requireView())
     }
 
