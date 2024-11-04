@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.viewmodel.RecipeMenuViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 class RecipeAdapter(
     recipeList: List<RecipeData>,
     private val viewModel: RecipeMenuViewModel,

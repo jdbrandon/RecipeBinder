@@ -21,6 +21,7 @@ import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.util.RecipeExporter
 import com.jeffbrandon.recipebinder.viewmodel.RecipeViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -43,21 +44,23 @@ class ShareFragmentViewBinder @Inject constructor(
 
     fun bind(vm: RecipeViewModel, viewRoot: View, lifecycleOwner: LifecycleOwner) {
         binder = FragmentShareRecipeBinding.bind(viewRoot)
-        vm.getRecipe().observe(lifecycleOwner) { recipe ->
-            vm.viewModelScope.launch {
-                val uriString = exporter.encode(recipe)
-                launch {
-                    binder.copyUriButton.setOnClickListener {
-                        addToClipboard(recipe.name, Uri.parse(uriString), viewRoot)
+        lifecycleOwner.whileResumed {
+            vm.getRecipe().mapNotNull { it }.collect { recipe ->
+                vm.viewModelScope.launch {
+                    val uriString = exporter.encode(recipe)
+                    launch {
+                        binder.copyUriButton.setOnClickListener {
+                            addToClipboard(recipe.name, Uri.parse(uriString), viewRoot)
+                        }
                     }
-                }
-                launch {
-                    binder.copyRawButton.setOnClickListener {
-                        addToClipboard(recipe.name, getClipString(recipe), viewRoot)
+                    launch {
+                        binder.copyRawButton.setOnClickListener {
+                            addToClipboard(recipe.name, getClipString(recipe), viewRoot)
+                        }
                     }
+                    val bitmap = uriString.asQRCode()
+                    binder.qrCode.setImageBitmap(bitmap)
                 }
-                val bitmap = uriString.asQRCode()
-                binder.qrCode.setImageBitmap(bitmap)
             }
         }
     }

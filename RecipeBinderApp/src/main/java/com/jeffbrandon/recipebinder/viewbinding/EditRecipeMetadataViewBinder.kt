@@ -9,7 +9,9 @@ import com.jeffbrandon.recipebinder.enums.RecipeTag.Companion.recipeMap
 import com.jeffbrandon.recipebinder.fragments.Savable
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import javax.inject.Inject
 
 class EditRecipeMetadataViewBinder @Inject constructor() : Savable {
@@ -20,15 +22,17 @@ class EditRecipeMetadataViewBinder @Inject constructor() : Savable {
     fun bind(vm: EditRecipeViewModel, viewRoot: View, lifecycle: LifecycleOwner) {
         viewModel = vm
         binder = FragmentEditRecipeMetadataBinding.bind(viewRoot)
-        viewModel.getRecipe().observe(lifecycle) { recipe ->
-            with(binder.meta) {
-                name.setText(recipe.name)
-                cookTime.setText(recipe.cookTime.toString())
-                servings.setText(recipe.servings.toString())
-            }
-            tagMap = binder.tags.recipeMap()
-            recipe.tags.forEach { tag ->
-                tagMap[tag]?.apply { isChecked = true } ?: error("Unmapped tag")
+        lifecycle.whileResumed {
+            viewModel.getRecipe().mapNotNull { it }.collect { recipe ->
+                with(binder.meta) {
+                    name.setText(recipe.name)
+                    cookTime.setText(String.format(Locale.US, "%d", recipe.cookTime))
+                    servings.setText(String.format(Locale.US, "%d", recipe.servings))
+                }
+                tagMap = binder.tags.recipeMap()
+                recipe.tags.forEach { tag ->
+                    tagMap[tag]?.apply { isChecked = true } ?: error("Unmapped tag")
+                }
             }
         }
     }

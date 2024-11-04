@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.DialogInterface
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
+import kotlinx.coroutines.launch
 
 class ConvertDialog(context: Context, amount: Float, startUnit: UnitType, vm: EditRecipeViewModel) {
     private companion object {
@@ -45,7 +47,7 @@ class ConvertDialog(context: Context, amount: Float, startUnit: UnitType, vm: Ed
         } - startUnit - UnitType.NONE).toList()
 
         val listener = DialogInterface.OnClickListener { _, index ->
-            vm.convertIngredientUnits(amount, startUnit, convertibleUnitTypes[index])
+            vm.viewModelScope.launch { vm.convertIngredientUnits(amount, startUnit, convertibleUnitTypes[index]) }
         }
 
         val adapter =

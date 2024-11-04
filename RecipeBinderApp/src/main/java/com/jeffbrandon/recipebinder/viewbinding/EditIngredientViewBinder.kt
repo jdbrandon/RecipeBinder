@@ -20,6 +20,7 @@ import com.jeffbrandon.recipebinder.widgets.ConvertDialog
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Locale
 import javax.inject.Inject
 
 class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: Context) : Savable {
@@ -115,23 +116,31 @@ class EditIngredientViewBinder @Inject constructor(@ApplicationContext context: 
                 saveAndPop(fm)
             }
         }
-        vm.editIngredientLiveData.observe(lifecycle) { ingredient ->
-            if (ingredient == null) {
-                Timber.w("Ingredient was null, hiding delete button")
-            } else {
-                with(binder) {
-                    ingredientInput.setText(ingredient.name)
-                    quantityInput.setText(ingredient.amountWhole().toString())
+        lifecycle.whileResumed {
+            vm.editIngredientFlow.collect { ingredient ->
+                if (ingredient == null) {
+                    Timber.w("Ingredient was null, hiding delete button")
+                } else {
+                    with(binder) {
+                        ingredientInput.setText(ingredient.name)
+                        quantityInput.setText(
+                            String.format(
+                                Locale.US,
+                                "%d",
+                                ingredient.amountWhole()
+                            )
+                        )
 
-                    val fractionTagMap = fractionViewMap()
-                    fractionTagMap[ingredient.amountFraction()]?.apply {
-                        isChecked = true
-                        callOnClick()
-                    }
-                    val unitTagMap = unitMap()
-                    unitTagMap[ingredient.unit]?.apply {
-                        isChecked = true
-                        callOnClick()
+                        val fractionTagMap = fractionViewMap()
+                        fractionTagMap[ingredient.amountFraction()]?.apply {
+                            isChecked = true
+                            callOnClick()
+                        }
+                        val unitTagMap = unitMap()
+                        unitTagMap[ingredient.unit]?.apply {
+                            isChecked = true
+                            callOnClick()
+                        }
                     }
                 }
             }

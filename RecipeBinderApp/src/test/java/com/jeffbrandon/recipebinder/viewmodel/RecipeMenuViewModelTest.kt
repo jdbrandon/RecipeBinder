@@ -1,29 +1,30 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import com.jeffbrandon.recipebinder.R
+import com.jeffbrandon.recipebinder.dagger.IDispatchers
 import com.jeffbrandon.recipebinder.data.TagFilter
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeMenuDataSource
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
-import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import com.jeffbrandon.recipebinder.util.RecipeBlobImporter
+import com.jeffbrandon.recipebinder.viewmodel.Result.Loaded
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
@@ -33,178 +34,265 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@ExperimentalCoroutinesApi
 class RecipeMenuViewModelTest {
 
-    @get:Rule val instantExecutorRule = InstantTaskExecutorRule()
-
     private val recipeList = TestRecipeData.buildTestData()
+    private val scheduler = TestCoroutineScheduler()
+    private val dispatcher = StandardTestDispatcher(scheduler, "Test Dispatcher")
 
-    @Mock private lateinit var dataSource: RecipeMenuDataSource
-    @Mock private lateinit var context: Context
-    @Mock private lateinit var importer: RecipeBlobImporter
+    @Mock
+    private lateinit var dataSource: RecipeMenuDataSource
+
+    @Mock
+    private lateinit var context: Context
+
+    @Mock
+    private lateinit var importer: RecipeBlobImporter
     private lateinit var underTest: RecipeMenuViewModel
-    private val dispatcher = TestCoroutineDispatcher()
-    private val scope = TestCoroutineScope(dispatcher)
 
     @Before
+    @ExperimentalCoroutinesApi
     fun setup() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(dispatcher)
-        whenever(dataSource.fetchAllRecipes(anyString())).thenReturn(MutableLiveData(recipeList))
-        underTest = RecipeMenuViewModel(context, { dataSource }, { importer })
+        whenever(dataSource.fetchAllRecipes(anyString())).thenReturn(flow { emit(recipeList) })
+        underTest = RecipeMenuViewModel(context, { dataSource }, { importer }, {
+            object :
+                IDispatchers {
+                override val default = dispatcher
+                override val io = dispatcher
+                override val main = dispatcher
+            }
+        })
     }
 
     @After
-    fun tearDown() {
-        dispatcher.cleanupTestCoroutines()
+    @ExperimentalCoroutinesApi
+    fun cleanup() {
         Dispatchers.resetMain()
     }
 
     @Test
-    fun `test delete`() = runBlocking {
-        scope.launch {
-            underTest.delete(TestRecipeData.RECIPE_1.recipeId!!)
+    @ExperimentalCoroutinesApi
+    fun `test delete`() = runTest {
+        underTest.delete(TestRecipeData.RECIPE_1.recipeId!!)
 
-            verify(dataSource).deleteRecipe(eq(TestRecipeData.RECIPE_1.recipeId!!))
-        }.join()
+        verify(dataSource).deleteRecipe(eq(TestRecipeData.RECIPE_1.recipeId))
     }
 
     @Test
-    fun `test insert`() = runBlocking {
-        scope.launch {
-            val name = "TestName"
-            val insertRecipe = RecipeData().copy(name = name)
+    @ExperimentalCoroutinesApi
+    fun `test insert`() = runTest {
+        val name = "TestName"
+        val insertRecipe = RecipeData().copy(name = name)
 
-            underTest.insert(name)
+        underTest.insert(name)
 
-            verify(dataSource).insertRecipe(eq(insertRecipe))
-        }.join()
+        verify(dataSource).insertRecipe(eq(insertRecipe))
     }
 
     @Test
-    fun `test blob import`() = runBlocking {
-        scope.launch {
-            whenever(context.getString(R.string.import_success)).thenReturn("%s")
-            whenever(importer.import(any())).thenReturn(TestRecipeData.RECIPE_2)
+    @ExperimentalCoroutinesApi
+    fun `test blob import`() = runTest {
+        whenever(context.getString(R.string.import_success)).thenReturn("%s")
+        whenever(importer.import(any())).thenReturn(TestRecipeData.RECIPE_2)
 
-            underTest.import("")
-            val message = underTest.toastObservable().getOrAwaitValue()
+        underTest.import("")
 
-            verify(importer).import(any())
-            assertEquals(TestRecipeData.RECIPE_2.name, message)
-        }.join()
+        verify(importer).import(any())
     }
 
     @Test
-    fun `test blob import failure`() = scope.runBlockingTest {
+    @ExperimentalCoroutinesApi
+    fun `test blob import failure`() = runTest {
         val errorMsg = "error"
         whenever(context.getString(R.string.error_import_failed)).thenReturn(errorMsg)
         whenever(importer.import(any())).thenReturn(null)
 
         underTest.import("")
 
-        val message = underTest.toastObservable().getOrAwaitValue()
+        val message = underTest.toastObservable().value
         verify(importer).import(any())
         assertEquals(errorMsg, message)
     }
 
     @Test
-    fun `test fetch recipes - no tag filter`() = scope.runBlockingTest {
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - no tag filter`() = runTest {
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(recipeList, recipeData)
+        job.cancel()
     }
 
     @Test
-    fun `test fetch recipes - tag filter for one`() = scope.runBlockingTest {
-        underTest.filterTags(TagFilter(TestRecipeData.RECIPE_1.tags, false))
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - tag filter for one`() = runTest {
+        underTest.filterTags(TagFilter.Include.create(TestRecipeData.RECIPE_1.tags))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = launch {
+            underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+            }
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(listOf(TestRecipeData.RECIPE_1), recipeData)
+        job.cancel()
+        scheduler.advanceUntilIdle()
     }
 
     @Test
-    fun `test fetch recipes - tag filter exclusion`() = scope.runBlockingTest {
-        underTest.filterTags(TagFilter(TestRecipeData.RECIPE_1.tags, true))
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - tag filter exclusion`() = runTest {
+        underTest.filterTags(TagFilter.Exclude.create(TestRecipeData.RECIPE_1.tags))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(listOf(TestRecipeData.RECIPE_2, TestRecipeData.RECIPE_3), recipeData)
+        job.cancel()
     }
 
     @Test
-    fun `test fetch recipes - tag filter on empty list`() = scope.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(), false))
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - tag filter on empty list`() = runTest {
+        underTest.filterTags(TagFilter.Include.create(emptySet()))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(recipeList, recipeData)
+        job.cancel()
     }
 
     @Test
-    fun `test fetch recipes - tag filter exclusion on empty list`() = scope.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(), true))
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - tag filter exclusion on empty list`() = runTest {
+        underTest.filterTags(TagFilter.Exclude.create(emptySet()))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(recipeList, recipeData)
+        job.cancel()
     }
 
     @Test
-    fun `test fetch recipes - tag filter for multiple`() = scope.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.EASY), false))
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - tag filter for multiple`() = runTest {
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.EASY)))
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
+        val easyList = recipeData
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
-        underTest.filterTags(TagFilter(setOf(RecipeTag.DESSERT), false))
-        val newData = underTest.getRecipes().getOrAwaitValue()
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.DESSERT)))
+        scheduler.advanceUntilIdle()
+        val newData = recipeData
 
-        assertEquals(listOf(TestRecipeData.RECIPE_1, TestRecipeData.RECIPE_3), recipeData)
+        job.cancel()
+        assertEquals(listOf(TestRecipeData.RECIPE_1, TestRecipeData.RECIPE_3), easyList)
         assertEquals(listOf(TestRecipeData.RECIPE_2, TestRecipeData.RECIPE_3), newData)
     }
 
     @Test
-    fun `test fetch recipes - tag filter exclude for multiple`() = scope.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.EASY), true))
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - tag filter exclude for multiple`() = runTest {
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.EASY)))
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
+        val notEasy = recipeData
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
-        underTest.filterTags(TagFilter(setOf(RecipeTag.DESSERT), true))
-        val newData = underTest.getRecipes().getOrAwaitValue()
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.DESSERT)))
+        scheduler.advanceUntilIdle()
+        val newData = recipeData
 
-        assertEquals(listOf(TestRecipeData.RECIPE_2), recipeData)
+        job.cancel()
+        assertEquals(listOf(TestRecipeData.RECIPE_2), notEasy)
         assertEquals(listOf(TestRecipeData.RECIPE_1), newData)
     }
 
     @Test
-    fun `test fetch recipes - tag filter for out everything`() = scope.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.SIDE), false))
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - tag filter for out everything`() = runTest {
+        underTest.filterTags(TagFilter.Include.create(setOf(RecipeTag.SIDE)))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
 
         assertEquals(listOf<RecipeData>(), recipeData)
+        job.cancel()
     }
 
     @Test
-    fun `test fetch recipes - tag filter for out everything exclusion`() = scope.runBlockingTest {
-        underTest.filterTags(TagFilter(setOf(RecipeTag.SIDE), true))
+    @ExperimentalCoroutinesApi
+    fun `test fetch recipes - tag filter for out everything exclusion`() = runTest {
+        underTest.filterTags(TagFilter.Exclude.create(setOf(RecipeTag.SIDE)))
 
-        val recipeData = underTest.getRecipes().getOrAwaitValue()
+        var recipeData: List<RecipeData>? = null
+        val job = underTest.collectRecipesInScope(this) { data ->
+            recipeData = data
+        }
+        scheduler.advanceUntilIdle()
 
         assertEquals(recipeList, recipeData)
+        job.cancel()
     }
 
     @Test
-    fun `test filterTags list`() {
-        val testTags = TagFilter(setOf(RecipeTag.SIDE, RecipeTag.SIDE), false)
+    @ExperimentalCoroutinesApi
+    fun `test filterTags list`() = runTest {
+        val testTags = TagFilter.Include.create(setOf(RecipeTag.SIDE, RecipeTag.SIDE))
+
         underTest.filterTags(testTags)
 
-        val tags = underTest.selectedTags().getOrAwaitValue()
+        val tags = underTest.selectedTags().first()
 
         assertEquals(testTags, tags)
     }
 
     @Test
-    fun `test filterTags empty list`() {
-        underTest.filterTags(TagFilter(setOf(), false))
+    @ExperimentalCoroutinesApi
+    fun `test filterTags empty list`() = runTest {
+        val filter = TagFilter.Include.create(setOf())
+        underTest.filterTags(filter)
 
-        val tags = underTest.selectedTags().getOrAwaitValue()
+        val tags = underTest.selectedTags().first()
 
-        assertEquals(TagFilter(setOf(), false), tags)
+        assertEquals(filter, tags)
     }
+}
+
+@ExperimentalCoroutinesApi
+private fun RecipeMenuViewModel.collectRecipesInScope(
+    scope: CoroutineScope,
+    updater: (List<RecipeData>) -> Unit
+): Job {
+    val job = scope.launch {
+        getRecipes(this).collect { result ->
+            when (result) {
+                is Loaded<List<RecipeData>> -> updater(result.data)
+                else -> Unit
+            }
+        }
+    }
+    return job
 }

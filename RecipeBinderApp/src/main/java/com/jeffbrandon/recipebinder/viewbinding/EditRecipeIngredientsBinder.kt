@@ -4,6 +4,7 @@ import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.data.EditIngredientAdapter
 import com.jeffbrandon.recipebinder.data.Ingredient
@@ -11,6 +12,7 @@ import com.jeffbrandon.recipebinder.databinding.FragmentEditRecipeItemsBinding
 import com.jeffbrandon.recipebinder.enums.UnitType
 import com.jeffbrandon.recipebinder.fragments.EditIngredientFragment
 import com.jeffbrandon.recipebinder.viewmodel.EditRecipeViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EditRecipeIngredientsBinder @Inject constructor() {
@@ -23,15 +25,25 @@ class EditRecipeIngredientsBinder @Inject constructor() {
     ) {
         val binding = FragmentEditRecipeItemsBinding.bind(viewRoot)
         binding.items.contentDescription = viewRoot.resources.getString(R.string.ingredient_list)
-        vm.getIngredients().observe(lifecycle) { ingredients ->
-            with(binding) {
-                items.adapter = EditIngredientAdapter(vm, ingredients) {
-                    vm.setEditIngredient(it)
-                    openEditIngredientFragment(fm)
-                }
-                addItemFab.setOnClickListener {
-                    vm.setEditIngredient(Ingredient("", 0f, UnitType.NONE))
-                    openEditIngredientFragment(fm)
+        lifecycle.whileResumed {
+            vm.getIngredients().collect { ingredients ->
+                with(binding) {
+                    items.adapter = EditIngredientAdapter(vm, ingredients) {
+                        vm.viewModelScope.launch { vm.setEditIngredient(it) }
+                        openEditIngredientFragment(fm)
+                    }
+                    addItemFab.setOnClickListener {
+                        vm.viewModelScope.launch {
+                            vm.setEditIngredient(
+                                Ingredient(
+                                    "",
+                                    0f,
+                                    UnitType.NONE
+                                )
+                            )
+                        }
+                        openEditIngredientFragment(fm)
+                    }
                 }
             }
         }
