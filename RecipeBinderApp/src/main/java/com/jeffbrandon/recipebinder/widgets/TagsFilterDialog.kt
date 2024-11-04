@@ -27,8 +27,11 @@ class TagsFilterDialog @Inject constructor() {
                 with(binding) {
                     tags.recipeMap().filter { it.value.isChecked }.map { it.key }.toSet().also {
                         val filter =
-                            if (exclusionCheckbox.isChecked) TagFilter.Exclude.create(it)
-                            else TagFilter.Include.create(it)
+                            if (exclusionCheckbox.isChecked) {
+                                TagFilter.Exclude.create(it)
+                            } else {
+                                TagFilter.Include.create(it)
+                            }
                         callback(filter)
                     }
                 }

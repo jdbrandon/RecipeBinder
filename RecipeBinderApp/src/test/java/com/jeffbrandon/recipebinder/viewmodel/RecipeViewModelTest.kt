@@ -5,15 +5,18 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.dagger.IDispatchers
+import com.jeffbrandon.recipebinder.data.Ingredient
+import com.jeffbrandon.recipebinder.data.Instruction
+import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -76,20 +79,41 @@ class RecipeViewModelTest {
 
     @Test
     fun `test get recipe`() = runTest {
-        val recipe = underTest.getRecipe().getOrAwaitValue()
+        var recipe: RecipeData? = null
+        val job = launch {
+            underTest.getRecipe().collect {
+                recipe = it
+            }
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(TestRecipeData.RECIPE_1, recipe)
         verify(dataSource).fetchRecipe(eq(EXTRA_VAL))
+        job.cancel()
     }
 
     @Test
     fun `test get ingredients`() = runTest {
-        val ingredients = underTest.getIngredients().getOrAwaitValue()
+        var ingredients: List<Ingredient> = emptyList()
+        val job = launch {
+            underTest.getIngredients().collect {
+                ingredients = it
+            }
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(TestRecipeData.RECIPE_1.ingredients, ingredients)
+        job.cancel()
     }
 
     @Test
     fun `test get instructions`() = runTest {
-        val instructions = underTest.getInstructions().getOrAwaitValue()
+        var instructions: List<Instruction> = emptyList()
+        val job = launch {
+            underTest.getInstructions().collect {
+                instructions = it
+            }
+        }
+        scheduler.advanceUntilIdle()
         assertEquals(TestRecipeData.RECIPE_1.instructions, instructions)
+        job.cancel()
     }
 }

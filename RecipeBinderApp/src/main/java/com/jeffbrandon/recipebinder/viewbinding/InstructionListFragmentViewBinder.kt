@@ -18,8 +18,10 @@ class InstructionListFragmentViewBinder @Inject constructor() {
         with(FragmentListBinding.bind(view)) {
             name.text = view.resources.getString(R.string.instructions)
             recycler.contentDescription = view.resources.getString(R.string.instruction_list)
-            viewModel.getInstructions().observe(lifecycle) { instructions ->
-                recycler.adapter = InstructionAdapter(instructions)
+            lifecycle.whileResumed {
+                viewModel.getInstructions().collect { instructions ->
+                    recycler.adapter = InstructionAdapter(instructions)
+                }
             }
         }
     }

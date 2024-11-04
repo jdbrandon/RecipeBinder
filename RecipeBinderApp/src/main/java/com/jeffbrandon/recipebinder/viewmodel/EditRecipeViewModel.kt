@@ -1,9 +1,7 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.asLiveData
 import com.jeffbrandon.recipebinder.dagger.IDispatchers
 import com.jeffbrandon.recipebinder.data.Ingredient
 import com.jeffbrandon.recipebinder.data.Instruction
@@ -13,7 +11,6 @@ import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -35,10 +32,8 @@ class EditRecipeViewModel @Inject constructor(
 
     private var editIngredient: MutableStateFlow<Edit<Ingredient>?> = MutableStateFlow(null)
     private var editInstruction: MutableStateFlow<Edit<Instruction>?> = MutableStateFlow(null)
-
-    val editIngredientLiveData: LiveData<Ingredient?> = editIngredient.map { it?.data }.asLiveData()
-    val editInstructionLiveData: LiveData<Instruction?> =
-        editInstruction.map { it?.data }.asLiveData()
+    val editIngredientFlow: Flow<Ingredient?> = editIngredient.map { it?.data }
+    val editInstructionFlow: Flow<Instruction?> = editInstruction.map { it?.data }
     private val shouldWarn: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val editing: MutableStateFlow<Boolean> = MutableStateFlow(false)
 

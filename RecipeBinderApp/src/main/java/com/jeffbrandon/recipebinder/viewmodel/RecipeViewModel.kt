@@ -1,11 +1,9 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.dagger.IDispatchers
 import com.jeffbrandon.recipebinder.data.Ingredient
@@ -16,6 +14,11 @@ import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,14 +34,14 @@ open class RecipeViewModel @Inject constructor(
     private val id: Long = state[context.getString(R.string.extra_recipe_id)]
         ?: error("Did you forget to provide recipeId in the intent extras or fragment args bundle")
     private val db = dataSource.get()
-    private val recipe = db.fetchRecipe(id).asLiveData()
+    private val recipe = db.fetchRecipe(id).stateIn(viewModelScope, SharingStarted.Lazily, null)
     protected val dispatchers: IDispatchers by lazy { lazyDispatchers.get() }
 
-    fun getRecipe(): LiveData<RecipeData> = recipe
+    fun getRecipe(): StateFlow<RecipeData?> = recipe
 
-    fun getIngredients() = recipe.map { it.ingredients }
+    fun getIngredients(): Flow<List<Ingredient>> = recipe.map { it?.ingredients ?: emptyList() }
 
-    fun getInstructions() = recipe.map { it.instructions }
+    fun getInstructions(): Flow<List<Instruction>> = recipe.map { it?.instructions ?: emptyList() }
 
     protected fun getIngredientIndex(data: Ingredient): Int? =
         recipe.value?.ingredients?.indexOf(data).takeIf { it != -1 }

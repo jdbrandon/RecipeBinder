@@ -21,15 +21,17 @@ class EditRecipeInstructionsBinder @Inject constructor(private val dialog: Updat
     ) {
         val binding = FragmentEditRecipeItemsBinding.bind(viewRoot)
         binding.items.contentDescription = viewRoot.resources.getString(R.string.instruction_list)
-        vm.getInstructions().observe(lifecycle) { instructions ->
-            with(binding) {
-                items.adapter = EditInstructionAdapter(vm, instructions) {
-                    vm.viewModelScope.launch { vm.setEditInstruction(it) }
-                    dialog.show(viewRoot.context, vm, it)
-                }
-                addItemFab.setOnClickListener {
-                    vm.viewModelScope.launch { vm.setEditInstruction(Instruction("")) }
-                    dialog.show(viewRoot.context, vm)
+        lifecycle.whileResumed {
+            vm.getInstructions().collect { instructions ->
+                with(binding) {
+                    items.adapter = EditInstructionAdapter(vm, instructions) {
+                        vm.viewModelScope.launch { vm.setEditInstruction(it) }
+                        dialog.show(viewRoot.context, vm, it)
+                    }
+                    addItemFab.setOnClickListener {
+                        vm.viewModelScope.launch { vm.setEditInstruction(Instruction("")) }
+                        dialog.show(viewRoot.context, vm)
+                    }
                 }
             }
         }

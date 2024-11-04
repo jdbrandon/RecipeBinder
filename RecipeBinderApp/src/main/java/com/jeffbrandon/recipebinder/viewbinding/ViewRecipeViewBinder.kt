@@ -13,6 +13,7 @@ import com.jeffbrandon.recipebinder.viewmodel.RecipeViewModel
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 @Module
@@ -29,7 +30,9 @@ class ViewRecipeViewBinder @Inject constructor() {
         lifecycleOwner: LifecycleOwner,
     ) {
         viewRoot = view
-        viewModel.getRecipe().observe(lifecycleOwner) { recipe -> onNewRecipe(recipe) }
+        lifecycleOwner.whileResumed {
+            viewModel.getRecipe().mapNotNull { it }.collect { recipe -> onNewRecipe(recipe) }
+        }
         with(binder) {
             listFragmentContainer.adapter = ViewFragmentPagerAdapter(activity)
             editButton.setOnClickListener {
@@ -46,7 +49,8 @@ class ViewRecipeViewBinder @Inject constructor() {
         with(binder) {
             recipe.run {
                 nameText.text = name
-                cookTimeView.text = viewRoot.resources.getQuantityString(R.plurals.minute, cookTime, cookTime)
+                cookTimeView.text =
+                    viewRoot.resources.getQuantityString(R.plurals.minute, cookTime, cookTime)
                 servingsText.text = servings.toString()
             }
         }

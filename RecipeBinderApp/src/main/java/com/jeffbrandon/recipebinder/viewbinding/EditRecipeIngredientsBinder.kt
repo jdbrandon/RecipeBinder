@@ -25,15 +25,25 @@ class EditRecipeIngredientsBinder @Inject constructor() {
     ) {
         val binding = FragmentEditRecipeItemsBinding.bind(viewRoot)
         binding.items.contentDescription = viewRoot.resources.getString(R.string.ingredient_list)
-        vm.getIngredients().observe(lifecycle) { ingredients ->
-            with(binding) {
-                items.adapter = EditIngredientAdapter(vm, ingredients) {
-                    vm.viewModelScope.launch { vm.setEditIngredient(it) }
-                    openEditIngredientFragment(fm)
-                }
-                addItemFab.setOnClickListener {
-                    vm.viewModelScope.launch { vm.setEditIngredient(Ingredient("", 0f, UnitType.NONE)) }
-                    openEditIngredientFragment(fm)
+        lifecycle.whileResumed {
+            vm.getIngredients().collect { ingredients ->
+                with(binding) {
+                    items.adapter = EditIngredientAdapter(vm, ingredients) {
+                        vm.viewModelScope.launch { vm.setEditIngredient(it) }
+                        openEditIngredientFragment(fm)
+                    }
+                    addItemFab.setOnClickListener {
+                        vm.viewModelScope.launch {
+                            vm.setEditIngredient(
+                                Ingredient(
+                                    "",
+                                    0f,
+                                    UnitType.NONE
+                                )
+                            )
+                        }
+                        openEditIngredientFragment(fm)
+                    }
                 }
             }
         }

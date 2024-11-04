@@ -134,9 +134,11 @@ class RecipeMenuViewModelTest {
         underTest.filterTags(TagFilter.Include.create(TestRecipeData.RECIPE_1.tags))
 
         var recipeData: List<RecipeData>? = null
-        val job = launch{ underTest.collectRecipesInScope(this) { data ->
+        val job = launch {
+            underTest.collectRecipesInScope(this) { data ->
             recipeData = data
-        }}
+            }
+        }
         scheduler.advanceUntilIdle()
         assertEquals(listOf(TestRecipeData.RECIPE_1), recipeData)
         job.cancel()

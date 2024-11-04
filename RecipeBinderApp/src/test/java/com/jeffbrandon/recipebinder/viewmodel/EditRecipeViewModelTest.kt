@@ -1,27 +1,30 @@
 package com.jeffbrandon.recipebinder.viewmodel
 
 import android.content.Context
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import com.jeffbrandon.recipebinder.R
 import com.jeffbrandon.recipebinder.dagger.IDispatchers
+import com.jeffbrandon.recipebinder.data.Ingredient
+import com.jeffbrandon.recipebinder.data.Instruction
 import com.jeffbrandon.recipebinder.enums.RecipeTag
 import com.jeffbrandon.recipebinder.enums.UnitType
-import com.jeffbrandon.recipebinder.room.RecipeData
 import com.jeffbrandon.recipebinder.room.RecipeDataSource
 import com.jeffbrandon.recipebinder.testutils.TestRecipeData
-import com.jeffbrandon.recipebinder.testutils.getOrAwaitValue
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -48,8 +51,6 @@ class EditRecipeViewModelTest {
     @Mock
     private lateinit var context: Context
     private lateinit var underTest: EditRecipeViewModel
-    private var currentRecipeData: RecipeData? = null
-    private val testObserver = Observer<RecipeData> { t -> currentRecipeData = t }
 
     private val scheduler = TestCoroutineScheduler()
     private val dispatcher = StandardTestDispatcher(scheduler, "Test Dispatcher")
@@ -73,7 +74,6 @@ class EditRecipeViewModelTest {
                 }
             },
         )
-        underTest.getRecipe().observeForever(testObserver)
     }
 
     @After
@@ -82,30 +82,45 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun setEditIngredient() = runTest {
+    fun `set edit ingredient`() = runTestObservingRecipes {
         val index = 1
 
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[index])
-        val ingredient = underTest.editIngredientLiveData.getOrAwaitValue()
+        var ingredient: Ingredient? = null
+        val job = launch {
+            underTest.editIngredientFlow.collect {
+                ingredient = it
+            }
+        }
+        scheduler.advanceUntilIdle()
 
         assertEquals("Got correct ingredient", TestRecipeData.INGREDIENT_1_2, ingredient)
+        job.cancel()
     }
 
     @Test
-    fun setEditInstruction() = runTest {
+    fun `set edit instruction`() = runTestObservingRecipes {
         val index = 1
 
         underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[index])
-        val instruction = underTest.editInstructionLiveData.getOrAwaitValue()
+        var instruction: Instruction? = null
+        val job = launch {
+            underTest.editInstructionFlow.collect {
+                instruction = it
+            }
+        }
+        scheduler.advanceUntilIdle()
 
         assertEquals(
             "Got correct instruction", TestRecipeData.INSTRUCTION_1_2, instruction!!
         )
+        job.cancel()
     }
 
     @Test
-    fun saveIngredient() = runTest {
+    fun `save ingredient`() = runTestObservingRecipes {
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_LIST_1[2])
+        scheduler.advanceUntilIdle()
 
         underTest.saveIngredient(TestRecipeData.INGREDIENT_1_1)
         scheduler.advanceUntilIdle()
@@ -114,34 +129,46 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun saveInstruction() = runTest {
+    fun saveInstruction() = runTestObservingRecipes {
         underTest.setEditInstruction(TestRecipeData.INSTRUCTION_LIST_1[1])
+        scheduler.advanceUntilIdle()
 
         underTest.saveInstruction(TestRecipeData.INSTRUCTION_1_3)
+        scheduler.advanceUntilIdle()
 
         verify(dataSource).updateRecipe(any())
     }
 
     @Test
-    fun convertIngredientUnits() = runTest {
+    fun convertIngredientUnits() = runTestObservingRecipes {
         val ingredient = TestRecipeData.INGREDIENT_1_3
         underTest.setEditIngredient(ingredient)
+        scheduler.advanceUntilIdle()
         underTest.convertIngredientUnits(ingredient.amount, ingredient.unit, UnitType.GRAM)
+        scheduler.advanceUntilIdle()
 
-        val newIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
+        var newIngredient: Ingredient? = null
+        val job = launch {
+            underTest.editIngredientFlow.collect {
+                newIngredient = it
+            }
+        }
+        scheduler.advanceUntilIdle()
 
         assertEquals("type", UnitType.GRAM, newIngredient!!.unit)
-        assertTrue("conversion", newIngredient.amount > 453 && newIngredient.amount < 454)
+        assertTrue("conversion", newIngredient?.amount!! > 453 && newIngredient?.amount!! < 454)
+        job.cancel()
     }
 
     @Test
-    fun `test save metadata`() = runTest {
+    fun `test save metadata`() = runTestObservingRecipes {
         val name = "newName"
         val time = 5
         val servings = 8
         val tags = setOf(RecipeTag.DESSERT, RecipeTag.SIDE, RecipeTag.EASY)
 
         underTest.saveMetadata(name, time, servings, tags)
+        scheduler.advanceUntilIdle()
 
         val expected = TestRecipeData.RECIPE_1.copy(
             name = "NewName", cookTime = time, servings = servings, tags = tags
@@ -150,10 +177,12 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun `test ingredient moveTo`() = runTest {
+    fun `test ingredient moveTo`() = runTestObservingRecipes {
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_3)
+        scheduler.advanceUntilIdle()
 
         underTest.moveEditIngredientBefore(TestRecipeData.INGREDIENT_1_1)
+        scheduler.advanceUntilIdle()
 
         verify(dataSource).updateRecipe(
             eq(
@@ -167,16 +196,24 @@ class EditRecipeViewModelTest {
             )
         )
 
-        val editIngredient = underTest.editIngredientLiveData.getOrAwaitValue()
+        var editIngredient: Ingredient? = null
+        val job = launch {
+            underTest.editIngredientFlow.collect {
+                editIngredient = it
+            }
+        }
+        scheduler.advanceUntilIdle()
 
         assertNull(editIngredient)
+        job.cancel()
     }
 
     @Test
-    fun `test instruction moveTo`() = runTest {
+    fun `test instruction moveTo`() = runTestObservingRecipes {
         underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
-
+        scheduler.advanceUntilIdle()
         underTest.moveEditInstructionBefore(TestRecipeData.INSTRUCTION_1_2)
+        scheduler.advanceUntilIdle()
 
         verify(dataSource).updateRecipe(
             eq(
@@ -190,15 +227,24 @@ class EditRecipeViewModelTest {
             )
         )
 
-        val editInstruction = underTest.editInstructionLiveData.getOrAwaitValue()
+        var editInstruction: Instruction? = null
+        val job = launch {
+            underTest.editInstructionFlow.collect {
+                editInstruction = it
+            }
+        }
+        scheduler.advanceUntilIdle()
 
         assertNull(editInstruction)
+        job.cancel()
     }
 
     @Test
-    fun `test delete ingredient`() = runTest {
+    fun `test delete ingredient`() = runTestObservingRecipes {
         underTest.setEditIngredient(TestRecipeData.INGREDIENT_1_2)
+        scheduler.advanceUntilIdle()
         underTest.deleteEditIngredient()
+        scheduler.advanceUntilIdle()
 
         val target = TestRecipeData.RECIPE_1.copy(
             ingredients = TestRecipeData.INGREDIENT_LIST_1.minus(
@@ -209,8 +255,9 @@ class EditRecipeViewModelTest {
     }
 
     @Test
-    fun `test delete instruction`() = runTest {
+    fun `test delete instruction`() = runTestObservingRecipes {
         underTest.setEditInstruction(TestRecipeData.INSTRUCTION_1_3)
+        scheduler.advanceUntilIdle()
         underTest.deleteEditInstruction()
 
         val target = TestRecipeData.RECIPE_1.copy(
@@ -218,6 +265,7 @@ class EditRecipeViewModelTest {
                 TestRecipeData.INSTRUCTION_1_3
             )
         )
+        scheduler.advanceUntilIdle()
         verify(dataSource).updateRecipe(eq(target))
     }
 
@@ -244,5 +292,16 @@ class EditRecipeViewModelTest {
         scheduler.advanceUntilIdle()
         assertFalse(shouldWarn)
         job.cancel()
+    }
+
+    private fun runTestObservingRecipes(test: suspend TestScope.() -> Unit) = runTest {
+        val job = launchRecipeCollection()
+        scheduler.advanceUntilIdle()
+        test()
+        job.cancel()
+    }
+
+    private fun CoroutineScope.launchRecipeCollection(): Job = launch {
+        underTest.getRecipe().collect()
     }
 }

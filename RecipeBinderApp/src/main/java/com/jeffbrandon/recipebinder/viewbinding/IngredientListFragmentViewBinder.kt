@@ -18,8 +18,10 @@ class IngredientListFragmentViewBinder @Inject constructor() {
         with(FragmentListBinding.bind(view)) {
             name.text = view.resources.getString(R.string.ingredients)
             recycler.contentDescription = view.resources.getString(R.string.ingredient_list)
-            viewModel.getIngredients().observe(lifecycle) { ingredients ->
-                recycler.adapter = IngredientAdapter(ingredients)
+            lifecycle.whileResumed {
+                viewModel.getIngredients().collect { ingredients ->
+                    recycler.adapter = IngredientAdapter(ingredients)
+                }
             }
         }
     }
